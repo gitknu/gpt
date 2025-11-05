@@ -14,16 +14,17 @@
         padding: 0;
         background-color: white;
         display: flex;
-        justify-content: center;
-        align-items: flex-end; /* Pushes content to the bottom */
+        flex-direction: column; /* Stack items vertically */
+        justify-content: space-between; /* Pushes scroller to top, logos to bottom */
         font-family: sans-serif;
+        box-sizing: border-box; /* Ensure padding/borders don't add to height */
     }
 
     /* --- START: Scroller Styles --- */
     .scroller-container {
-        position: fixed; /* Position relative to the viewport */
-        left: 40px;      /* Distance from the left edge */
-        top: 40px;       /* Distance from the top edge */
+        /* position: fixed; */ /* Removed to prevent overlay */
+        margin-left: 40px;  /* Replaced 'left' */
+        margin-top: 40px;   /* Replaced 'top' */
         height: 300px;
         width: 2px;
         background-color: black;
@@ -32,6 +33,7 @@
         justify-content: space-between;
         align-items: center;
         position: relative;
+        flex-shrink: 0; /* Prevents scroller from shrinking */
     }
 
     .dot {
@@ -66,6 +68,8 @@
         align-items: flex-end; /* Aligns items based on their bottom edge */
         gap: 20px; /* space between logo items */
         margin-bottom: 20px; /* Adds space from the bottom edge */
+        width: 100%; /* Added to allow centering */
+        justify-content: center; /* Added to center the logos */
     }
 
     .logo-item {
@@ -100,9 +104,10 @@
     /* --- Mobile Responsivity --- */
     @media (max-width: 600px) {
         .scroller-container {
-            left: 20px;
-            top: 20px;
+            margin-left: 20px; /* Use margin for positioning */
+            margin-top: 20px;  /* Use margin for positioning */
             height: 200px;
+            /* 'left' and 'top' are already removed */
         }
 
         .dot {
@@ -120,7 +125,7 @@
             box-sizing: border-box; /* Ensures padding doesn't add to the total width */
             padding: 0 20px 20px; /* 0 for top, 20px for left/right, 20px for bottom */
             margin-bottom: 0; /* Bottom spacing is now handled by padding */
-            justify-content: center; /* Center logos within the full-width container */
+            justify-content: center; /* This was already here and correct */
             gap: 15px; /* Adjust the gap for smaller screens */
         }
         .logo {
@@ -134,7 +139,7 @@
 </head>
 <body>
 
-<!-- Scroller is placed here, positioned independently at the top-left -->
+<!-- Scroller is placed here, positioned at the top by the body's flex settings -->
 <div class="scroller-container">
     <div class="dot"></div>
     <div class="dot"></div>
@@ -146,7 +151,7 @@
     <div id="scroller-handle"></div>
 </div>
 
-<!-- Logo content is placed here, positioned independently at the bottom-center -->
+<!-- Logo content is placed here, positioned at the bottom by the body's flex settings -->
 <div class="logo-container">
     <div class="logo-item">
         <p class="logo-label">Комп'ютер</p>
@@ -186,6 +191,7 @@
 
 
         // --- START: Scroller Logic ---
+        // This logic remains the same and works correctly.
         const handle = document.getElementById('scroller-handle');
         const scroller = handle.parentElement;
         const dots = Array.from(scroller.getElementsByClassName('dot'));
@@ -215,7 +221,13 @@
 
             const eventY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
             const scrollerRect = scroller.getBoundingClientRect();
+            
+            // Use pageY and scroller.offsetTop when not fixed
+            // Or, getBoundingClientRect().top + window.scrollY
+            // But since the page isn't scrolling, clientY is still fine.
+            // Let's check scrollerRect.top
             const mouseY = eventY - scrollerRect.top;
+
 
             // Find the closest dot position to snap to
             let closestDotY = dotPositions.reduce((prev, curr) => {
