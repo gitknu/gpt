@@ -207,6 +207,7 @@
     <!-- Updated title structure -->
     <div class="data-title-container">
         <!-- This text will be updated by the script -->
+        <!-- Set initial text to Level 1 (which is now at the bottom) -->
         <span class="title-en">Data collection:</span>
         <span class="title-ua">процес збору даних</span>
     </div>
@@ -261,21 +262,23 @@
         // --- END: PocketPal Link Logic ---
 
 
-        // --- START: Text Data for Scroller ---
+        // --- START: Text Data for Scroller (INVERTED) ---
         const levelData = [
-            { en: "Data collection:", ua: "процес збору даних" },
-            { en: "Preprocessing:", ua: "попередня обробка" },
-            { en: "Tokenization:", ua: "розбиття на токени" },
-            { en: "Unsupervised pretraining:", ua: "попереднє навчання (без вчителя)" },
-            // --- FIX: Corrected the broken line below ---
-            { en: "Supervised finetuning:", ua: "донавчання (зі вчителем)" },
+            // Index 0 (Top Dot) is now Level 7
+            { en: "RLHF:", ua: "навчання по відгуках" }, 
             { en: "Reward model training:", ua: "створення моделі винагороди" },
-            { en: "RLHF:", ua: "навчання по відгуках" }
+            { en: "Supervised finetuning:", ua: "донавчання (зі вчителем)" },
+            { en: "Unsupervised pretraining:", ua: "попереднє навчання (без вчителя)" },
+            { en: "Tokenization:", ua: "розбиття на токени" },
+            { en: "Preprocessing:", ua: "попередня обробка" },
+            // Index 6 (Bottom Dot) is now Level 1
+            { en: "Data collection:", ua: "процес збору даних" }
         ];
 
         const titleEn = document.querySelector('.title-en');
         const titleUa = document.querySelector('.title-ua');
-        let currentLevelIndex = 0; // Keep track of the current level
+        // Set initial level index to 6 (Bottom dot, which is now Level 1)
+        let currentLevelIndex = 6; // Keep track of the current level
         // --- END: Text Data for Scroller ---
 
 
@@ -287,8 +290,8 @@
 
         const dotPositions = dots.map(dot => dot.offsetTop + dot.offsetHeight / 2);
 
-        // Set initial position of the handle to the *first* dot (to match HTML)
-        handle.style.top = `${dotPositions[0]}px`;
+        // Set initial position of the handle to the *last* dot (bottom)
+        handle.style.top = `${dotPositions[dotPositions.length - 1]}px`;
 
         function startDrag(e) {
             isDragging = true;
@@ -310,12 +313,7 @@
             const eventY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
             const scrollerRect = scroller.getBoundingClientRect();
             
-            // Use pageY and scroller.offsetTop when not fixed
-            // Or, getBoundingClientRect().top + window.scrollY
-            // But since the page isn't scrolling, clientY is still fine.
-            // Let's check scrollerRect.top
             const mouseY = eventY - scrollerRect.top;
-
 
             // Find the closest dot position to snap to
             let closestDotY = dotPositions.reduce((prev, curr) => {
@@ -332,6 +330,7 @@
             // Update the text based on the index
             if (closestIndex !== -1 && closestIndex !== currentLevelIndex) {
                 
+                // Determine direction (1 for down, -1 for up)
                 const direction = closestIndex > currentLevelIndex ? 1 : -1;
                 const transitionDelay = 200; // Must match CSS transition duration
                 const slideDistance = 15; // How many pixels to slide
@@ -348,6 +347,7 @@
                 // 3. Wait for fade out, then change text and position for fade-in
                 setTimeout(() => {
                     // Change text content
+                    // This now correctly maps to the inverted levelData array
                     titleEn.textContent = levelData[currentLevelIndex].en;
                     titleUa.textContent = levelData[currentLevelIndex].ua;
                     
