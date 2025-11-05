@@ -1,57 +1,71 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clickable Logos</title>
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            background-color: white;
-            display: flex;
-            justify-content: center;
-            align-items: flex-end; /* Pushes content to the bottom */
-            font-family: sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clickable Logos</title>
+<style>
+body, html {
+height: 100%;
+margin: 0;
+padding: 0;
+background-color: white;
+display: flex;
+justify-content: center;
+align-items: flex-end; /* Pushes content to the bottom */
+font-family: sans-serif;
+}
+.logo-container {
+        display: flex;
+        flex-direction: row; /* Aligns logos in a row */
+        align-items: center;
+        gap: 20px; /* space between logos */
+        margin-bottom: 20px; /* Adds space from the bottom edge */
+    }
 
-        .logo-container {
-            display: flex;
-            flex-direction: row; /* Aligns logos in a row */
-            align-items: center;
-            gap: 20px; /* space between logos */
-            margin-bottom: 20px; /* Adds space from the bottom edge */
-        }
+    .logo-link {
+        display: inline-block;
+    }
 
-        .logo-link {
-            display: inline-block;
-        }
+    .logo {
+        width: 150px; /* Adjust size as needed */
+        height: auto;
+        transition: transform 0.2s ease-in-out;
+    }
 
-        .logo {
-            width: 150px; /* Adjust size as needed */
-            height: auto;
-            transition: transform 0.2s ease-in-out;
-        }
-
-        .logo:hover {
-            transform: scale(1.1);
-        }
-    </style>
+    .logo:hover {
+        transform: scale(1.1);
+    }
+</style>
 </head>
 <body>
+<div class="logo-container">
+    <a href="https://ollama.com" target="_blank" class="logo-link">
+        <img src="https://gitknu.github.io/gpt/files/ollama.png" alt="Ollama Logo" class="logo">
+    </a>
+    <a href="https://play.google.com/store/apps/details?id=com.pocketpalai" target="_blank" class="logo-link" id="pocketpal-link">
+        <img src="https://gitknu.github.io/gpt/files/pocketpal.png" alt="PocketPal Logo" class="logo">
+    </a>
+    <a href="https://github.com/theaniketgiri/create-llm" target="_blank" class="logo-link">
+        <img src="https://gitknu.github.io/gpt/files/github.png" alt="GitHub Logo" class="logo">
+    </a>
+</div>
 
-    <div class="logo-container">
-        <a href="https://ollama.com" target="_blank" class="logo-link">
-            <img src="https://gitknu.github.io/gpt/files/ollama.png" alt="Ollama Logo" class="logo">
-        </a>
-        <a href="https://play.google.com/store/apps/details?id=com.pocketpalai" target="_blank" class="logo-link">
-            <img src="https://gitknu.github.io/gpt/files/pocketpal.png" alt="PocketPal Logo" class="logo">
-        </a>
-        <a href="https://github.com/theaniketgiri/create-llm" target="_blank" class="logo-link">
-            <img src="https://gitknu.github.io/gpt/files/github.png" alt="GitHub Logo" class="logo">
-        </a>
-    </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        const pocketpalLink = document.getElementById("pocketpal-link");
 
+        // Check for iOS/iPadOS
+        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+            pocketpalLink.href = "https://apps.apple.com/us/app/pocketpal-ai/id6502579498";
+        }
+        // Check for MacOS
+        else if (/Macintosh|MacIntel|MacPPC|Mac68K/.test(userAgent)) {
+            pocketpalLink.href = "https://apps.apple.com/us/app/pocketpal-ai/id6502579498";
+        }
+    });
+</script>
 </body>
 </html>
