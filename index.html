@@ -33,6 +33,7 @@
         display: flex;
         flex-direction: column;
         /* REMOVED: align-self: flex-start; */
+        align-items: flex-start; /* ADDED: This makes all children left-align by default */
     }
 
     /* REMOVED: .top-group.right block */
@@ -74,7 +75,7 @@
     /* --- START: Scroller Styles --- */
     .scroller-container {
         /* Margins are now on the parent .top-group */
-        margin-left: 0;
+        /* margin-left: 0; */ /* This is now controlled below for animation */
         margin-top: 20px; /* Added space to avoid overlap with title */
         height: 514px; /* 6/7ths of original 600px */
         width: 4px; /* Doubled from 2px */
@@ -85,12 +86,30 @@
         align-items: center;
         position: relative;
         flex-shrink: 0; /* Prevents scroller from shrinking */
-        align-self: flex-start; /* ADDED: Default left alignment */
+        /* REMOVED: align-self: flex-start; */
+        
+        /* --- START: EDITED FOR TRANSITION --- */
+        /* Use margins for animatable horizontal positioning */
+        /* REMOVED: margin-left: 0; */
+        /* REMOVED: margin-right: auto; */
+        /* Add a transition with a cubic-bezier for a "bouncy" effect */
+        transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* CHANGED: Animate transform instead of margin */
+        transform: translateX(0); /* ADDED: Default "left" position */
+        /* --- END: EDITED FOR TRANSITION --- */
     }
     
     /* ADDED: Rule to move *only* the scroller */
     .scroller-container.right {
-        align-self: flex-end;
+        /* REMOVED: align-self: flex-end; */
+
+        /* --- START: EDITED FOR TRANSITION --- */
+        /* Set new margins to trigger the transition */
+        /* REMOVED: margin-left: auto; */
+        /* REMOVED: margin-right: 0; */
+        /* ADDED: New "right" position using transform. */
+        /* 100vw (full width) - 80px (40px L/R padding) - 4px (scroller width) */
+        transform: translateX(calc(100vw - 80px - 4px));
+        /* --- END: EDITED FOR TRANSITION --- */
     }
 
     .dot {
@@ -192,13 +211,18 @@
         
         .scroller-container {
             /* Margins are now on the parent .top-group */
-            margin-left: 0;
+            /* REMOVED: margin-left: 0; (This would break the .right state on mobile) */
             margin-top: 20px; /* Added space to avoid overlap with title */
             height: 343px; /* 6/7ths of original 400px */
-            /* align-self: flex-start is inherited */
+            /* The transition and margin-left/right rules are inherited */
         }
         
-        /* .scroller-container.right { align-self: flex-end } is inherited */
+        /* .scroller-container.right { margin-left: auto; margin-right: 0; } is inherited */
+        /* ADDED: Override transform for mobile */
+        .scroller-container.right {
+            /* 100vw (full width) - 40px (20px L/R padding) - 4px (scroller width) */
+            transform: translateX(calc(100vw - 40px - 4px));
+        }
 
         .dot {
             width: 16px; /* Doubled from 8px */
