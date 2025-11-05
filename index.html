@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clickable Logos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
 <style>
     body, html {
         height: 100%;
@@ -17,11 +20,28 @@
     }
     .logo-container {
         display: flex;
-        flex-direction: row; /* Aligns logos in a row */
-        align-items: center;
-        gap: 20px; /* space between logos */
+        flex-direction: row; /* Aligns logo items in a row */
+        align-items: flex-end; /* Aligns items based on their bottom edge */
+        gap: 20px; /* space between logo items */
         margin-bottom: 20px; /* Adds space from the bottom edge */
     }
+
+    /* --- START: New styles for text labels --- */
+    .logo-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .logo-label {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500;
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 10px; /* Space between text and logo */
+    }
+    /* --- END: New styles for text labels --- */
 
     .logo-link {
         display: inline-block;
@@ -37,7 +57,7 @@
         transform: scale(1.1);
     }
 
-    /* --- START: Mobile Responsivity Fix --- */
+    /* --- Mobile Responsivity --- */
     @media (max-width: 600px) {
         .logo-container {
             width: 100%;
@@ -48,23 +68,34 @@
             gap: 15px; /* Adjust the gap for smaller screens */
         }
         .logo {
-            width: 90px; /* Made logos a bit larger on mobile */
+            width: 90px; /* Logos size on mobile */
+        }
+        .logo-label {
+            font-size: 14px; /* Slightly smaller text on mobile */
         }
     }
-    /* --- END: Mobile Responsivity Fix --- */
 </style>
 </head>
 <body>
 <div class="logo-container">
-    <a href="https://ollama.com" target="_blank" class="logo-link">
-        <img src="https://gitknu.github.io/gpt/files/ollama.png" alt="Ollama Logo" class="logo">
-    </a>
-    <a href="https://play.google.com/store/apps/details?id=com.pocketpalai" target="_blank" class="logo-link" id="pocketpal-link">
-        <img src="https://gitknu.github.io/gpt/files/pocketpal.png" alt="PocketPal Logo" class="logo">
-    </a>
-    <a href="https://github.com/theaniketgiri/create-llm" target="_blank" class="logo-link">
-        <img src="https://gitknu.github.io/gpt/files/github.png" alt="GitHub Logo" class="logo">
-    </a>
+    <div class="logo-item">
+        <p class="logo-label">Комп'ютер</p>
+        <a href="https://ollama.com" target="_blank" class="logo-link">
+            <img src="https://gitknu.github.io/gpt/files/ollama.png" alt="Ollama Logo" class="logo">
+        </a>
+    </div>
+    <div class="logo-item">
+        <p class="logo-label">Смартфон</p>
+        <a href="https://play.google.com/store/apps/details?id=com.pocketpalai" target="_blank" class="logo-link" id="pocketpal-link">
+            <img src="https://gitknu.github.io/gpt/files/pocketpal.png" alt="PocketPal Logo" class="logo">
+        </a>
+    </div>
+    <div class="logo-item">
+        <p class="logo-label">Власна АІ</p>
+        <a href="https://github.com/theaniketgiri/create-llm" target="_blank" class="logo-link">
+            <img src="https://gitknu.github.io/gpt/files/github.png" alt="GitHub Logo" class="logo">
+        </a>
+    </div>
 </div>
 
 <script>
