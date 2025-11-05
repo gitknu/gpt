@@ -6,7 +6,8 @@
 <title>Clickable Logos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+<!-- Updated to include font-weight 800 for extrabold -->
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;800&display=swap" rel="stylesheet">
 <style>
     body, html {
         height: 100%;
@@ -15,17 +16,39 @@
         background-color: white;
         display: flex;
         flex-direction: column; /* Stack items vertically */
-        justify-content: space-between; /* Pushes scroller to top, logos to bottom */
+        justify-content: space-between; /* Pushes top content to top, logos to bottom */
         font-family: sans-serif;
         box-sizing: border-box; /* Ensure padding/borders don't add to height */
     }
 
+    /* --- START: Top Content Styles --- */
+
+    /* New container for the title and scroller */
+    .top-group {
+        margin-left: 40px; /* Original scroller margin */
+        margin-top: 40px;  /* Original scroller margin */
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* New title style */
+    .data-title {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 800; /* Extrabold */
+        color: black;
+        font-size: 2rem;
+        margin: 0;
+        height: 86px; /* 1/7th of original 600px */
+        display: flex;
+        align-items: center; /* Vertically center text in its space */
+    }
+
     /* --- START: Scroller Styles --- */
     .scroller-container {
-        /* position: fixed; */ /* Removed to prevent overlay */
-        margin-left: 40px;  /* Replaced 'left' */
-        margin-top: 40px;   /* Replaced 'top' */
-        height: 600px; /* Doubled from 300px */
+        /* Margins are now on the parent .top-group */
+        margin-left: 0;
+        margin-top: 0;
+        height: 514px; /* 6/7ths of original 600px */
         width: 4px; /* Doubled from 2px */
         background-color: black;
         display: flex;
@@ -103,11 +126,24 @@
 
     /* --- Mobile Responsivity --- */
     @media (max-width: 600px) {
+        
+        /* Adjust top group for mobile */
+        .top-group {
+            margin-left: 20px;
+            margin-top: 20px;
+        }
+
+        /* Adjust title for mobile */
+        .data-title {
+            font-size: 1.5rem;
+            height: 57px; /* 1/7th of original 400px */
+        }
+        
         .scroller-container {
-            margin-left: 20px; /* Use margin for positioning */
-            margin-top: 20px;  /* Use margin for positioning */
-            height: 400px; /* Doubled from 200px */
-            /* 'left' and 'top' are already removed */
+            /* Margins are now on the parent .top-group */
+            margin-left: 0;
+            margin-top: 0;
+            height: 343px; /* 6/7ths of original 400px */
         }
 
         .dot {
@@ -139,16 +175,19 @@
 </head>
 <body>
 
-<!-- Scroller is placed here, positioned at the top by the body's flex settings -->
-<div class="scroller-container">
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div id="scroller-handle"></div>
+<!-- Top content group -->
+<div class="top-group">
+    <h1 class="data-title">Data collection</h1>
+    <div class="scroller-container">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div id="scroller-handle"></div>
+    </div>
 </div>
 
 <!-- Logo content is placed here, positioned at the bottom by the body's flex settings -->
