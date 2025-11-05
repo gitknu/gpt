@@ -1,22 +1,21 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Clickable Logos</title>
 <style>
-body, html {
-height: 100%;
-margin: 0;
-padding: 0;
-background-color: white;
-display: flex;
-justify-content: center;
-align-items: flex-end; /* Pushes content to the bottom */
-font-family: sans-serif;
-}
-.logo-container {
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        background-color: white;
+        display: flex;
+        justify-content: center;
+        align-items: flex-end; /* Pushes content to the bottom */
+        font-family: sans-serif;
+    }
+    .logo-container {
         display: flex;
         flex-direction: row; /* Aligns logos in a row */
         align-items: center;
@@ -37,6 +36,18 @@ font-family: sans-serif;
     .logo:hover {
         transform: scale(1.1);
     }
+
+    /* --- START: Mobile Responsivity Fix --- */
+    @media (max-width: 600px) {
+        .logo-container {
+            gap: 15px; /* Reduce space between logos */
+            margin-bottom: 15px; /* Get closer to the bottom */
+        }
+        .logo {
+            width: 80px; /* Make logos smaller on mobile devices */
+        }
+    }
+    /* --- END: Mobile Responsivity Fix --- */
 </style>
 </head>
 <body>
