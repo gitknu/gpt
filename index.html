@@ -66,7 +66,7 @@
     .scroller-container {
         /* Margins are now on the parent .top-group */
         margin-left: 0;
-        margin-top: 0;
+        margin-top: 20px; /* Added space to avoid overlap with title */
         height: 514px; /* 6/7ths of original 600px */
         width: 4px; /* Doubled from 2px */
         background-color: black;
@@ -169,7 +169,7 @@
         .scroller-container {
             /* Margins are now on the parent .top-group */
             margin-left: 0;
-            margin-top: 0;
+            margin-top: 20px; /* Added space to avoid overlap with title */
             height: 343px; /* 6/7ths of original 400px */
         }
 
@@ -267,6 +267,7 @@
             { en: "Preprocessing:", ua: "попередня обробка" },
             { en: "Tokenization:", ua: "розбиття на токени" },
             { en: "Unsupervised pretraining:", ua: "попереднє навчання (без вчителя)" },
+            // --- FIX: Corrected the broken line below ---
             { en: "Supervised finetuning:", ua: "донавчання (зі вчителем)" },
             { en: "Reward model training:", ua: "створення моделі винагороди" },
             { en: "RLHF:", ua: "навчання по відгуках" }
