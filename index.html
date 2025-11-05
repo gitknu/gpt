@@ -111,6 +111,11 @@
         transform: translate(-50%, -50%);
         cursor: grab;
         transition: top 0.1s ease-out; /* This transition was already here */
+        
+        /* --- CHANGED --- */
+        border: 9px solid black; /* CHANGED: Was 4px */
+        box-sizing: border-box;  /* Ensures border is inside the width/height */
+        /* --- END CHANGED --- */
     }
 
     #scroller-handle:active {
@@ -203,6 +208,10 @@
         #scroller-handle {
             width: 24px; /* CHANGED: Reduced from 36px (approx 7% of 343px) */
             height: 24px; /* CHANGED: Reduced from 36px (approx 7% of 343px) */
+            
+            /* --- CHANGED --- */
+            border-width: 7px; /* CHANGED: Was 3px */
+            /* --- END CHANGED --- */
         }
 
         .logo-container {
@@ -261,7 +270,7 @@
     </div>
     <div class="logo-item">
         <p class="logo-label">Власна АІ</p>
-        <a href="https://github.com/theaniketgiri/create-llm" target="_blank" class="logo-link">
+        <a href="httpsD" target="_blank" class="logo-link">
             <img src="https://gitknu.github.io/gpt/files/github.png" alt="GitHub Logo" class="logo">
         </a>
     </div>
