@@ -40,11 +40,15 @@
     /* --- START: Mobile Responsivity Fix --- */
     @media (max-width: 600px) {
         .logo-container {
-            gap: 15px; /* Reduce space between logos */
-            margin-bottom: 15px; /* Get closer to the bottom */
+            width: 100%;
+            box-sizing: border-box; /* Ensures padding doesn't add to the total width */
+            padding: 0 20px 20px; /* 0 for top, 20px for left/right, 20px for bottom */
+            margin-bottom: 0; /* Bottom spacing is now handled by padding */
+            justify-content: center; /* Center logos within the full-width container */
+            gap: 15px; /* Adjust the gap for smaller screens */
         }
         .logo {
-            width: 80px; /* Make logos smaller on mobile devices */
+            width: 90px; /* Made logos a bit larger on mobile */
         }
     }
     /* --- END: Mobile Responsivity Fix --- */
