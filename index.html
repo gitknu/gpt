@@ -25,11 +25,17 @@
 
     /* New container for the title and scroller */
     .top-group {
-        margin-left: 40px; /* Original scroller margin */
-        margin-top: 40px;  /* Original scroller margin */
+        /* CHANGED: Removed margins, added padding, set to full width */
+        width: 100%;
+        padding: 0 40px; 
+        margin-top: 40px;
+        box-sizing: border-box; /* Include padding in width */
         display: flex;
         flex-direction: column;
+        /* REMOVED: align-self: flex-start; */
     }
+
+    /* REMOVED: .top-group.right block */
 
     /* New title style */
     .data-title-container {
@@ -41,6 +47,9 @@
         flex-direction: column;
         justify-content: center; /* Vertically center the text block */
         overflow: hidden; /* Added to clip the text during transition */
+        cursor: pointer; /* ADDED: Show it's clickable */
+        user-select: none; /* ADDED: Prevent text selection on click */
+        align-self: flex-start; /* ADDED: Always stay left */
     }
 
     .title-en {
@@ -76,6 +85,12 @@
         align-items: center;
         position: relative;
         flex-shrink: 0; /* Prevents scroller from shrinking */
+        align-self: flex-start; /* ADDED: Default left alignment */
+    }
+    
+    /* ADDED: Rule to move *only* the scroller */
+    .scroller-container.right {
+        align-self: flex-end;
     }
 
     .dot {
@@ -148,9 +163,13 @@
         
         /* Adjust top group for mobile */
         .top-group {
-            margin-left: 20px;
+            /* CHANGED: Use padding instead of margin */
+            padding: 0 20px;
             margin-top: 20px;
+            /* align-self: flex-start is inherited */
         }
+        
+        /* REMOVED: .top-group.right media query */
 
         /* Adjust title for mobile */
         .data-title-container {
@@ -171,7 +190,10 @@
             margin-left: 0;
             margin-top: 20px; /* Added space to avoid overlap with title */
             height: 343px; /* 6/7ths of original 400px */
+            /* align-self: flex-start is inherited */
         }
+        
+        /* .scroller-container.right { align-self: flex-end } is inherited */
 
         .dot {
             width: 16px; /* Doubled from 8px */
@@ -260,6 +282,19 @@
             pocketpalLink.href = "https://apps.apple.com/us/app/pocketpal-ai/id6502579498";
         }
         // --- END: PocketPal Link Logic ---
+
+        // --- START: Side Toggle Logic (NEW) ---
+        // const topGroup = document.querySelector('.top-group'); // No longer needed
+        const titleContainer = document.querySelector('.data-title-container');
+        const scrollerContainer = document.querySelector('.scroller-container'); // ADDED
+
+        if (titleContainer && scrollerContainer) { // CHANGED
+            titleContainer.addEventListener('click', function() {
+                // topGroup.classList.toggle('right'); // REMOVED
+                scrollerContainer.classList.toggle('right'); // CHANGED
+            });
+        }
+        // --- END: Side Toggle Logic ---
 
 
         // --- START: Text Data for Scroller (INVERTED) ---
