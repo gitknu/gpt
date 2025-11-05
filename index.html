@@ -200,6 +200,7 @@
 <div class="top-group">
     <!-- Updated title structure -->
     <div class="data-title-container">
+        <!-- This text will be updated by the script -->
         <span class="title-en">Data collection:</span>
         <span class="title-ua">процес збору даних</span>
     </div>
@@ -254,8 +255,23 @@
         // --- END: PocketPal Link Logic ---
 
 
+        // --- START: Text Data for Scroller ---
+        const levelData = [
+            { en: "Data collection:", ua: "процес збору даних" },
+            { en: "Preprocessing:", ua: "попередня обробка" },
+            { en: "Tokenization:", ua: "розбиття на токени" },
+            { en: "Unsupervised pretraining:", ua: "попереднє навчання (без вчителя)" },
+            { en: "Supervised finetuning:", ua: "донавчання (зі вчителем)" },
+            { en: "Reward model training:", ua: "створення моделі винагороди" },
+            { en: "RLHF:", ua: "навчання по відгуках" }
+        ];
+
+        const titleEn = document.querySelector('.title-en');
+        const titleUa = document.querySelector('.title-ua');
+        // --- END: Text Data for Scroller ---
+
+
         // --- START: Scroller Logic ---
-        // This logic remains the same and works correctly.
         const handle = document.getElementById('scroller-handle');
         const scroller = handle.parentElement;
         const dots = Array.from(scroller.getElementsByClassName('dot'));
@@ -263,8 +279,8 @@
 
         const dotPositions = dots.map(dot => dot.offsetTop + dot.offsetHeight / 2);
 
-        // Set initial position of the handle to the middle dot
-        handle.style.top = `${dotPositions[3]}px`;
+        // Set initial position of the handle to the *first* dot (to match HTML)
+        handle.style.top = `${dotPositions[0]}px`;
 
         function startDrag(e) {
             isDragging = true;
@@ -300,6 +316,17 @@
 
             // Snap the handle to the closest dot
             handle.style.top = `${closestDotY}px`;
+            
+            // --- START: Update Text Logic ---
+            // Find the index of the closest dot
+            let closestIndex = dotPositions.indexOf(closestDotY);
+
+            // Update the text based on the index
+            if (closestIndex !== -1 && levelData[closestIndex]) {
+                titleEn.textContent = levelData[closestIndex].en;
+                titleUa.textContent = levelData[closestIndex].ua;
+            }
+            // --- END: Update Text Logic ---
         }
 
         // Mouse events
