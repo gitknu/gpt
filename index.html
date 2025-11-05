@@ -32,15 +32,28 @@
     }
 
     /* New title style */
-    .data-title {
+    .data-title-container {
         font-family: 'Montserrat', sans-serif;
-        font-weight: 800; /* Extrabold */
         color: black;
-        font-size: 2rem;
         margin: 0;
         height: 86px; /* 1/7th of original 600px */
         display: flex;
-        align-items: center; /* Vertically center text in its space */
+        flex-direction: column;
+        justify-content: center; /* Vertically center the text block */
+    }
+
+    .title-en {
+        font-weight: 800; /* Extrabold */
+        font-size: 2rem; /* 32px */
+        line-height: 1.2;
+        white-space: nowrap; /* Prevent wrapping */
+    }
+
+    .title-ua {
+        font-weight: 800; /* Extrabold - CHANGED */
+        font-size: 1.1rem; /* 17.6px - CHANGED (adjusted to match width with new weight) */
+        line-height: 1.2;
+        white-space: nowrap; /* Prevent wrapping */
     }
 
     /* --- START: Scroller Styles --- */
@@ -134,9 +147,17 @@
         }
 
         /* Adjust title for mobile */
-        .data-title {
-            font-size: 1.5rem;
+        .data-title-container {
             height: 57px; /* 1/7th of original 400px */
+        }
+        
+        .title-en {
+            font-size: 1.5rem; /* 24px */
+        }
+
+        .title-ua {
+            /* Font weight is inherited from the main rule (800) */
+            font-size: 0.83rem; /* 13.28px - CHANGED (adjusted to match mobile width with new weight) */
         }
         
         .scroller-container {
@@ -177,7 +198,11 @@
 
 <!-- Top content group -->
 <div class="top-group">
-    <h1 class="data-title">Data collection</h1>
+    <!-- Updated title structure -->
+    <div class="data-title-container">
+        <span class="title-en">Data collection:</span>
+        <span class="title-ua">процес збору даних</span>
+    </div>
     <div class="scroller-container">
         <div class="dot"></div>
         <div class="dot"></div>
