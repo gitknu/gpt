@@ -40,6 +40,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center; /* Vertically center the text block */
+        overflow: hidden; /* Added to clip the text during transition */
     }
 
     .title-en {
@@ -47,6 +48,9 @@
         font-size: 2rem; /* 32px */
         line-height: 1.2;
         white-space: nowrap; /* Prevent wrapping */
+        color: #b80000; /* Added requested color */
+        /* Updated transition for opacity and transform */
+        transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
 
     .title-ua {
@@ -54,6 +58,8 @@
         font-size: 1.1rem; /* 17.6px - CHANGED (adjusted to match width with new weight) */
         line-height: 1.2;
         white-space: nowrap; /* Prevent wrapping */
+        /* Updated transition for opacity and transform */
+        transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
 
     /* --- START: Scroller Styles --- */
@@ -89,7 +95,7 @@
         left: 50%;
         transform: translate(-50%, -50%);
         cursor: grab;
-        transition: top 0.1s ease-out;
+        transition: top 0.1s ease-out; /* This transition was already here */
     }
 
     #scroller-handle:active {
@@ -268,6 +274,7 @@
 
         const titleEn = document.querySelector('.title-en');
         const titleUa = document.querySelector('.title-ua');
+        let currentLevelIndex = 0; // Keep track of the current level
         // --- END: Text Data for Scroller ---
 
 
@@ -322,9 +329,48 @@
             let closestIndex = dotPositions.indexOf(closestDotY);
 
             // Update the text based on the index
-            if (closestIndex !== -1 && levelData[closestIndex]) {
-                titleEn.textContent = levelData[closestIndex].en;
-                titleUa.textContent = levelData[closestIndex].ua;
+            if (closestIndex !== -1 && closestIndex !== currentLevelIndex) {
+                
+                const direction = closestIndex > currentLevelIndex ? 1 : -1;
+                const transitionDelay = 200; // Must match CSS transition duration
+                const slideDistance = 15; // How many pixels to slide
+
+                // 1. Slide and fade out
+                titleEn.style.opacity = 0;
+                titleEn.style.transform = `translateY(${direction * slideDistance}px)`;
+                titleUa.style.opacity = 0;
+                titleUa.style.transform = `translateY(${direction * slideDistance}px)`;
+
+                // 2. Update current index
+                currentLevelIndex = closestIndex;
+                
+                // 3. Wait for fade out, then change text and position for fade-in
+                setTimeout(() => {
+                    // Change text content
+                    titleEn.textContent = levelData[currentLevelIndex].en;
+                    titleUa.textContent = levelData[currentLevelIndex].ua;
+                    
+                    // Temporarily disable transition to set the "from" position
+                    titleEn.style.transition = 'none';
+                    titleUa.style.transition = 'none';
+
+                    // Set "from" position (opposite direction)
+                    titleEn.style.transform = `translateY(${-direction * slideDistance}px)`;
+                    titleUa.style.transform = `translateY(${-direction * slideDistance}px)`;
+
+                    // Force the browser to apply the transform immediately
+                    titleEn.offsetHeight; // This is a trick to trigger a browser reflow
+
+                    // 4. Re-enable transitions and slide/fade in to final position
+                    titleEn.style.transition = 'opacity 0.2s ease-in-out, transform 0.2s ease-in-out';
+                    titleUa.style.transition = 'opacity 0.2s ease-in-out, transform 0.2s ease-in-out';
+                    
+                    titleEn.style.opacity = 1;
+                    titleEn.style.transform = 'translateY(0)';
+                    titleUa.style.opacity = 1;
+                    titleUa.style.transform = 'translateY(0)';
+
+                }, transitionDelay);
             }
             // --- END: Update Text Logic ---
         }
