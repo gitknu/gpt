@@ -16,29 +16,27 @@
         font-family: sans-serif;
     }
 
-    .main-container {
+    /* --- START: Main Layout Container --- */
+    .content-wrapper {
         display: flex;
-        align-items: flex-end;
-        width: 100%;
-        justify-content: center;
-        padding-left: 50px; /* Space for the scroller */
+        align-items: flex-end; /* Aligns scroller and logos along their bottom edge */
+        gap: 40px; /* Space between the scroller and the logos block */
+        margin-bottom: 20px; /* Adds space from the bottom edge of the screen */
+        padding: 0 20px; /* Ensures some space from screen edges */
         box-sizing: border-box;
     }
+    /* --- END: Main Layout Container --- */
 
     .scroller-container {
-        position: fixed;
-        left: 20px;
-        top: 50%;
-        transform: translateY(-50%);
-        height: 300px; /* Adjust height of the scroller line */
+        position: relative; /* Changed from fixed */
+        height: 300px;
         width: 2px;
         background-color: black;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
-        /* Added for positioning the handle */
-        position: relative;
+        margin-bottom: 15px; /* Fine-tune vertical alignment with logos */
     }
 
     .dot {
@@ -49,31 +47,43 @@
         flex-shrink: 0;
     }
 
-    /* --- START: Scroller Handle --- */
     #scroller-handle {
-        width: 20px; /* Made slightly larger to be easily grabbable */
+        width: 20px;
         height: 20px;
         background-color: black;
         border-radius: 50%;
         position: absolute;
         left: 50%;
-        transform: translate(-50%, -50%); /* Center the handle on its position */
+        transform: translate(-50%, -50%);
         cursor: grab;
-        transition: top 0.1s ease-out; /* Smooth snapping animation */
+        transition: top 0.1s ease-out;
     }
 
     #scroller-handle:active {
         cursor: grabbing;
     }
-    /* --- END: Scroller Handle --- */
 
+    /* --- START: Container for Text and Logos --- */
+    .main-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .text-container {
+        color: black;
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 15px; /* Space between text and logos */
+        text-align: center;
+    }
+    /* --- END: Container for Text and Logos --- */
 
     .logo-container {
         display: flex;
-        flex-direction: row; /* Aligns logos in a row */
+        flex-direction: row;
         align-items: center;
-        gap: 20px; /* space between logos */
-        margin-bottom: 20px; /* Adds space from the bottom edge */
+        gap: 20px;
     }
 
     .logo-link {
@@ -81,7 +91,7 @@
     }
 
     .logo {
-        width: 150px; /* Adjust size as needed */
+        width: 150px;
         height: auto;
         transition: transform 0.2s ease-in-out;
     }
@@ -92,13 +102,15 @@
 
     /* --- START: Mobile Responsivity Fix --- */
     @media (max-width: 600px) {
-        .main-container {
-            padding-left: 40px; /* Adjust space for scroller on mobile */
+        .content-wrapper {
+            gap: 20px;
+            margin-bottom: 0;
+            padding: 0 10px 20px;
         }
 
         .scroller-container {
-            left: 10px;
             height: 200px;
+            margin-bottom: 5px;
         }
 
         .dot {
@@ -111,16 +123,16 @@
             height: 18px;
         }
 
-        .logo-container {
-            width: 100%;
-            box-sizing: border-box; /* Ensures padding doesn't add to the total width */
-            padding: 0 20px 20px; /* 0 for top, 20px for left/right, 20px for bottom */
-            margin-bottom: 0; /* Bottom spacing is now handled by padding */
-            justify-content: center; /* Center logos within the full-width container */
-            gap: 15px; /* Adjust the gap for smaller screens */
+        .text-container {
+            font-size: 14px;
         }
+
+        .logo-container {
+            gap: 15px;
+        }
+
         .logo {
-            width: 90px; /* Made logos a bit larger on mobile */
+            width: 90px;
         }
     }
     /* --- END: Mobile Responsivity Fix --- */
@@ -128,31 +140,35 @@
 </head>
 <body>
 
-<div class="scroller-container">
-    <!-- The 7 dots that act as snap points -->
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <div class="dot"></div>
-    <!-- The draggable handle -->
-    <div id="scroller-handle"></div>
-</div>
+<div class="content-wrapper">
+    <div class="scroller-container">
+        <!-- The 7 dots that act as snap points -->
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <!-- The draggable handle -->
+        <div id="scroller-handle"></div>
+    </div>
 
-
-<div class="main-container">
-    <div class="logo-container">
-        <a href="https://ollama.com" target="_blank" class="logo-link">
-            <img src="https://gitknu.github.io/gpt/files/ollama.png" alt="Ollama Logo" class="logo">
-        </a>
-        <a href="https://play.google.com/store/apps/details?id=com.pocketpalai" target="_blank" class="logo-link" id="pocketpal-link">
-            <img src="https://gitknu.github.io/gpt/files/pocketpal.png" alt="PocketPal Logo" class="logo">
-        </a>
-        <a href="https://github.com/theaniketgiri/create-llm" target="_blank" class="logo-link">
-            <img src="https://gitknu.github.io/gpt/files/github.png" alt="GitHub Logo" class="logo">
-        </a>
+    <div class="main-content">
+        <div class="text-container">
+            Комп'ютер / Смартфон / Власний АІ
+        </div>
+        <div class="logo-container">
+            <a href="https://ollama.com" target="_blank" class="logo-link">
+                <img src="https://gitknu.github.io/gpt/files/ollama.png" alt="Ollama Logo" class="logo">
+            </a>
+            <a href="https://play.google.com/store/apps/details?id=com.pocketpalai" target="_blank" class="logo-link" id="pocketpal-link">
+                <img src="https://gitknu.github.io/gpt/files/pocketpal.png" alt="PocketPal Logo" class="logo">
+            </a>
+            <a href="https://github.com/theaniketgiri/create-llm" target="_blank" class="logo-link">
+                <img src="https://gitknu.github.io/gpt/files/github.png" alt="GitHub Logo" class="logo">
+            </a>
+        </div>
     </div>
 </div>
 
@@ -170,16 +186,14 @@
             pocketpalLink.href = "https://apps.apple.com/us/app/pocketpal-ai/id6502579498";
         }
 
-        // --- START: Scroller Logic ---
+        // --- Scroller Logic (no changes needed here) ---
         const handle = document.getElementById('scroller-handle');
         const scroller = handle.parentElement;
         const dots = Array.from(scroller.getElementsByClassName('dot'));
         let isDragging = false;
 
-        // Get the top position of each dot relative to the scroller container
         const dotPositions = dots.map(dot => dot.offsetTop + dot.offsetHeight / 2);
         
-        // Set initial position of the handle to the middle dot
         handle.style.top = `${dotPositions[3]}px`;
 
         function startDrag(e) {
@@ -197,32 +211,27 @@
 
         function onDrag(e) {
             if (!isDragging) return;
-            e.preventDefault(); // Prevent page scroll on touch devices
+            e.preventDefault();
 
             const eventY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
             const scrollerRect = scroller.getBoundingClientRect();
             const mouseY = eventY - scrollerRect.top;
 
-            // Find the closest dot position
             let closestDotY = dotPositions.reduce((prev, curr) => {
                 return (Math.abs(curr - mouseY) < Math.abs(prev - mouseY) ? curr : prev);
             });
             
-            // Snap the handle to the closest dot
             handle.style.top = `${closestDotY}px`;
         }
 
-        // Mouse events
         handle.addEventListener('mousedown', startDrag);
         document.addEventListener('mouseup', endDrag);
         document.addEventListener('mousemove', onDrag);
 
-        // Touch events
         handle.addEventListener('touchstart', startDrag);
         document.addEventListener('touchend', endDrag);
         document.addEventListener('touchmove', onDrag);
-        // --- END: Scroller Logic ---
     });
 </script>
 </body>
-</html>```
+</html>
