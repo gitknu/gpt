@@ -9,7 +9,6 @@
 <!-- Updated to include font-weight 800 for extrabold -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;800&display=swap" rel="stylesheet">
 <style>
-/* --- START: EDITED BY GEMINI --- */
     body, html {
         height: 100%;
         margin: 0;
@@ -17,30 +16,23 @@
         background-color: white;
         display: flex;
         flex-direction: column; /* Stack items vertically */
-        /* REMOVED: justify-content: space-between; */
         font-family: sans-serif;
         box-sizing: border-box; /* Ensure padding/borders don't add to height */
-        /* --- REMOVED: overflow-x: hidden; --- */
     }
-/* --- END: EDITED BY GEMINI --- */
 
     /* --- START: Top Content Styles --- */
 
     /* New container for the title and scroller */
     .top-group {
-        /* CHANGED: Removed margins, added padding, set to full width */
         width: 100%;
         padding: 0 40px;
-        /* --- CHANGED: Raised header --- */
         margin-top: 20px;
         box-sizing: border-box; /* Include padding in width */
         display: flex;
         flex-direction: column;
-        /* REMOVED: align-self: flex-start; */
-        align-items: flex-start; /* ADDED: This makes all children left-align by default */
+        align-items: flex-start;
     }
 
-    /* REMOVED: .top-group.right block */
 
     /* New title style */
     .data-title-container {
@@ -52,19 +44,15 @@
         flex-direction: column;
         justify-content: center; /* Vertically center the text block */
         overflow: hidden; /* Added to clip the text during transition */
-        /* --- CHANGED: Removed cursor pointer --- */
-        /* cursor: pointer; */
         user-select: none; /* ADDED: Prevent text selection on click */
         align-self: center; /* CHANGED: Center the title block */
         align-items: center; /* ADDED: Center the text lines inside */
     }
 
-/* --- START: EDITED BY GEMINI --- */
     .title-en {
         font-weight: 800; /* Extrabold */
         font-size: 2rem; /* 32px */
         line-height: 1.2;
-        /* --- REMOVED: white-space: nowrap; --- */
         text-align: center; /* --- ADDED --- */
         color: #b80000; /* Added requested color */
         /* Updated transition for opacity and transform */
@@ -75,12 +63,10 @@
         font-weight: 800; /* Extrabold - CHANGED */
         font-size: 1.1rem; /* 17.6px - CHANGED (adjusted to match width with new weight) */
         line-height: 1.2;
-        /* --- REMOVED: white-space: nowrap; --- */
         text-align: center; /* --- ADDED --- */
         /* Updated transition for opacity and transform */
         transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
-/* --- END: EDITED BY GEMINI --- */
 
     /* --- ADDED: Style for new hint text --- */
     .scroller-hint {
@@ -111,24 +97,27 @@
     }
     /* --- END CORRECTION --- */
 
+/* --- START: EDITED BY GEMINI --- */
     /* New wrapper for scroller and dashed box */
     .main-content-wrapper {
-        display: flex;
-        flex-direction: row; /* Scroller and box are side-by-side */
+        /* REMOVED: display: flex; */
+        /* REMOVED: flex-direction: row; */
         flex-grow: 1; /* This wrapper fills the vertical space */
         width: 100%;
         box-sizing: border-box;
-        /* --- START: MODIFIED TO FIT SCREEN --- */
-        margin: 10px 0 0 0; /* Was 10px 40px 0 40px */
-        padding: 0 40px; /* ADDED */
-        /* --- END: MODIFIED TO FIT SCREEN --- */
-        position: relative; /* For layout */
+        margin: 10px 0 0 0; 
+        padding: 0 40px; /* This is the outer page padding */
+        position: relative; /* CRITICAL: For absolute positioning child */
     }
+/* --- END: EDITED BY GEMINI --- */
+
 
     /* --- START: Scroller Styles --- */
+/* --- START: EDITED BY GEMINI --- */
     .scroller-container {
-        margin-top: 0; /* Was 10px, now on wrapper */
-        order: 1; /* Default position */
+        margin-top: 0;
+        /* REMOVED: order: 1; */
+        /* REMOVED: flex-shrink: 0; */
         height: 514px; /* 6/7ths of original 600px */
         width: 9px; 
         background-color: transparent;
@@ -136,12 +125,13 @@
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
-        position: relative;
-        flex-shrink: 0; 
-
-        /* REMOVED: transition: transform ... (now handled by flex order) */
-        /* REMOVED: transform: translateX(0); */
+        position: absolute; /* CRITICAL: Now absolutely positioned */
+        top: 0; /* Align to top of wrapper */
+        left: 40px; /* Align to left padding edge */
+        /* ADDED: Transition for horizontal movement */
+        transition: left 0.4s cubic-bezier(0.65, 0, 0.35, 1);
     }
+/* --- END: EDITED BY GEMINI --- */
 
     /* --- ADDED: This is the thin, base line --- */
     .scroller-container::before {
@@ -172,8 +162,6 @@
     .thick-segment.active {
         width: 9px; /* Animate to thick width */
     }
-
-    /* REMOVED: .top-group.right .scroller-container rule */
 
     .dot {
         width: 20px; 
@@ -237,27 +225,29 @@
     }
     /* --- END: Scroller Styles --- */
 
+/* --- START: EDITED BY GEMINI --- */
     /* --- ADDED: Dashed border for the working area --- */
     .working-area {
-        flex-grow: 1; /* Fills horizontal space */
-        order: 2; /* Default position */
+        /* REMOVED: flex-grow: 1; */
+        /* REMOVED: order: 2; */
         border: 2px dashed black;
-        /* Space from scroller (13.5px overhang + 10.5px padding) */
+        /* CRITICAL: Set fixed margins on BOTH sides */
         margin-left: 24px; 
-        margin-right: 0; /* Default */
-        /* REMOVED: min-height */
-        /* REMOVED: display: flex and align-items */
+        margin-right: 24px; 
+        /* ADDED: Set height to match scroller */
+        height: 514px;
+        box-sizing: border-box; /* Account for border */
     }
     
     /* Rules for when scroller is on the right */
     .main-content-wrapper.right .scroller-container {
-        order: 3;
+        /* REMOVED: order: 3; */
+        /* CRITICAL: Move scroller to the right edge, accounting for padding and its own width */
+        left: calc(100% - 40px - 9px);
     }
-    .main-content-wrapper.right .working-area {
-        order: 2;
-        margin-left: 0;
-        margin-right: 24px; /* Add space on the right */
-    }
+
+    /* REMOVED: .main-content-wrapper.right .working-area rule (div no longer moves) */
+/* --- END: EDITED BY GEMINI --- */
 
 
     .logo-container {
@@ -328,19 +318,23 @@
             margin-top: 4px;
         }
 
+/* --- START: EDITED BY GEMINI --- */
         .main-content-wrapper {
-            /* --- START: MODIFIED TO FIT SCREEN --- */
-            margin: 10px 0 0 0; /* Was 10px 20px 0 20px */
-            padding: 0 20px; /* ADDED */
-            /* --- END: MODIFIED TO FIT SCREEN --- */
+            margin: 10px 0 0 0;
+            padding: 0 20px; /* Mobile page padding */
         }
 
         .scroller-container {
-            margin-top: 0; /* Now on wrapper */
+            margin-top: 0;
             height: 343px; /* 6/7ths of original 400px */
+            left: 20px; /* Align to left padding edge on mobile */
         }
 
-        /* REMOVED: .working-area.right .scroller-container { ... } rule */
+        /* CRITICAL: Mobile rule for scroller on the right */
+        .main-content-wrapper.right .scroller-container {
+            left: calc(100% - 20px - 9px);
+        }
+/* --- END: EDITED BY GEMINI --- */
 
         .dot {
             width: 16px; 
@@ -357,16 +351,20 @@
             height: 10px;
         }
 
+/* --- START: EDITED BY GEMINI --- */
         /* --- ADDED: Mobile style for working area --- */
         .working-area {
+            /* CRITICAL: Set fixed margins on BOTH sides for mobile */
             margin-left: 12px; /* Half of desktop */
-            margin-right: 0;
+            margin-right: 12px; /* Half of desktop */
+            /* ADDED: Set height to match mobile scroller */
+            height: 343px;
+            box-sizing: border-box;
         }
 
-        .main-content-wrapper.right .working-area {
-            margin-left: 0;
-            margin-right: 12px; /* Half of desktop */
-        }
+        /* REMOVED: .main-content-wrapper.right .working-area rule */
+/* --- END: EDITED BY GEMINI --- */
+
 
         .logo-container {
             padding: 0 20px 20px; 
@@ -407,6 +405,7 @@
 <!-- New wrapper for scroller and content -->
 <div class="main-content-wrapper">
     <!-- Scroller is now here -->
+    <!-- Its position is controlled by position:absolute -->
     <div class="scroller-container">
         <!-- ADDED: 6 segments for the 6 gaps between 7 dots -->
         <div class="thick-segment" id="segment-0"></div>
@@ -428,6 +427,7 @@
     </div>
 
     <!-- Dashed box is now here -->
+    <!-- Its position is fixed by its own margins -->
     <div class="working-area"></div>
 </div>
 
@@ -648,9 +648,7 @@
                     // This logic now runs ONLY when the index changes
 
                     const startIdx = Math.min(previousLevelIndex, currentLevelIndex);
-                    // --- START: EDITED BY GEMINI (FIX) ---
                     const endIdx = Math.max(previousLevelIndex, currentLevelIndex);
-                    // --- END: EDITED BY GEMINI (FIX) ---
 
                     // Loop through all 6 segments
                     for (let i = 0; i < segments.length; i++) {
@@ -689,7 +687,6 @@
 
                         // Set "from" position (opposite direction)
                         titleEn.style.transform = `translateY(${-direction * slideDistance}px)`;
-                        // --- FIXED TYPO HERE ---
                         titleUa.style.transform = `translateY(${-direction * slideDistance}px)`;
 
                         // Force the browser to apply the transform immediately
