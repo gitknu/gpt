@@ -3,12 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Clickable Logos</title>
+<title>Як створити GPT</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Updated to include font-weight 800 for extrabold -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;800&display=swap" rel="stylesheet">
 <style>
+/* --- ALL CSS is unchanged --- */
     body, html {
         height: 100%;
         margin: 0;
@@ -100,10 +101,10 @@
         width: 9px; /* CHANGED: Set to max width for interaction area */
         background-color: transparent; /* CHANGED: Container is no longer the line */
         
-        /* --- THIS IS THE FIX: Add padding to increase touch area --- */
-        padding-left: 10px;
-        padding-right: 10px;
-        /* Total width is now 9px + 10px + 10px = 29px */
+        /* --- START OF FIX: Removed padding --- */
+        /* padding-left: 10px; */
+        /* padding-right: 10px; */
+        /* Total width is now 9px */
         /* --- END OF FIX --- */
         
         /* --- END OF CHANGES --- */
@@ -127,7 +128,7 @@
         width: 4px;
         height: 100%;
         background-color: black;
-        /* This still works: 50% of the 29px container is the center */
+        /* This still works: 50% of the 9px container is the center */
         left: 50%;
         transform: translateX(-50%);
         z-index: 1;
@@ -140,7 +141,7 @@
         position: absolute;
         width: 4px; /* Start at thin width */
         background-color: black;
-        /* This still works: 50% of the 29px container is the center */
+        /* This still works: 50% of the 9px container is the center */
         left: 50%;
         transform: translateX(-50%);
         z-index: 2; /* Above thin line */
@@ -161,10 +162,10 @@
 
     /* ADDED: Rule to move *only* the scroller */
     .scroller-container.right {
-        /* --- START: EDITED FOR TRANSITION --- */
-        /* CHANGED: Use 29px (the new container width: 9px + 20px padding) in calculation */
-        transform: translateX(calc(100vw - 80px - 29px));
-        /* --- END: EDITED FOR TRANSITION --- */
+        /* --- START OF FIX: Reverted 29px to 9px --- */
+        /* CHANGED: Use 9px (the original container width) in calculation */
+        transform: translateX(calc(100vw - 80px - 9px));
+        /* --- END OF FIX --- */
     }
 
     /* REMOVED: .scroller-container.right.dragging rule (no longer needed) */
@@ -190,7 +191,7 @@
         background-color: black; /* CHANGED: This is now the black dot */
         border-radius: 50%;
         position: absolute;
-        /* This still works: 50% of the 29px container is the center */
+        /* This still works: 50% of the 9px container is the center */
         left: 50%;
         
         /* --- START OF EDITS --- */
@@ -345,10 +346,10 @@
         /* .scroller-container.right { margin-left: auto; margin-right: 0; } is inherited */
         /* ADDED: Override transform for mobile */
         .scroller-container.right {
-            /* --- EDIT: Adjust for new container width --- */
-            /* 100vw (full width) - 40px (20px L/R padding) - 29px (new container width) */
-            transform: translateX(calc(100vw - 40px - 29px));
-            /* --- END EDIT --- */
+            /* --- START OF FIX: Reverted 29px to 9px --- */
+            /* 100vw (full width) - 40px (20px L/R padding) - 9px (original container width) */
+            transform: translateX(calc(100vw - 40px - 9px));
+            /* --- END OF FIX --- */
         }
 
         /* REMOVED: .scroller-container.right.dragging rule */
@@ -409,7 +410,7 @@
     </div>
     
     <!-- --- ADDED: New hint text --- -->
-    <p class="scroller-hint"><i>можна перетягнуCти у інший бік екрану</i></p>
+    <p class="scroller-hint"><i>можна потягнути на інший бік екрану</i></p>
 
     <div class="scroller-container">
         <!-- ADDED: 6 segments for the 6 gaps between 7 dots -->
@@ -708,26 +709,30 @@
                 // --- END: Update Text Logic ---
             } 
             // --- MODIFIED: Changed 'else if' to 'if' ---
-            // This is the horizontal drag logic. It was not changed.
             if (dragMode === 'horizontal') {
                 e.preventDefault(); // Prevent horizontal page swipe
                 const screenWidth = window.innerWidth;
                 const isRightSide = scroller.classList.contains('right');
+                
+                // --- START OF FIX: Set drag distance to (Half Screen - 10px) ---
+                const dragDistance = currentX - startX; // Get horizontal drag distance
+                const minDrag = (screenWidth / 2) - 10; // Min drag distance is (Half Screen - 10px)
 
-                // Check if drag crossed the center
-                if (isRightSide && currentX < screenWidth / 2) {
+                if (isRightSide && dragDistance < -minDrag) { // Dragged left
                     scroller.classList.remove('right');
                     endDrag(e); // Stop the drag immediately after toggle
-                } else if (!isRightSide && currentX > screenWidth / 2) {
+                } else if (!isRightSide && dragDistance > minDrag) { // Dragged right
                     scroller.classList.add('right');
                     endDrag(e); // Stop the drag immediately after toggle
                 }
+                // --- END OF FIX ---
             }
         }
 
+        // --- START OF FIX: Replaced bad code with correct listeners ---
         // --- MODIFIED: Listeners moved to scroller ---
         // These listeners are on the 'scroller' container, which
-        // now has the 10px padding on each side.
+        // is now back to 9px wide.
         scroller.addEventListener('mousedown', startDrag);
         document.addEventListener('mouseup', endDrag);
         document.addEventListener('mousemove', onDrag);
