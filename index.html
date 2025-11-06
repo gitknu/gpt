@@ -20,9 +20,6 @@
         box-sizing: border-box; /* Ensure padding/borders don't add to height */
     }
 
-    /* --- START: Top Content Styles --- */
-
-    /* New container for the title and scroller */
     .top-group {
         width: 100%;
         padding: 0 40px;
@@ -54,8 +51,7 @@
         font-size: 2rem; /* 32px */
         line-height: 1.2;
         text-align: center; /* --- ADDED --- */
-        color: #b80000; /* Added requested color */
-        /* Updated transition for opacity and transform */
+        color: #b80000; 
         transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
 
@@ -63,12 +59,10 @@
         font-weight: 800; /* Extrabold - CHANGED */
         font-size: 1.1rem; /* 17.6px - CHANGED (adjusted to match width with new weight) */
         line-height: 1.2;
-        text-align: center; /* --- ADDED --- */
-        /* Updated transition for opacity and transform */
+        text-align: center; 
         transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
 
-    /* --- ADDED: Style for new hint text --- */
     .scroller-hint {
         font-family: 'Montserrat', sans-serif;
         font-weight: 500; /* Not bold, as requested */
@@ -81,7 +75,6 @@
         user-select: none;
     }
 
-    /* --- CORRECTED: Style for arrow hints --- */
     .scroller-hint .arrow-left {
         display: inline; /* Show left arrow by default (scroller is on the left) */
     }
@@ -95,13 +88,8 @@
     .top-group.right .scroller-hint .arrow-right {
         display: inline; /* Show right arrow when scroller is on the right */
     }
-    /* --- END CORRECTION --- */
 
-/* --- START: EDITED BY GEMINI --- */
-    /* New wrapper for scroller and dashed box */
     .main-content-wrapper {
-        /* REMOVED: display: flex; */
-        /* REMOVED: flex-direction: row; */
         flex-grow: 1; /* This wrapper fills the vertical space */
         width: 100%;
         box-sizing: border-box;
@@ -116,8 +104,6 @@
 /* --- START: EDITED BY GEMINI --- */
     .scroller-container {
         margin-top: 0;
-        /* REMOVED: order: 1; */
-        /* REMOVED: flex-shrink: 0; */
         height: 514px; /* 6/7ths of original 600px */
         width: 9px; 
         background-color: transparent;
@@ -127,13 +113,10 @@
         align-items: center;
         position: absolute; /* CRITICAL: Now absolutely positioned */
         top: 0; /* Align to top of wrapper */
-        left: 40px; /* Align to left padding edge */
-        /* ADDED: Transition for horizontal movement */
+        left: 40px; 
         transition: left 0.4s cubic-bezier(0.65, 0, 0.35, 1);
     }
-/* --- END: EDITED BY GEMINI --- */
 
-    /* --- ADDED: This is the thin, base line --- */
     .scroller-container::before {
         content: '';
         position: absolute;
@@ -145,7 +128,6 @@
         z-index: 1;
     }
 
-    /* --- ADDED: Style for individual segments --- */
     .thick-segment {
         position: absolute;
         width: 4px; /* Start at thin width */
@@ -158,7 +140,6 @@
         transition: width 0.3s cubic-bezier(0.65, 0, 0.35, 1);
     }
 
-    /* --- ADDED: Active state animates width --- */
     .thick-segment.active {
         width: 9px; /* Animate to thick width */
     }
@@ -191,7 +172,6 @@
         z-index: 4; /* Topmost element */
     }
 
-    /* --- ADDED: This is the blue "liquid" --- */
     #scroller-handle::before {
         content: '';
         display: block;
@@ -203,14 +183,11 @@
         transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
     }
 
-
-    /* Class for the "shrunken" state while dragging */
     #scroller-handle.grabbing {
         transform: translate(-50%, -50%) scaleX(0.25) scaleY(1);
         cursor: grabbing;
     }
 
-    /* --- MODIFIED: This is the "at dot" state --- */
     #scroller-handle.grabbing::before {
         transform: scaleX(2) scaleY(0.5);
     }
@@ -223,34 +200,21 @@
     #scroller-handle:active {
         cursor: grabbing;
     }
-    /* --- END: Scroller Styles --- */
 
-/* --- START: EDITED BY GEMINI --- */
-    /* --- ADDED: Dashed border for the working area --- */
     .working-area {
-        /* REMOVED: flex-grow: 1; */
-        /* REMOVED: order: 2; */
         border: 2px dashed black;
         /* CRITICAL: Set fixed margins on BOTH sides */
-        margin-left: 60px; 
+        margin-left: 24px; 
         margin-right: 24px; 
         /* ADDED: Set height to match scroller */
         height: 514px;
         box-sizing: border-box; /* Account for border */
     }
     
-    /* Rules for when scroller is on the right */
     .main-content-wrapper.right .scroller-container {
-        /* REMOVED: order: 3; */
-        /* CRITICAL: Move scroller to the right edge, accounting for padding and its own width */
         left: calc(100% - 40px - 9px);
     }
 
-    /* REMOVED: .main-content-wrapper.right .working-area rule (div no longer moves) */
-/* --- END: EDITED BY GEMINI --- */
-
-
-/* --- START: EDITED BY GEMINI --- */
     .logo-container {
         display: flex;
         flex-direction: row; 
