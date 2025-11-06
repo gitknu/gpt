@@ -735,13 +735,30 @@
         .vis-vocab-entry { font-size: 0.75rem; padding: 3px 8px; }
         .vis-sequence-area { font-size: 1rem; padding: 10px; min-height: 40px; }
         
-        /* Pretraining mobile styles */
-        .vis-corpus-text-area { font-size: 1rem; }
-        .vis-weight-matrix-area { grid-template-columns: repeat(3, 1fr); font-size: 0.7rem; }
+        /* --- START: Pretraining mobile styles (EDITED) --- */
+        .vis-corpus-text-area {
+            font-size: 0.9rem; /* Reduced font size */
+            padding: 10px;    /* Reduced padding */
+            line-height: 1.6; /* Adjusted line height */
+        }
+        .vis-weight-matrix-area {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px; /* Reduced gap */
+        }
+        .vis-weight-cell {
+            padding: 2px; /* Reduced padding */
+        }
+        .vis-weight-cell .token-pair {
+            font-size: 0.55rem; /* Make the pair text smaller */
+        }
+        .vis-weight-cell .weight-value {
+            font-size: 0.75rem; /* Ensure weight value is readable */
+        }
         .vis-model-icon { font-size: 3rem; }
         .vis-knowledge-gears { font-size: 1.2rem; }
         .vis-text-processing-area { font-size: 1rem; min-height: 50px; }
         .vis-stats-area { font-size: 0.8rem; }
+        /* --- END: Pretraining mobile styles (EDITED) --- */
 
 
 /* --- END: EDITED BY GEMINI --- */
@@ -1325,7 +1342,7 @@
             if (isVisRunning) return;
             isVisRunning = true;
 
-            const corpus = "the quick brown fox jumps over the lazy dog the lazy fox slept all day";
+            const corpus = "a cat sat on the mat a dog ran by";
             const unique_tokens = [...new Set(corpus.split(' '))].sort();
             const token_pairs = unique_tokens.flatMap((t1, i) => unique_tokens.slice(i + 1).map(t2 => [t1, t2].sort().join('-'))).filter((v, i, a) => a.indexOf(v) === i);
 
@@ -1379,7 +1396,7 @@
                 const cell = document.createElement('div');
                 cell.className = 'vis-weight-cell';
                 cell.id = `cell-${pair}`;
-                cell.innerHTML = `<div class="token-pair">${t1} ↔ ${t2}</div><div class="weight-value" id="weight-${pair}">0</div>`;
+                cell.innerHTML = `<div class="token-pair">${t1}↔${t2}</div><div class="weight-value" id="weight-${pair}">0</div>`;
                 weightMatrixArea.appendChild(cell);
             }
 
@@ -1390,7 +1407,7 @@
             scanWindow.className = 'vis-scan-window';
             corpusTextArea.appendChild(scanWindow);
 
-            const windowSize = 4;
+            const windowSize = 3; // EDITED: Reduced window size
             for (let i = 0; i <= corpusWords.length - windowSize; i++) {
                 if (!isVisRunning) return;
                 
@@ -1450,16 +1467,15 @@
             phase2Container.style.opacity = 1;
             phase1Container.style.display = 'none'; // Use display:none after transition
             
-            // Re-use weight matrix in a more compact form for phase 2
             const predictionArea = document.getElementById('phase-2-prediction').querySelector('.vis-prediction-area');
             weightMatrixArea.style.opacity = '0.5';
             predictionArea.insertBefore(weightMatrixArea, predictionArea.children[1]);
 
             // --- PHASE 2: Masked Prediction Loop ---
-            const sentences = [
-                { text: "the fox jumps over the dog", mask: 1, alternatives: ["cat", "wolf"] },
-                { text: "a quick brown fox jumps", mask: 2, alternatives: ["red", "grey"] },
-                { text: "the dog slept all day", mask: 1, alternatives: ["cat", "boy"] }
+            const sentences = [ // EDITED: Sentences from the new corpus
+                { text: "a cat sat on the", mask: 1, alternatives: ["dog", "mat"] },
+                { text: "sat on the mat", mask: 2, alternatives: ["cat", "dog"] },
+                { text: "a dog ran by", mask: 1, alternatives: ["cat", "mat"] }
             ];
             const textArea = document.getElementById('vis-text-processing-area');
             const epochStat = document.getElementById('stat-epoch');
@@ -1496,7 +1512,6 @@
                     const popup = maskedElement.querySelector('.vis-prediction-popup');
                     addToVisLog(logArea, "Модель намагається вгадати слово, використовуючи ваги...");
 
-                    // Highlight relevant weights
                     const activeCells = [];
                     for(const cword of contextWords) {
                          for (const token of unique_tokens) {
@@ -1712,4 +1727,4 @@
     });
 </script>
 </body>
-</html>```
+</html>
