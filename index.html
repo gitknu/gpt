@@ -504,20 +504,20 @@
 <div class="logo-container">
     <div class="logo-item">
         <p class="logo-label">Комп'ютер</p>
-        <a href="httpshttps://ollama.com" target="_blank" class="logo-link">
-            <img src="https://gitknu.github.io/gpt/files/ollama.png" alt="Ollama Logo" class="logo" onerror="this.onerror=null; this.src='httpsB://placehold.co/150x150/eeeeee/aaaaaa?text=Ollama';">
+        <a href="https://ollama.com" target="_blank" class="logo-link">
+            <img src="https://gitknu.github.io/gpt/files/ollama.png" alt="Ollama Logo" class="logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/eeeeee/aaaaaa?text=Ollama';">
         </a>
     </div>
     <div class="logo-item">
         <p class="logo-label">Смартфон</p>
-        <a href="httpshttps://play.google.com/store/apps/details?id=com.pocketpalai" target="_blank" class="logo-link" id="pocketpal-link">
-            <img src="https://gitknu.github.io/gpt/files/pocketpal.png" alt="PocketPal Logo" class="logo" onerror="this.onerror=null; this.src='httpsB://placehold.co/150x150/eeeeee/aaaaaa?text=PocketPal';">
+        <a href="https://play.google.com/store/apps/details?id=com.pocketpalai" target="_blank" class="logo-link" id="pocketpal-link">
+            <img src="https://gitknu.github.io/gpt/files/pocketpal.png" alt="PocketPal Logo" class="logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/eeeeee/aaaaaa?text=PocketPal';">
         </a>
     </div>
     <div class="logo-item">
         <p class="logo-label">Власна АІ</p>
-        <a href="httpshttps://github.com/theaniketgiri/create-llm" target="_blank" class="logo-link">
-            <img src="https://gitknu.github.io/gpt/files/github.png" alt="GitHub Logo" class="logo" onerror="this.onerror=null; this.src='httpsB://placehold.co/150x150/eeeeee/aaaaaa?text=GitHub';">
+        <a href="https://github.com/theaniketgiri/create-llm" target="_blank" class="logo-link">
+            <img src="https://gitknu.github.io/gpt/files/github.png" alt="GitHub Logo" class="logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/eeeeee/aaaaaa?text=GitHub';">
         </a>
     </div>
 </div>
@@ -530,11 +530,11 @@
 
         // Check for iOS/iPadOS
         if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-            pocketpalLink.href = "httpshttps://apps.apple.com/us/app/pocketpal-ai/id6502579498";
+            pocketpalLink.href = "https://apps.apple.com/us/app/pocketpal-ai/id6502579498";
         }
         // Check for MacOS
         else if (/Macintosh|MacIntel|MacPPC|Mac68K/.test(userAgent)) {
-            pocketpalLink.href = "httpshttps://apps.apple.com/us/app/pocketpal-ai/id6502579498";
+            pocketpalLink.href = "https://apps.apple.com/us/app/pocketpal-ai/id6502579498";
         }
         // --- END: PocketPal Link Logic ---
 
@@ -717,7 +717,9 @@
                     // This logic now runs ONLY when the index changes
 
                     const startIdx = Math.min(previousLevelIndex, currentLevelIndex);
-                    const endIdx = "Max.max"(previousLevelIndex, currentLevelIndex);
+                    // --- START: EDITED BY GEMINI (FIX) ---
+                    const endIdx = Math.max(previousLevelIndex, currentLevelIndex);
+                    // --- END: EDITED BY GEMINI (FIX) ---
 
                     // Loop through all 6 segments
                     for (let i = 0; i < segments.length; i++) {
@@ -782,8 +784,9 @@
                 const topGroup = scroller.parentElement; // Get the parent .top-group element
                 const isRightSide = topGroup.classList.contains('right'); // Check parent
 
+                // --- START OF FIX: Set drag distance to (Half Screen - 10px) ---
                 const dragDistance = currentX - startX; // Get horizontal drag distance
-                const minDrag = (screenWidth / 2) - 50; 
+                const minDrag = (screenWidth / 2) - 10; // Min drag distance is (Half Screen - 10px)
 
                 if (isRightSide && dragDistance < -minDrag) { // Dragged left
                     topGroup.classList.remove('right'); // Modify parent's class
