@@ -28,7 +28,8 @@
         /* CHANGED: Removed margins, added padding, set to full width */
         width: 100%;
         padding: 0 40px; 
-        margin-top: 40px;
+        /* --- CHANGED: Raised header --- */
+        margin-top: 20px; 
         box-sizing: border-box; /* Include padding in width */
         display: flex;
         flex-direction: column;
@@ -74,11 +75,25 @@
         transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
 
+    /* --- ADDED: Style for new hint text --- */
+    .scroller-hint {
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 500; /* Not bold, as requested */
+        font-size: 0.9rem; /* 14.4px */
+        color: #555;
+        margin-top: 8px; /* Space from title */
+        margin-bottom: 0; /* No extra space, scroller has its own */
+        align-self: center;
+        text-align: center;
+        user-select: none; 
+    }
+
     /* --- START: Scroller Styles --- */
     .scroller-container {
         /* Margins are now on the parent .top-group */
         /* margin-left: 0; */ /* This is now controlled below for animation */
-        margin-top: 20px; /* Added space to avoid overlap with title */
+        /* --- CHANGED: Reduced top margin --- */
+        margin-top: 10px; 
         height: 514px; /* 6/7ths of original 600px */
         
         /* --- START OF CHANGES --- */
@@ -280,7 +295,8 @@
         .top-group {
             /* CHANGED: Use padding instead of margin */
             padding: 0 20px;
-            margin-top: 20px;
+            /* --- CHANGED: Raised higher --- */
+            margin-top: 10px;
             /* align-self: flex-start is inherited */
         }
         
@@ -300,10 +316,17 @@
             font-size: 0.83rem; /* 13.28px - CHANGED (adjusted to match mobile width with new weight) */
         }
         
+        /* --- ADDED: Mobile hint styles --- */
+        .scroller-hint {
+            font-size: 0.8rem; /* 12.8px */
+            margin-top: 4px;
+        }
+
         .scroller-container {
             /* Margins are now on the parent .top-group */
             /* REMOVED: margin-left: 0; (This would break the .right state on mobile) */
-            margin-top: 20px; /* Added space to avoid overlap with title */
+            /* --- CHANGED: Reduced margin --- */
+            margin-top: 10px; 
             height: 343px; /* 6/7ths of original 400px */
             /* The transition and margin-left/right rules are inherited */
         }
@@ -371,6 +394,10 @@
         <span class="title-en">Data collection:</span>
         <span class="title-ua">процес збору даних</span>
     </div>
+    
+    <!-- --- ADDED: New hint text --- -->
+    <p class="scroller-hint">Повзунок можна перетягнути у інший бік екрану</p>
+
     <div class="scroller-container">
         <!-- ADDED: 6 segments for the 6 gaps between 7 dots -->
         <div class="thick-segment" id="segment-0"></div>
