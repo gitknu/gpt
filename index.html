@@ -109,8 +109,9 @@
     .scroller-container {
         /* Margins are now on the parent .top-group */
         /* margin-left: 0; */ /* This is now controlled below for animation */
-        /* --- CHANGED: Reduced top margin --- */
-        margin-top: 10px;
+        /* --- START: EDITED BY GEMINI --- */
+        margin-top: 0; /* Was 10px, now controlled by .working-area padding */
+        /* --- END: EDITED BY GEMINI --- */
         height: 514px; /* 6/7ths of original 600px */
 
         /* --- START OF CHANGES --- */
@@ -176,8 +177,10 @@
 
     /* REMOVED: .scroller-container.dragging { ... } rule */
 
-    /* ADDED: Rule to move *only* the scroller, now targeted via .top-group */
-    .top-group.right .scroller-container {
+    /* --- START: EDITED BY GEMINI --- */
+    /* ADDED: Rule to move *only* the scroller, now targeted via .working-area */
+    .working-area.right .scroller-container {
+    /* --- END: EDITED BY GEMINI --- */
         /* --- START OF FIX: Reverted 29px to 9px --- */
         /* CHANGED: Use 9px (the original container width) in calculation */
         transform: translateX(calc(100vw - 80px - 9px));
@@ -293,7 +296,15 @@
         /* margin-bottom: 10px; */
         /* --- END: Changed --- */
         /* Ensure it doesn't shrink */
-        min-height: 50px; /* Add a minimum height just in case */
+        /* min-height: 50px; */ /* REMOVED BY GEMINI */
+
+        /* --- START: EDITED BY GEMINI --- */
+        display: flex;
+        align-items: center; /* Vertically center the scroller */
+        padding-top: 10px;
+        padding-bottom: 10px;
+        box-sizing: border-box;
+        /* --- END: EDITED BY GEMINI --- */
     }
     /* --- END: Added style --- */
 
@@ -375,15 +386,17 @@
             /* Margins are now on the parent .top-group */
             /* REMOVED: margin-left: 0; (This would break the .right state on mobile) */
             /* --- CHANGED: Reduced margin --- */
-            margin-top: 10px;
+            /* margin-top: 10px; */ /* REMOVED BY GEMINI */
             height: 343px; /* 6/7ths of original 400px */
             /* The transition and margin-left/right rules are inherited */
             /* The padding: 0 10px; is inherited */
         }
 
         /* .scroller-container.right { margin-left: auto; margin-right: 0; } is inherited */
+        /* --- START: EDITED BY GEMINI --- */
         /* ADDED: Override transform for mobile */
-        .top-group.right .scroller-container {
+        .working-area.right .scroller-container {
+        /* --- END: EDITED BY GEMINI --- */
             /* --- START OF FIX: Reverted 29px to 9px --- */
             /* 100vw (full width) - 40px (20px L/R padding) - 9px (original container width) */
             transform: translateX(calc(100vw - 40px - 9px));
@@ -433,8 +446,16 @@
             /* margin-top: 5px; */
             /* margin-bottom: 5px; */
             /* --- END: Changed --- */
-            min-height: 30px;
+            /* min-height: 30px; */ /* REMOVED BY GEMINI */
             flex-grow: 1; /* <-- THIS WAS THE MISSING LINE */
+
+            /* --- START: EDITED BY GEMINI --- */
+            display: flex;
+            align-items: center; /* Vertically center the scroller */
+            padding-top: 5px;
+            padding-bottom: 5px;
+            box-sizing: border-box;
+            /* --- END: EDITED BY GEMINI --- */
         }
         /* --- END: Added style --- */
 
@@ -476,6 +497,15 @@
         </i>
     </p>
 
+    <!-- --- START: EDITED BY GEMINI --- -->
+    <!-- SCROLLER CONTAINER MOVED OUT OF .top-group -->
+    <!-- --- END: EDITED BY GEMINI --- -->
+</div>
+
+<!-- ADDED: Dashed box for the main working area -->
+<div class="working-area">
+    <!-- --- START: EDITED BY GEMINI --- -->
+    <!-- SCROLLER CONTAINER MOVED INTO .working-area -->
     <div class="scroller-container">
         <!-- ADDED: 6 segments for the 6 gaps between 7 dots -->
         <div class="thick-segment" id="segment-0"></div>
@@ -495,10 +525,8 @@
         <!-- REMOVED: #thick-line-segment -->
         <div id="scroller-handle"></div>
     </div>
+    <!-- --- END: EDITED BY GEMINI --- -->
 </div>
-
-<!-- ADDED: Dashed box for the main working area -->
-<div class="working-area"></div>
 
 <!-- Logo content is placed here, positioned at the bottom by the body's flex settings -->
 <div class="logo-container">
@@ -781,18 +809,28 @@
             if (dragMode === 'horizontal') {
                 e.preventDefault(); // Prevent horizontal page swipe
                 const screenWidth = window.innerWidth;
-                const topGroup = scroller.parentElement; // Get the parent .top-group element
+                
+                // --- START: EDITED BY GEMINI ---
+                const workingArea = scroller.parentElement; // scroller's parent is .working-area
+                const topGroup = document.querySelector('.top-group'); // Get .top-group separately
                 const isRightSide = topGroup.classList.contains('right'); // Check parent
+                // --- END: EDITED BY GEMINI ---
 
                 // --- START OF FIX: Set drag distance to (Half Screen - 10px) ---
                 const dragDistance = currentX - startX; // Get horizontal drag distance
                 const minDrag = (screenWidth / 2) - 10; // Min drag distance is (Half Screen - 10px)
 
                 if (isRightSide && dragDistance < -minDrag) { // Dragged left
+                    // --- START: EDITED BY GEMINI ---
                     topGroup.classList.remove('right'); // Modify parent's class
+                    workingArea.classList.remove('right'); // ALSO modify working-area's class
+                    // --- END: EDITED BY GEMINI ---
                     endDrag(e); // Stop the drag immediately after toggle
                 } else if (!isRightSide && dragDistance > minDrag) { // Dragged right
+                    // --- START: EDITED BY GEMINI ---
                     topGroup.classList.add('right'); // Modify parent's class
+                    workingArea.classList.add('right'); // ALSO modify working-area's class
+                    // --- END: EDITED BY GEMINI ---
                     endDrag(e); // Stop the drag immediately after toggle
                 }
                 // --- END OF FIX ---
