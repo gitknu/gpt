@@ -94,11 +94,18 @@
         /* REMOVED: margin-left: 0; */
         /* REMOVED: margin-right: auto; */
         /* Add a transition with a cubic-bezier for a "bouncy" effect */
-        transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* CHANGED: Animate transform instead of margin */
+        /* CHANGED: Added 'width' to the transition */
+        transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55),
+                    width 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
         transform: translateX(0); /* ADDED: Default "left" position */
         /* --- END: EDITED FOR TRANSITION --- */
     }
     
+    /* ADDED: New rule for when dragging */
+    .scroller-container.dragging {
+        width: 12px; /* Make line "bolder" */
+    }
+
     /* ADDED: Rule to move *only* the scroller */
     .scroller-container.right {
         /* REMOVED: align-self: flex-end; */
@@ -111,6 +118,11 @@
         /* 100vw (full width) - 80px (40px L/R padding) - 4px (scroller width) */
         transform: translateX(calc(100vw - 80px - 4px));
         /* --- END: EDITED FOR TRANSITION --- */
+    }
+
+    /* ADDED: Rule to adjust position when 'right' and 'dragging' */
+    .scroller-container.right.dragging {
+        transform: translateX(calc(100vw - 80px - 12px)); /* 12px is new bold width */
     }
 
     .dot {
@@ -128,14 +140,27 @@
         border-radius: 50%;
         position: absolute;
         left: 50%;
-        transform: translate(-50%, -50%);
-        cursor: grab;
-        transition: top 0.1s ease-out; /* This transition was already here */
         
-        /* --- CHANGED --- */
+        /* --- START OF EDITS --- */
+        /* CHANGED: Set default transform and add transform to transition */
+        transform: translate(-50%, -50%) scale(1);
+        cursor: grab;
+        
+        /* This cubic-bezier overshoots and settles, feeling like liquid */
+        /* CHANGED: Added transition for 'transform' to animate the shrink/grow */
+        transition: top 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55),
+                    transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); 
+        
+        /* --- END OF EDITS --- */
+        
         border: 9px solid black; /* CHANGED: Was 4px */
         box-sizing: border-box;  /* Ensures border is inside the width/height */
-        /* --- END CHANGED --- */
+    }
+
+    /* ADDED: New class for the "shrunken" state while dragging */
+    #scroller-handle.grabbing {
+        transform: translate(-50%, -50%) scale(0.6); /* Shrink to 60% */
+        cursor: grabbing;
     }
 
     #scroller-handle:active {
@@ -225,6 +250,11 @@
             transform: translateX(calc(100vw - 40px - 4px));
         }
 
+        /* ADDED: Rule to adjust position when 'right' and 'dragging' on mobile */
+        .scroller-container.right.dragging {
+            transform: translateX(calc(100vw - 40px - 12px)); /* 12px is new bold width */
+        }
+
         .dot {
             width: 16px; /* Doubled from 8px */
             height: 16px; /* Doubled from 8px */
@@ -237,6 +267,8 @@
             /* --- CHANGED --- */
             border-width: 7px; /* CHANGED: Was 3px */
             /* --- END CHANGED --- */
+
+            /* The .grabbing class and transitions are inherited */
         }
 
         .logo-container {
@@ -364,15 +396,23 @@
 
         function startDrag(e) {
             isDragging = true;
-            handle.style.cursor = 'grabbing';
+            // handle.style.cursor = 'grabbing'; // No longer needed, CSS class handles it
             document.body.style.cursor = 'grabbing'; // Optional: change cursor for the whole page
+            
+            // --- ADDED ---
+            handle.classList.add('grabbing'); // Add class to shrink handle
+            scroller.classList.add('dragging'); // Add class to thicken line
         }
 
         function endDrag(e) {
             if (!isDragging) return;
             isDragging = false;
-            handle.style.cursor = 'grab';
+            // handle.style.cursor = 'grab'; // No longer needed, CSS class handles it
             document.body.style.cursor = 'default';
+            
+            // --- ADDED ---
+            handle.classList.remove('grabbing'); // Remove class to grow handle
+            scroller.classList.remove('dragging'); // Remove class to thin line
         }
 
         function onDrag(e) {
