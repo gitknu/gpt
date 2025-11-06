@@ -662,7 +662,7 @@
                 { id: "site-4", url: "shop.net" }
             ];
 
-            // 2. Create the HTML structure for the new visualization
+            // 2. Create the HTML structure for the new visualization (This happens only once)
             workingArea.innerHTML = `
                 <div class="data-vis-container">
                     <div class="vis-main-area" id="vis-main-area">
@@ -687,7 +687,6 @@
                              <div class="vis-storage-icon">🗄️</div>
                         </div>
 
-                        <!-- Animated element will be added here by JS -->
                     </div>
                     <div class="vis-log" id="vis-log"></div>
                 </div>
@@ -698,87 +697,102 @@
             const mainArea = document.getElementById('vis-main-area');
             const scraperContainer = document.getElementById('vis-scraper-container');
             const storageContainer = document.getElementById('vis-storage-container');
+            const visContainer = workingArea.querySelector('.data-vis-container');
             
-            addToVisLog(logArea, "Починаємо задачу збору даних...");
-            await wait(1000); // Pause before starting
+            // 4. Start the eternal animation loop. It will only stop if isVisRunning becomes false.
+            while (isVisRunning) {
 
-            // 4. Loop through each site and animate the scraping
-            for (const site of sitesToScrape) {
-                if (!isVisRunning) return; 
+                // --- A. Run one full animation cycle ---
+                addToVisLog(logArea, "Починаємо задачу збору даних...");
+                await wait(1000);
 
-                const sourceElement = document.getElementById(site.id);
+                for (const site of sitesToScrape) {
+                    if (!isVisRunning) break; 
+
+                    const sourceElement = document.getElementById(site.id);
+                    sourceElement.classList.remove('pending');
+                    sourceElement.classList.add('active');
+                    addToVisLog(logArea, `Підключаємось до ${site.url}...`);
+                    
+                    const packet = document.createElement('div');
+                    packet.className = 'vis-data-packet';
+                    packet.innerHTML = '📄';
+                    mainArea.appendChild(packet);
+                    
+                    const sourceRect = sourceElement.getBoundingClientRect();
+                    const scraperRect = scraperContainer.getBoundingClientRect();
+                    const storageRect = storageContainer.getBoundingClientRect();
+                    const mainAreaRect = mainArea.getBoundingClientRect();
+
+                    const startTop = sourceRect.top - mainAreaRect.top + (sourceRect.height / 2);
+                    const startLeft = sourceRect.left - mainAreaRect.left + (sourceRect.width / 2);
+                    const midTop = scraperRect.top - mainAreaRect.top + (scraperRect.height / 2);
+                    const midLeft = scraperRect.left - mainAreaRect.left + (scraperRect.width / 2);
+                    const endTop = storageRect.top - mainAreaRect.top + (storageRect.height / 2);
+                    const endLeft = storageRect.left - mainAreaRect.left + (storageRect.width / 2);
+
+                    packet.style.top = `${startTop}px`;
+                    packet.style.left = `${startLeft}px`;
+                    packet.style.transform = 'translate(-50%, -50%) scale(0.5)';
+
+                    await wait(50);
+                    if (!isVisRunning) { if (mainArea.contains(packet)) mainArea.removeChild(packet); break; }
+                    
+                    packet.style.transition = 'top 1s ease-in-out, left 1s ease-in-out, opacity 0.5s, transform 1s ease-in-out';
+                    packet.style.opacity = 1;
+                    packet.style.transform = 'translate(-50%, -50%) scale(1)';
+                    packet.style.top = `${midTop}px`;
+                    packet.style.left = `${midLeft}px`;
+                    
+                    addToVisLog(logArea, `Збираємо дані...`);
+                    await wait(1100);
+                    if (!isVisRunning) { if (mainArea.contains(packet)) mainArea.removeChild(packet); break; }
+
+                    packet.style.transition = 'top 0.8s ease-in, left 0.8s ease-in, opacity 0.8s ease-in, transform 0.8s ease-in';
+                    packet.style.opacity = 0;
+                    packet.style.transform = 'translate(-50%, -50%) scale(0.2)';
+                    packet.style.top = `${endTop}px`;
+                    packet.style.left = `${endLeft}px`;
+                    
+                    addToVisLog(logArea, `Зберігаємо зібрані дані...`);
+                    await wait(900);
+                    if (mainArea.contains(packet)) mainArea.removeChild(packet);
+                    if (!isVisRunning) break; 
+
+                    sourceElement.classList.remove('active');
+                    sourceElement.classList.add('done');
+                    addToVisLog(logArea, `Завершено з ${site.url}.`);
+
+                    await wait(500);
+                    if (!isVisRunning) break;
+                }
+
+                if (!isVisRunning) break;
+
+                // --- B. Conclude the cycle and fade out ---
+                addToVisLog(logArea, "Збір даних завершено. Перезапуск...");
+                await wait(2000); 
                 
-                // --- A. Activate Source ---
-                sourceElement.classList.remove('pending');
-                sourceElement.classList.add('active');
-                addToVisLog(logArea, `Підключаємось до ${site.url}...`);
+                if (!isVisRunning) break;
+
+                visContainer.style.transition = 'opacity 0.5s ease-in-out';
+                visContainer.style.opacity = 0;
+                await wait(500);
                 
-                // Create the data packet
-                const packet = document.createElement('div');
-                packet.className = 'vis-data-packet';
-                packet.innerHTML = '📄';
-                mainArea.appendChild(packet);
-                
-                // Get positions for animation
-                const sourceRect = sourceElement.getBoundingClientRect();
-                const scraperRect = scraperContainer.getBoundingClientRect();
-                const storageRect = storageContainer.getBoundingClientRect();
-                const mainAreaRect = mainArea.getBoundingClientRect();
+                if (!isVisRunning) break;
 
-                // Calculate starting position (relative to mainArea)
-                const startTop = sourceRect.top - mainAreaRect.top + (sourceRect.height / 2);
-                const startLeft = sourceRect.left - mainAreaRect.left + (sourceRect.width / 2);
-                
-                // Calculate middle position
-                const midTop = scraperRect.top - mainAreaRect.top + (scraperRect.height / 2);
-                const midLeft = scraperRect.left - mainAreaRect.left + (scraperRect.width / 2);
+                // --- C. Reset the state while invisible and fade back in ---
+                const allSources = workingArea.querySelectorAll('.vis-source');
+                allSources.forEach(s => {
+                    s.classList.remove('done', 'active');
+                    s.classList.add('pending');
+                });
+                logArea.innerHTML = '';
 
-                // Calculate end position
-                const endTop = storageRect.top - mainAreaRect.top + (storageRect.height / 2);
-                const endLeft = storageRect.left - mainAreaRect.left + (storageRect.width / 2);
-
-                // --- B. Animate from Source to Scraper ---
-                packet.style.top = `${startTop}px`;
-                packet.style.left = `${startLeft}px`;
-                packet.style.transform = 'translate(-50%, -50%) scale(0.5)';
-
-                // Short delay to ensure the element is rendered before transition
-                await wait(50);
-                
-                packet.style.transition = 'top 1s ease-in-out, left 1s ease-in-out, opacity 0.5s, transform 1s ease-in-out';
-                packet.style.opacity = 1;
-                packet.style.transform = 'translate(-50%, -50%) scale(1)';
-                packet.style.top = `${midTop}px`;
-                packet.style.left = `${midLeft}px`;
-                
-                addToVisLog(logArea, `Збираємо дані...`);
-                await wait(1100); // Wait for animation to arrive
-                if (!isVisRunning) { mainArea.removeChild(packet); return; }
-
-                // --- C. Animate from Scraper to Storage ---
-                packet.style.transition = 'top 0.8s ease-in, left 0.8s ease-in, opacity 0.8s ease-in, transform 0.8s ease-in';
-                packet.style.opacity = 0;
-                packet.style.transform = 'translate(-50%, -50%) scale(0.2)';
-                packet.style.top = `${endTop}px`;
-                packet.style.left = `${endLeft}px`;
-                
-                addToVisLog(logArea, `Зберігаємо зібрані дані...`);
-                await wait(900); // Wait for animation to finish
-                if (!isVisRunning) { mainArea.removeChild(packet); return; }
-
-                // --- D. Clean up and mark as done ---
-                mainArea.removeChild(packet);
-                sourceElement.classList.remove('active');
-                sourceElement.classList.add('done');
-                addToVisLog(logArea, `Завершено з ${site.url}.`);
-
-                await wait(500); // Short pause before next loop
+                visContainer.style.opacity = 1;
+                await wait(500);
+                visContainer.style.transition = '';
             }
-
-            // 5. Finish
-            if (!isVisRunning) return;
-            addToVisLog(logArea, "Збір даних завершено.");
-            isVisRunning = false;
         }
         // --- END: EDITED BY GEMINI ---
 
