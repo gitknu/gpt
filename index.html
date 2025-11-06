@@ -721,7 +721,7 @@
 
                 // --- START OF FIX: Set drag distance to (Half Screen - 10px) ---
                 const dragDistance = currentX - startX; // Get horizontal drag distance
-                const minDrag = (screenWidth / 2) - 10; // Min drag distance is (Half Screen - 10px)
+                const minDrag = (screenWidth / 2) - 50; // Min drag distance is (Half Screen - 10px)
 
                 if (isRightSide && dragDistance < -minDrag) { // Dragged left
                     topGroup.classList.remove('right'); 
