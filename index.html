@@ -782,9 +782,8 @@
                 const topGroup = scroller.parentElement; // Get the parent .top-group element
                 const isRightSide = topGroup.classList.contains('right'); // Check parent
 
-                // --- START OF FIX: Set drag distance to (Half Screen - 10px) ---
                 const dragDistance = currentX - startX; // Get horizontal drag distance
-                const minDrag = (screenWidth / 2) - 50; // Min drag distance is (Half Screen - 10px)
+                const minDrag = (screenWidth / 2) - 50; 
 
                 if (isRightSide && dragDistance < -minDrag) { // Dragged left
                     topGroup.classList.remove('right'); // Modify parent's class
