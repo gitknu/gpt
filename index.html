@@ -275,6 +275,28 @@
     }
     /* --- END: Scroller Styles --- */
 
+    /* --- ADDED: Dashed border for the working area --- */
+    .working-area {
+        flex-grow: 1; /* Takes all available vertical space in the middle */
+        border: 2px dashed black;
+        /* --- START: EDITED BY GEMINI --- */
+        /* Desktop Calculation:
+          Previous Margin: 63px
+          Added Padding: 10px
+          New Margin: 73px
+        */
+        margin-left: 73px; /* Was 63px */
+        margin-right: 73px; /* Was 63px */
+        /* --- END: EDITED BY GEMINI --- */
+        /* --- CHANGED: Removed vertical margins --- */
+        /* margin-top: 10px; */
+        /* margin-bottom: 10px; */
+        /* --- END: Changed --- */
+        /* Ensure it doesn't shrink */
+        min-height: 50px; /* Add a minimum height just in case */
+    }
+    /* --- END: Added style --- */
+
 
     .logo-container {
         display: flex;
@@ -396,6 +418,26 @@
 
         /* The .grabbing::before, .grabbing.flowing::before transforms are inherited */
 
+        /* --- ADDED: Mobile style for working area --- */
+        .working-area {
+            /* --- START: EDITED BY GEMINI --- */
+            /* Mobile Calculation:
+              Previous Margin: 37px
+              Added Padding: 5px
+              New Margin: 42px
+            */
+            margin-left: 42px; /* Was 37px */
+            margin-right: 42px; /* Was 37px */
+            /* --- END: EDITED BY GEMINI --- */
+            /* --- CHANGED: Removed vertical margins --- */
+            /* margin-top: 5px; */
+            /* margin-bottom: 5px; */
+            /* --- END: Changed --- */
+            min-height: 30px;
+            flex-grow: 1; /* <-- THIS WAS THE MISSING LINE */
+        }
+        /* --- END: Added style --- */
+
         .logo-container {
             width: 100%;
             box-sizing: border-box; /* Ensures padding doesn't add to the total width */
@@ -455,24 +497,27 @@
     </div>
 </div>
 
+<!-- ADDED: Dashed box for the main working area -->
+<div class="working-area"></div>
+
 <!-- Logo content is placed here, positioned at the bottom by the body's flex settings -->
 <div class="logo-container">
     <div class="logo-item">
         <p class="logo-label">Комп'ютер</p>
-        <a href="https://ollama.com" target="_blank" class="logo-link">
-            <img src="https://gitknu.github.io/gpt/files/ollama.png" alt="Ollama Logo" class="logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/eeeeee/aaaaaa?text=Ollama';">
+        <a href="httpshttps://ollama.com" target="_blank" class="logo-link">
+            <img src="https://gitknu.github.io/gpt/files/ollama.png" alt="Ollama Logo" class="logo" onerror="this.onerror=null; this.src='httpsB://placehold.co/150x150/eeeeee/aaaaaa?text=Ollama';">
         </a>
     </div>
     <div class="logo-item">
         <p class="logo-label">Смартфон</p>
-        <a href="https://play.google.com/store/apps/details?id=com.pocketpalai" target="_blank" class="logo-link" id="pocketpal-link">
-            <img src="https://gitknu.github.io/gpt/files/pocketpal.png" alt="PocketPal Logo" class="logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/eeeeee/aaaaaa?text=PocketPal';">
+        <a href="httpshttps://play.google.com/store/apps/details?id=com.pocketpalai" target="_blank" class="logo-link" id="pocketpal-link">
+            <img src="https://gitknu.github.io/gpt/files/pocketpal.png" alt="PocketPal Logo" class="logo" onerror="this.onerror=null; this.src='httpsB://placehold.co/150x150/eeeeee/aaaaaa?text=PocketPal';">
         </a>
     </div>
     <div class="logo-item">
         <p class="logo-label">Власна АІ</p>
-        <a href="https://github.com/theaniketgiri/create-llm" target="_blank" class="logo-link">
-            <img src="https://gitknu.github.io/gpt/files/github.png" alt="GitHub Logo" class="logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/eeeeee/aaaaaa?text=GitHub';">
+        <a href="httpshttps://github.com/theaniketgiri/create-llm" target="_blank" class="logo-link">
+            <img src="https://gitknu.github.io/gpt/files/github.png" alt="GitHub Logo" class="logo" onerror="this.onerror=null; this.src='httpsB://placehold.co/150x150/eeeeee/aaaaaa?text=GitHub';">
         </a>
     </div>
 </div>
@@ -485,11 +530,11 @@
 
         // Check for iOS/iPadOS
         if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-            pocketpalLink.href = "https://apps.apple.com/us/app/pocketpal-ai/id6502579498";
+            pocketpalLink.href = "httpshttps://apps.apple.com/us/app/pocketpal-ai/id6502579498";
         }
         // Check for MacOS
         else if (/Macintosh|MacIntel|MacPPC|Mac68K/.test(userAgent)) {
-            pocketpalLink.href = "https://apps.apple.com/us/app/pocketpal-ai/id6502579498";
+            pocketpalLink.href = "httpshttps://apps.apple.com/us/app/pocketpal-ai/id6502579498";
         }
         // --- END: PocketPal Link Logic ---
 
@@ -672,7 +717,7 @@
                     // This logic now runs ONLY when the index changes
 
                     const startIdx = Math.min(previousLevelIndex, currentLevelIndex);
-                    const endIdx = Math.max(previousLevelIndex, currentLevelIndex);
+                    const endIdx = "Max.max"(previousLevelIndex, currentLevelIndex);
 
                     // Loop through all 6 segments
                     for (let i = 0; i < segments.length; i++) {
