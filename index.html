@@ -266,113 +266,96 @@
         transform: scale(1.1);
     }
 
-    /* --- START: Data Visualization Styles (Added by Gemini) --- */
+    /* --- START: Data Visualization Styles (Enhanced by Gemini) --- */
     .data-vis-container {
         width: 100%;
         height: 100%;
         display: flex;
         flex-direction: column;
-    }
-    .vis-title {
-        font-size: 1.2rem;
-        font-weight: bold;
-        text-align: center;
-        margin-bottom: 15px;
+        align-items: center; /* Center the whole viz */
+        font-family: 'Montserrat', sans-serif;
         color: black;
     }
+
     .vis-main-area {
-        display: flex;
-        flex-grow: 1;
-        gap: 15px;
-        min-height: 0; /* Fix for flex overflow */
-    }
-    .vis-url-list {
-        list-style-type: none;
-        padding-left: 0;
-        margin: 0;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 10px;
-        width: 40%;
-        overflow-y: auto;
-    }
-    .vis-url-item {
-        margin-bottom: 8px;
-        padding: 5px;
-        border-radius: 3px;
-        font-size: 0.9rem;
-        transition: background-color 0.3s, color 0.3s;
-    }
-    .vis-url-item.pending {
-        color: #888;
-    }
-    .vis-url-item.active {
-        background-color: #0b5394;
-        color: white;
-        font-weight: bold;
-    }
-    .vis-url-item.done {
-        background-color: #d9ead3;
-        color: #333;
-        text-decoration: line-through;
-    }
-    .vis-animation-area {
+        width: 100%;
         flex-grow: 1;
         display: flex;
         flex-direction: column;
-        justify-content: center;
+        justify-content: space-between; /* Space out rows */
         align-items: center;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 10px;
-        position: relative;
+        position: relative; /* For absolute positioning of animated elements */
+        min-height: 0; /* Fix for flex overflow */
     }
-    .vis-storage-area {
+
+    /* Row for the source websites */
+    .vis-sources-row {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        width: 100%;
+    }
+    .vis-source {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: transform 0.3s, opacity 0.3s;
+    }
+    .vis-source-icon {
+        font-size: 2.5rem;
+    }
+    .vis-source-url {
+        font-size: 0.7rem;
+        margin-top: 5px;
+        font-family: 'Courier New', Courier, monospace;
+    }
+    .vis-source.pending {
+        opacity: 0.4;
+    }
+    .vis-source.active {
+        transform: scale(1.1);
+        font-weight: bold;
+    }
+    .vis-source.done {
+        opacity: 0.2;
+    }
+
+    /* The central scraper icon */
+    .vis-scraper-icon {
+        font-size: 4rem;
+        animation: gentle-bob 2s infinite ease-in-out;
+    }
+    @keyframes gentle-bob {
+        0% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0); }
+    }
+
+    /* The storage icon at the bottom */
+    .vis-storage-icon {
+        font-size: 3.5rem;
+    }
+
+    /* The animated data packet */
+    .vis-data-packet {
         position: absolute;
-        bottom: 10px;
-        right: 10px;
-        font-size: 3rem; /* File icon size */
-    }
-    .vis-scraper {
-        font-size: 1rem;
-        color: #b80000;
-        animation: pulse 1s infinite;
-    }
-    @keyframes pulse {
-        0% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.1); opacity: 0.7; }
-        100% { transform: scale(1); opacity: 1; }
-    }
-    .vis-scraped-data {
-        font-size: 0.8rem;
-        color: #0b5394;
-        background-color: #f3f3f3;
-        border: 1px dashed #0b5394;
-        padding: 10px;
-        margin-top: 10px;
-        border-radius: 5px;
+        font-size: 2rem;
         opacity: 0;
-        transform: scale(0.5);
-        transition: opacity 0.5s, transform 0.5s;
+        z-index: 10;
+        /* JS will control top, left and transitions */
     }
-    .vis-scraped-data.visible {
-        opacity: 1;
-        transform: scale(1);
-    }
-    .vis-scraped-data.storing {
-        transition: transform 0.5s ease-in, opacity 0.5s ease-in;
-        transform: translate(50px, 100px) scale(0.1);
-        opacity: 0;
-    }
+
+
     .vis-log {
         margin-top: 15px;
         height: 100px; /* Fixed height for log area */
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 10px;
+        width: 100%;
+        border-top: 1px solid #eee; /* A subtle separator instead of a full border */
+        padding-top: 10px;
         overflow-y: auto;
         font-size: 0.85rem;
-        background-color: #f9f9f9;
+        font-family: 'Courier New', Courier, monospace;
+        flex-shrink: 0; /* Prevent log from shrinking */
     }
     .vis-log-entry {
         margin-bottom: 5px;
@@ -383,27 +366,24 @@
     /* --- Mobile Responsivity --- */
     @media (max-width: 600px) {
 
-        /* --- START: EDITED BY GEMINI --- */
-        /* Adjust top group for mobile to match logo padding and give header more space */
+        /* Adjust top group for mobile */
         .top-group {
-            padding: 0 20px; /* --- EDITED: Matched logo padding for consistent width --- */
+            padding: 0 40px; /* --- EDITED: Increased horizontal padding for mobile --- */
             margin-top: 10px;
         }
 
         /* Adjust title for mobile */
         .data-title-container {
             height: 57px; /* 1/7th of original 400px */
-            width: 100%; /* --- ADDED: Make container fill available width to prevent wrapping --- */
         }
 
         .title-en {
-            font-size: 1.4rem; /* 22.4px - EDITED: Slightly smaller to prevent wrapping */
+            font-size: 1.5rem; /* 24px */
         }
 
         .title-ua {
-            font-size: 0.8rem; /* 12.8px - EDITED: Slightly smaller to prevent wrapping */
+            font-size: 0.83rem; /* 13.28px - CHANGED (adjusted to match mobile width with new weight) */
         }
-        /* --- END: EDITED BY GEMINI --- */
 
         /* --- ADDED: Mobile hint styles --- */
         .scroller-hint {
@@ -460,32 +440,25 @@
         }
         
         /* --- START: Updated by Gemini for better mobile fit --- */
-        .vis-title {
-            font-size: 1rem;
-            margin-bottom: 10px;
+        .vis-sources-row {
+            gap: 15px; /* Less space between icons on mobile */
         }
-        .vis-main-area {
-            flex-direction: column; /* Stack on mobile */
-            gap: 10px; /* --- ADDED FOR BETTER MOBILE FIT --- */
+        .vis-source-icon {
+            font-size: 2rem;
         }
-        .vis-url-list {
-            width: 100%; /* Full width */
-            height: 80px; /* --- EDITED FOR BETTER MOBILE FIT (was 100px) --- */
+        .vis-source-url {
+            font-size: 0.6rem; /* Smaller text for URL */
         }
-        .vis-url-item {
-            font-size: 0.8rem;
+        .vis-scraper-icon {
+            font-size: 3rem;
+        }
+        .vis-storage-icon {
+            font-size: 3rem;
         }
         .vis-log {
-            height: 60px; /* --- EDITED FOR BETTER MOBILE FIT (was 80px) --- */
+            height: 60px;
             font-size: 0.75rem;
             margin-top: 10px;
-        }
-        .vis-storage-area {
-            font-size: 2.5rem;
-        }
-        .vis-scraped-data.storing {
-             /* Adjust animation for mobile layout */
-            transform: translate(30px, 80px) scale(0.1); /* --- EDITED FOR BETTER MOBILE FIT (was 50px) --- */
         }
         /* --- END: Updated by Gemini for better mobile fit --- */
 
@@ -674,106 +647,140 @@
             isVisRunning = false; // Allow a new visualization to start
         }
 
+        // --- START: EDITED BY GEMINI ---
         // Function to start and run the data collection visualization
         async function startDataCollectionVisualization() {
             // Prevent multiple instances from running
             if (isVisRunning) return;
             isVisRunning = true;
 
-            // 1. Define the sites and data to scrape
+            // 1. Define the sites to scrape
             const sitesToScrape = [
-                { id: "site-1", url: "example.com/news/article1", data: "{ title: 'News 1', content: '...' }" },
-                { id: "site-2", url: "example-reviews.com/product/a", data: "{ product: 'A', rating: 4.5 }" },
-                { id: "site-3", url: "blog.org/post-42", data: "{ author: 'Jane', post: '...' }" },
-                { id: "site-4", url: "e-commerce.net/item/123", data: "{ item: 'Widget', price: 19.99 }" }
+                { id: "site-1", url: "news.com" },
+                { id: "site-2", url: "reviews.com" },
+                { id: "site-3", url: "blog.org" },
+                { id: "site-4", url: "shop.net" }
             ];
 
-            // 2. Create the HTML structure for the visualization
-            // --- START: TRANSLATED BY GEMINI ---
+            // 2. Create the HTML structure for the new visualization
             workingArea.innerHTML = `
                 <div class="data-vis-container">
-                    <div class="vis-main-area">
-                        <ul class="vis-url-list" id="vis-url-list">
+                    <div class="vis-main-area" id="vis-main-area">
+                        
+                        <!-- Row 1: Source Websites -->
+                        <div class="vis-sources-row">
                             ${sitesToScrape.map(site => `
-                                <li class="vis-url-item pending" id="${site.id}">${site.url}</li>
+                                <div class="vis-source pending" id="${site.id}">
+                                    <div class="vis-source-icon">🌐</div>
+                                    <div class="vis-source-url">${site.url}</div>
+                                </div>
                             `).join('')}
-                        </ul>
-                        <div class="vis-animation-area" id="vis-animation-area">
-                            <!-- Content will be added by JS -->
-                            <div class="vis-storage-area" id="vis-storage-area">📄</div>
                         </div>
+
+                        <!-- Row 2: Scraper Icon -->
+                        <div id="vis-scraper-container">
+                            <div class="vis-scraper-icon">🕷️</div>
+                        </div>
+
+                        <!-- Row 3: Storage Icon -->
+                        <div id="vis-storage-container">
+                             <div class="vis-storage-icon">🗄️</div>
+                        </div>
+
+                        <!-- Animated element will be added here by JS -->
                     </div>
                     <div class="vis-log" id="vis-log"></div>
                 </div>
             `;
-            // --- END: TRANSLATED BY GEMINI ---
-
 
             // 3. Get references to the new elements
             const logArea = document.getElementById('vis-log');
-            const animationArea = document.getElementById('vis-animation-area');
+            const mainArea = document.getElementById('vis-main-area');
+            const scraperContainer = document.getElementById('vis-scraper-container');
+            const storageContainer = document.getElementById('vis-storage-container');
             
-            // --- START: TRANSLATED BY GEMINI ---
             addToVisLog(logArea, "Починаємо задачу збору даних...");
             await wait(1000); // Pause before starting
 
             // 4. Loop through each site and animate the scraping
             for (const site of sitesToScrape) {
-                // Check if visualization was cancelled (e.g., user scrolled away)
                 if (!isVisRunning) return; 
 
-                const urlItem = document.getElementById(site.id);
-
-                // --- A. Visit Site ---
-                urlItem.classList.remove('pending');
-                urlItem.classList.add('active');
-                addToVisLog(logArea, `Відвідуємо ${site.url}...`);
+                const sourceElement = document.getElementById(site.id);
                 
-                // Show "Scraping" animation
-                animationArea.innerHTML = '<div class="vis-scraper">Збираємо...</div>';
+                // --- A. Activate Source ---
+                sourceElement.classList.remove('pending');
+                sourceElement.classList.add('active');
+                addToVisLog(logArea, `Підключаємось до ${site.url}...`);
                 
-                // Wait 2 seconds
-                await wait(2000);
-                if (!isVisRunning) return;
-
-                // --- B. Scrape Data ---
-                addToVisLog(logArea, `Зібрано дані з ${site.url}`);
-                // Replace "Scraping..." with the data
-                animationArea.innerHTML = `
-                    <div class="vis-scraped-data" id="scraped-data-vis">${site.data}</div>
-                    <div class="vis-storage-area" id="vis-storage-area">📄</div>
-                `;
+                // Create the data packet
+                const packet = document.createElement('div');
+                packet.className = 'vis-data-packet';
+                packet.innerHTML = '📄';
+                mainArea.appendChild(packet);
                 
-                // Trigger the "visible" transition
-                const dataVis = document.getElementById('scraped-data-vis');
-                // We need a tiny delay for the browser to register the element before adding the class
-                await wait(10); 
-                dataVis.classList.add('visible');
+                // Get positions for animation
+                const sourceRect = sourceElement.getBoundingClientRect();
+                const scraperRect = scraperContainer.getBoundingClientRect();
+                const storageRect = storageContainer.getBoundingClientRect();
+                const mainAreaRect = mainArea.getBoundingClientRect();
 
-                await wait(1500); // Pause to show the data
-                if (!isVisRunning) return;
-
-                // --- C. Store Data ---
-                addToVisLog(logArea, "Зберігаємо дані у файл...");
-                dataVis.classList.add('storing'); // Trigger storage animation
-
-                await wait(500); // Wait for animation to finish
-                if (!isVisRunning) return;
+                // Calculate starting position (relative to mainArea)
+                const startTop = sourceRect.top - mainAreaRect.top + (sourceRect.height / 2);
+                const startLeft = sourceRect.left - mainAreaRect.left + (sourceRect.width / 2);
                 
-                // Mark URL as done
-                urlItem.classList.remove('active');
-                urlItem.classList.add('done');
-                animationArea.innerHTML = '<div class="vis-storage-area" id="vis-storage-area">📄</div>'; // Clear animation area
+                // Calculate middle position
+                const midTop = scraperRect.top - mainAreaRect.top + (scraperRect.height / 2);
+                const midLeft = scraperRect.left - mainAreaRect.left + (scraperRect.width / 2);
+
+                // Calculate end position
+                const endTop = storageRect.top - mainAreaRect.top + (storageRect.height / 2);
+                const endLeft = storageRect.left - mainAreaRect.left + (storageRect.width / 2);
+
+                // --- B. Animate from Source to Scraper ---
+                packet.style.top = `${startTop}px`;
+                packet.style.left = `${startLeft}px`;
+                packet.style.transform = 'translate(-50%, -50%) scale(0.5)';
+
+                // Short delay to ensure the element is rendered before transition
+                await wait(50);
+                
+                packet.style.transition = 'top 1s ease-in-out, left 1s ease-in-out, opacity 0.5s, transform 1s ease-in-out';
+                packet.style.opacity = 1;
+                packet.style.transform = 'translate(-50%, -50%) scale(1)';
+                packet.style.top = `${midTop}px`;
+                packet.style.left = `${midLeft}px`;
+                
+                addToVisLog(logArea, `Збираємо дані...`);
+                await wait(1100); // Wait for animation to arrive
+                if (!isVisRunning) { mainArea.removeChild(packet); return; }
+
+                // --- C. Animate from Scraper to Storage ---
+                packet.style.transition = 'top 0.8s ease-in, left 0.8s ease-in, opacity 0.8s ease-in, transform 0.8s ease-in';
+                packet.style.opacity = 0;
+                packet.style.transform = 'translate(-50%, -50%) scale(0.2)';
+                packet.style.top = `${endTop}px`;
+                packet.style.left = `${endLeft}px`;
+                
+                addToVisLog(logArea, `Зберігаємо зібрані дані...`);
+                await wait(900); // Wait for animation to finish
+                if (!isVisRunning) { mainArea.removeChild(packet); return; }
+
+                // --- D. Clean up and mark as done ---
+                mainArea.removeChild(packet);
+                sourceElement.classList.remove('active');
+                sourceElement.classList.add('done');
+                addToVisLog(logArea, `Завершено з ${site.url}.`);
 
                 await wait(500); // Short pause before next loop
             }
 
             // 5. Finish
-            if (!isVisRunning) return; // Check one last time
+            if (!isVisRunning) return;
             addToVisLog(logArea, "Збір даних завершено.");
-            // --- END: TRANSLATED BY GEMINI ---
             isVisRunning = false;
         }
+        // --- END: EDITED BY GEMINI ---
 
         // --- END: Added by Gemini (Visualization Functions) ---
 
