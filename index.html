@@ -630,6 +630,93 @@
     .vis-stats-area { width: 100%; display: flex; justify-content: space-around; padding: 10px; font-size: 1rem; font-family: 'Montserrat', sans-serif; }
     /* --- END: Pretraining Visualization Styles --- */
 
+    /* --- START: Finetuning Visualization Styles --- */
+    .finetuning-vis-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Montserrat', sans-serif;
+        color: black;
+    }
+    .vis-finetuning-main {
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .vis-qa-area {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        height: 100%;
+        justify-content: center;
+    }
+    .vis-prompt-box, .vis-response-box {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 15px;
+        background-color: #f9f9f9;
+    }
+    .vis-prompt-box strong, .vis-response-box strong {
+        font-weight: 800;
+        color: #333;
+        display: block;
+        margin-bottom: 8px;
+    }
+    #vis-prompt-text, #vis-model-response-text, #vis-target-response-text {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 1.2rem;
+        min-height: 2em;
+    }
+    .vis-response-comparison {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .vis-response-box {
+        transition: border-color 0.5s, background-color 0.5s;
+    }
+    .vis-response-box.incorrect {
+        border-color: #b80000;
+        background-color: #ffdddd;
+    }
+    .vis-response-box.correct {
+        border-color: #006400;
+        background-color: #ddffdd;
+    }
+    .vis-model-area-ft { /* ft for finetuning */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    .vis-update-arrow {
+        font-size: 3rem;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.4s, transform 0.4s;
+    }
+    .vis-update-arrow.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .text-correction {
+        text-decoration: line-through;
+        opacity: 0.6;
+        background-color: #ffc8c8;
+        padding: 0 2px;
+        border-radius: 3px;
+    }
+    .text-corrected {
+        background-color: #c8ffc8;
+        font-weight: bold;
+        padding: 0 2px;
+        border-radius: 3px;
+    }
+    /* --- END: Finetuning Visualization Styles --- */
+
 
     /* --- Mobile Responsivity --- */
     @media (max-width: 600px) {
@@ -759,6 +846,36 @@
         .vis-text-processing-area { font-size: 1rem; min-height: 50px; }
         .vis-stats-area { font-size: 0.8rem; }
         /* --- END: Pretraining mobile styles (EDITED) --- */
+
+        /* --- START: Finetuning mobile styles --- */
+        .vis-finetuning-main {
+            flex-direction: column;
+            gap: 10px;
+        }
+        .vis-qa-area {
+            width: 100%;
+            gap: 10px;
+        }
+        .vis-prompt-box, .vis-response-box {
+            padding: 10px;
+        }
+        #vis-prompt-text, #vis-model-response-text, #vis-target-response-text {
+            font-size: 0.9rem;
+            min-height: 1.5em;
+        }
+        .vis-model-area-ft {
+            flex-direction: row;
+            align-items: center;
+            gap: 15px;
+        }
+        .vis-update-arrow {
+            font-size: 2rem;
+            transform: none; /* Reset transform */
+            animation: arrow-pulse 1s infinite;
+        }
+        @keyframes arrow-pulse { 0% {transform: scale(1);} 50% {transform: scale(1.2);} 100% {transform: scale(1);} }
+        .finetuning-vis-container .vis-stats-area { display: none; } /* Hide stats on mobile for space */
+        /* --- END: Finetuning mobile styles --- */
 
 
 /* --- END: EDITED BY GEMINI --- */
@@ -1566,6 +1683,131 @@
                 }
             }
         }
+
+        // --- Supervised Finetuning Visualizer ---
+        async function startSupervisedFinetuningVisualization() {
+            if (isVisRunning) return;
+            isVisRunning = true;
+
+            const qaPairs = [
+                { prompt: "Столиця України?", initial: "Львів", target: "Київ" },
+                { prompt: "Скільки буде 2 + 2?", initial: "3", target: "4" },
+                { prompt: "Третя планета від Сонця?", initial: "Марс", target: "Земля" }
+            ];
+
+            workingArea.innerHTML = `
+                <div class="finetuning-vis-container">
+                    <div class="vis-finetuning-main">
+                        <div class="vis-qa-area">
+                            <div class="vis-prompt-box">
+                                <strong>Запит:</strong>
+                                <div id="vis-prompt-text"></div>
+                            </div>
+                            <div class="vis-response-comparison">
+                                <div class="vis-response-box" id="vis-model-response-box">
+                                    <strong>Відповідь моделі:</strong>
+                                    <div id="vis-model-response-text"></div>
+                                </div>
+                                <div class="vis-response-box" id="vis-target-response-box">
+                                    <strong>Правильна відповідь:</strong>
+                                    <div id="vis-target-response-text"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="vis-model-area-ft">
+                            <div class="vis-model-icon">🧠</div>
+                            <div class="vis-update-arrow" id="vis-update-arrow">⬇️</div>
+                        </div>
+                    </div>
+                     <div class="vis-stats-area">
+                        <div>Epoch: <span id="stat-epoch-ft">1</span></div>
+                        <div>Loss: <span id="stat-loss-ft">0.55</span></div>
+                    </div>
+                    <div class="vis-log" id="vis-log"></div>
+                </div>`;
+            
+            const logArea = document.getElementById('vis-log');
+            const promptText = document.getElementById('vis-prompt-text');
+            const modelResponseText = document.getElementById('vis-model-response-text');
+            const targetResponseText = document.getElementById('vis-target-response-text');
+            const modelResponseBox = document.getElementById('vis-model-response-box');
+            const targetResponseBox = document.getElementById('vis-target-response-box');
+            const updateArrow = document.getElementById('vis-update-arrow');
+            const epochStat = document.getElementById('stat-epoch-ft');
+            const lossStat = document.getElementById('stat-loss-ft');
+            const visContainer = workingArea.querySelector('.finetuning-vis-container');
+
+            let epoch = 1;
+            let loss = 0.55;
+
+            while(isVisRunning) {
+                epochStat.textContent = epoch;
+                lossStat.textContent = loss.toFixed(2);
+                addToVisLog(logArea, `Починаємо Епоху ${epoch} донавчання. Рівень помилки: ${loss.toFixed(2)}`);
+                await wait(1500);
+
+                for (const pair of qaPairs) {
+                    if (!isVisRunning) break;
+
+                    // Reset state
+                    promptText.textContent = '';
+                    modelResponseText.textContent = '';
+                    targetResponseText.textContent = '';
+                    modelResponseBox.classList.remove('incorrect', 'correct');
+                    targetResponseBox.classList.remove('incorrect', 'correct');
+                    updateArrow.classList.remove('visible');
+                    
+                    // Show prompt
+                    promptText.textContent = pair.prompt;
+                    addToVisLog(logArea, `Запит: "${pair.prompt}"`);
+                    await wait(1500);
+                    if (!isVisRunning) break;
+
+                    // Model gives initial (wrong) answer
+                    modelResponseText.textContent = pair.initial;
+                    addToVisLog(logArea, `Відповідь моделі (до корекції): "${pair.initial}"`);
+                    await wait(1500);
+                    if (!isVisRunning) break;
+
+                    // Show target answer and compare
+                    targetResponseText.textContent = pair.target;
+                    modelResponseBox.classList.add('incorrect');
+                    targetResponseBox.classList.add('correct');
+                    addToVisLog(logArea, `Порівняння з правильною відповіддю: "${pair.target}"`);
+                    await wait(1000);
+                    if (!isVisRunning) break;
+
+                    // Show update arrow and log correction
+                    updateArrow.classList.add('visible');
+                    addToVisLog(logArea, `Помилка! Коригуємо ваги моделі...`);
+                    await wait(1500);
+                    if (!isVisRunning) break;
+
+                    // Animate the text correction
+                    modelResponseText.innerHTML = `<span class="text-correction">${pair.initial}</span> <span class="text-corrected">${pair.target}</span>`;
+                    modelResponseBox.classList.remove('incorrect');
+                    modelResponseBox.classList.add('correct');
+                    updateArrow.classList.remove('visible');
+                    addToVisLog(logArea, `Ваги оновлено. Модель вивчила правильну відповідь.`);
+                    await wait(2500);
+                    if (!isVisRunning) break;
+                }
+
+                if (!isVisRunning) break;
+                epoch++;
+                loss *= 0.5;
+                 if (loss < 0.1) {
+                     addToVisLog(logArea, "Донавчання завершено! Перезапуск...");
+                     await wait(2000);
+                     if (!isVisRunning) break;
+                     startSupervisedFinetuningVisualization();
+                     return;
+                } else {
+                     addToVisLog(logArea, "Епоха завершена. Зниження рівня помилки...");
+                     await wait(2000);
+                }
+            }
+        }
         
         // --- END: Visualization Functions ---
 
@@ -1673,6 +1915,8 @@
                                 startTokenizationVisualization();
                             } else if (currentLevelIndex === 3) {
                                 startUnsupervisedPretrainingVisualization();
+                            } else if (currentLevelIndex === 2) {
+                                startSupervisedFinetuningVisualization();
                             }
                         }, 10); // A tiny delay is enough
                     }
@@ -1682,7 +1926,7 @@
 
                     setTimeout(() => {
                         titleEn.textContent = levelData[currentLevelIndex].en;
-                        titleUa.textContent = levelData[currentLevelIndex].ua;
+                        titleUa.textContent = levelData[currentLevel-index].ua;
                         titleEn.style.transition = 'none';
                         titleUa.style.transition = 'none';
                         titleEn.style.transform = `translateY(${-direction * slideDistance}px)`;
