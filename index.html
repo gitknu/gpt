@@ -761,6 +761,104 @@
     }
     /* --- END: Finetuning Visualization Styles --- */
 
+    /* --- START: Reward Model Training Visualization Styles --- */
+    .reward-model-vis-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Montserrat', sans-serif;
+        color: black;
+    }
+    .reward-model-main {
+        flex-grow: 1;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        position: relative; /* For packet animation */
+    }
+    .vis-responses-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        position: relative; /* For ranker icon */
+    }
+    .vis-response-box-rm { /* rm for reward model */
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 1rem;
+        transition: all 0.4s ease-in-out;
+        position: relative; /* For score positioning */
+    }
+    .vis-response-box-rm.preferred {
+        border-color: #006400;
+        background-color: #ddffdd;
+        transform: scale(1.02);
+    }
+    .vis-human-ranker {
+        position: absolute;
+        font-size: 2.5rem;
+        left: -50px;
+        top: 0;
+        opacity: 0;
+        transition: all 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    .vis-reward-model-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    .vis-reward-model-icon {
+        font-size: 4rem;
+        position: relative;
+    }
+    .vis-reward-model-icon .gears {
+        position: absolute;
+        font-size: 1.5rem;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    .vis-reward-model-icon.training .gears {
+        opacity: 0.7;
+    }
+    .vis-reward-score {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background-color: #0b5394;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        font-weight: bold;
+        transform: scale(0);
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+    .vis-reward-score.visible {
+        transform: scale(1);
+    }
+    .vis-reward-data-packet {
+        position: absolute;
+        font-size: 2rem;
+        padding: 5px;
+        border: 1px solid black;
+        border-radius: 5px;
+        background-color: white;
+        opacity: 0;
+        transition: all 1s ease-in-out;
+        z-index: 10;
+        transform: scale(0.5);
+    }
+    /* --- END: Reward Model Training Visualization Styles --- */
+
 
     /* --- Mobile Responsivity --- */
     @media (max-width: 600px) {
@@ -928,6 +1026,22 @@
         @keyframes arrow-pulse { 0% {transform: scale(1);} 50% {transform: scale(1.2);} 100% {transform: scale(1);} }
         .finetuning-vis-container .vis-stats-area { display: none; } /* Hide stats on mobile for space */
         /* --- END: Finetuning mobile styles --- */
+
+        /* --- START: Reward Model mobile styles --- */
+        .reward-model-main {
+            flex-direction: column;
+            gap: 15px;
+        }
+        .vis-responses-area { width: 100%; }
+        .vis-prompt-box { padding: 10px; }
+        .vis-prompt-box strong { font-size: 0.9rem; }
+        .vis-prompt-box div { font-size: 0.9rem; }
+        .vis-response-box-rm { font-size: 0.85rem; padding: 8px; }
+        .vis-human-ranker { font-size: 2rem; left: -30px; }
+        .vis-reward-model-area { flex-direction: row; align-items: center; }
+        .vis-reward-model-icon { font-size: 3rem; }
+        .vis-reward-score { font-size: 0.75rem; padding: 3px 6px; top: -5px; right: -5px;}
+        /* --- END: Reward Model mobile styles --- */
 
 
 /* --- END: EDITED BY GEMINI --- */
@@ -1908,6 +2022,156 @@
                 }
             }
         }
+
+        // --- Reward Model Training Visualizer ---
+        async function startRewardModelTrainingVisualization() {
+            if (isVisRunning) return;
+            isVisRunning = true;
+
+            const rankingData = [
+                {
+                    prompt: "Як написати есе?",
+                    responses: [
+                        { text: "Почніть з плану, напишіть вступ, основну частину та висновок.", rank: 1, score: 0.92 },
+                        { text: "Просто почніть писати все, що думаєте.", rank: 2, score: 0.15 }
+                    ]
+                },
+                {
+                    prompt: "Порадьте фільм на вечір.",
+                    responses: [
+                        { text: "Залежить від жанру. 'Втеча з Шоушенка' - чудова драма.", rank: 1, score: 0.88 },
+                        { text: "Дивіться будь-що.", rank: 2, score: 0.05 },
+                        { text: "Фільми - це нудно.", rank: 3, score: -0.5 }
+                    ]
+                },
+                 {
+                    prompt: "Як зварити каву?",
+                    responses: [
+                        { text: "Насипте каву в чашку і залийте окропом.", rank: 2, score: 0.45 },
+                        { text: "Візьміть мелену каву, залийте гарячою водою у френч-пресі, зачекайте 4 хвилини.", rank: 1, score: 0.95 }
+                    ]
+                }
+            ];
+            
+            workingArea.innerHTML = `
+                <div class="reward-model-vis-container">
+                    <div class="reward-model-main" id="reward-model-main">
+                        <div class="vis-responses-area">
+                            <div class="vis-prompt-box">
+                                <strong>Запит:</strong>
+                                <div id="vis-prompt-text-rm"></div>
+                            </div>
+                            <div id="vis-responses-list"></div>
+                            <div class="vis-human-ranker" id="vis-human-ranker">🤔</div>
+                        </div>
+                        <div class="vis-reward-model-area">
+                             <div class="vis-reward-model-icon" id="vis-reward-model-icon">
+                                🏅
+                                <div class="gears">
+                                   <span class="gear1">⚙️</span><span class="gear2">⚙️</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="vis-log" id="vis-log"></div>
+                </div>`;
+            
+            const logArea = document.getElementById('vis-log');
+            const mainArea = document.getElementById('reward-model-main');
+            const promptText = document.getElementById('vis-prompt-text-rm');
+            const responsesList = document.getElementById('vis-responses-list');
+            const humanRanker = document.getElementById('vis-human-ranker');
+            const rewardModelIcon = document.getElementById('vis-reward-model-icon');
+
+            while(isVisRunning) {
+                addToVisLog(logArea, "Починаємо тренування моделі винагороди...");
+                await wait(1500);
+
+                for (const item of rankingData) {
+                    if (!isVisRunning) break;
+
+                    promptText.textContent = item.prompt;
+                    responsesList.innerHTML = item.responses.map((r, i) =>
+                        `<div class="vis-response-box-rm" id="response-rm-${i}">
+                            ${r.text}
+                            <div class="vis-reward-score" id="score-rm-${i}"></div>
+                         </div>`
+                    ).join('');
+                    
+                    addToVisLog(logArea, `Отримано запит: "${item.prompt}"`);
+                    await wait(2000);
+                    if (!isVisRunning) break;
+                    
+                    addToVisLog(logArea, "Людина-оцінювач порівнює відповіді...");
+                    const preferredResponseIndex = item.responses.findIndex(r => r.rank === 1);
+                    const preferredResponseEl = document.getElementById(`response-rm-${preferredResponseIndex}`);
+                    
+                    humanRanker.style.opacity = 1;
+                    humanRanker.style.top = `${preferredResponseEl.offsetTop + preferredResponseEl.offsetHeight / 2 - humanRanker.offsetHeight / 2}px`;
+                    await wait(1000);
+                    if (!isVisRunning) break;
+
+                    preferredResponseEl.classList.add('preferred');
+                    humanRanker.innerHTML = '👍';
+                    addToVisLog(logArea, `Найкращу відповідь обрано.`);
+                    await wait(1500);
+                    if (!isVisRunning) break;
+
+                    const packet = document.createElement('div');
+                    packet.className = 'vis-reward-data-packet';
+                    packet.innerHTML = '🗳️';
+                    mainArea.appendChild(packet);
+
+                    const rankerRect = humanRanker.getBoundingClientRect();
+                    const modelRect = rewardModelIcon.getBoundingClientRect();
+                    const mainRect = mainArea.getBoundingClientRect();
+
+                    packet.style.top = `${rankerRect.top - mainRect.top + rankerRect.height/2}px`;
+                    packet.style.left = `${rankerRect.left - mainRect.left + rankerRect.width/2}px`;
+                    
+                    await wait(50);
+                    if (!isVisRunning) { if(mainArea.contains(packet)) mainArea.removeChild(packet); break; }
+                    
+                    packet.style.opacity = 1;
+                    packet.style.transform = 'scale(1)';
+                    packet.style.top = `${modelRect.top - mainRect.top + modelRect.height/2}px`;
+                    packet.style.left = `${modelRect.left - mainRect.left + modelRect.width/2}px`;
+                    addToVisLog(logArea, `Відправляємо переваги для тренування моделі...`);
+                    
+                    await wait(1100);
+                    if (!isVisRunning) { if(mainArea.contains(packet)) mainArea.removeChild(packet); break; }
+                    
+                    rewardModelIcon.classList.add('training');
+                    if(mainArea.contains(packet)) mainArea.removeChild(packet);
+                    addToVisLog(logArea, `Модель оновлює свої ваги...`);
+                    
+                    await wait(2000);
+                    if (!isVisRunning) break;
+                    rewardModelIcon.classList.remove('training');
+
+                    addToVisLog(logArea, `Модель навчилася присвоювати бали.`);
+                    for(let i=0; i < item.responses.length; i++) {
+                        const scoreEl = document.getElementById(`score-rm-${i}`);
+                        scoreEl.textContent = `🏆 ${item.responses[i].score}`;
+                        scoreEl.classList.add('visible');
+                        await wait(300);
+                    }
+                    
+                    await wait(3000);
+                    if (!isVisRunning) break;
+
+                    // Cleanup for next iteration
+                    responsesList.innerHTML = '';
+                    promptText.textContent = '';
+                    humanRanker.style.opacity = 0;
+                    humanRanker.innerHTML = '🤔';
+                }
+
+                if (!isVisRunning) break;
+                addToVisLog(logArea, "Цикл тренування завершено. Перезапуск...");
+                await wait(2000);
+            }
+        }
         
         // --- END: Visualization Functions ---
 
@@ -2017,6 +2281,8 @@
                                 startUnsupervisedPretrainingVisualization();
                             } else if (currentLevelIndex === 2) {
                                 startSupervisedFinetuningVisualization();
+                            } else if (currentLevelIndex === 1) {
+                                startRewardModelTrainingVisualization();
                             }
                         }, 10); // A tiny delay is enough
                     }
