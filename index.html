@@ -232,8 +232,8 @@
         /* REMOVED: order: 2; */
         border: 2px dashed black;
         /* CRITICAL: Set fixed margins on BOTH sides */
-        margin-left: 40px; /* EDITED: Increased from 24px */
-        margin-right: 40px; /* EDITED: Increased from 24px */
+        margin-left: 24px; 
+        margin-right: 24px; 
         /* ADDED: Set height to match scroller */
         height: 514px;
         box-sizing: border-box; /* Account for border */
@@ -355,8 +355,8 @@
         /* --- ADDED: Mobile style for working area --- */
         .working-area {
             /* CRITICAL: Set fixed margins on BOTH sides for mobile */
-            margin-left: 20px; /* EDITED: Increased from 12px */
-            margin-right: 20px; /* EDITED: Increased from 12px */
+            margin-left: 12px; /* Half of desktop */
+            margin-right: 12px; /* Half of desktop */
             /* ADDED: Set height to match mobile scroller */
             height: 343px;
             box-sizing: border-box;
@@ -690,7 +690,7 @@
 
                         // Set "from" position (opposite direction)
                         titleEn.style.transform = `translateY(${-direction * slideDistance}px)`;
-                        titleUa.style.transform = `translateY(${-direction * slideLDistance}px)`;
+                        titleUa.style.transform = `translateY(${-direction * slideDistance}px)`;
 
                         // Force the browser to apply the transform immediately
                         titleEn.offsetHeight; // This is a trick to trigger a browser reflow
