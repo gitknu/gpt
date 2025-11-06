@@ -89,21 +89,22 @@
         flex-shrink: 0; /* Prevents scroller from shrinking */
         /* REMOVED: align-self: flex-start; */
         
-        /* --- START: EDITED FOR TRANSITION --- */
+        /* --- START: EDITED FOR SMOOTHER TRANSITION --- */
         /* Use margins for animatable horizontal positioning */
         /* REMOVED: margin-left: 0; */
         /* REMOVED: margin-right: auto; */
-        /* Add a transition with a cubic-bezier for a "bouncy" effect */
-        /* CHANGED: Added 'width' to the transition */
-        transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55),
-                    width 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        /* CHANGED: Replaced bouncy cubic-bezier with a smoother 'ease-in-out' curve */
+        /* CHANGED: Increased duration for a smoother, more 'liquid' feel */
+        transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1),
+                    width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
         transform: translateX(0); /* ADDED: Default "left" position */
-        /* --- END: EDITED FOR TRANSITION --- */
+        /* --- END: EDITED FOR SMOOTHER TRANSITION --- */
     }
     
     /* ADDED: New rule for when dragging */
     .scroller-container.dragging {
-        width: 12px; /* Make line "bolder" */
+        /* CHANGED: Enlarged less (was 12px, now 9px) */
+        width: 9px; 
     }
 
     /* ADDED: Rule to move *only* the scroller */
@@ -122,7 +123,8 @@
 
     /* ADDED: Rule to adjust position when 'right' and 'dragging' */
     .scroller-container.right.dragging {
-        transform: translateX(calc(100vw - 80px - 12px)); /* 12px is new bold width */
+        /* CHANGED: Updated to use new 9px width */
+        transform: translateX(calc(100vw - 80px - 9px)); /* 9px is new bold width */
     }
 
     .dot {
@@ -131,6 +133,15 @@
         background-color: black;
         border-radius: 50%;
         flex-shrink: 0;
+        /* --- ADDED --- */
+        /* Add transition for opacity to fade dots during drag */
+        transition: opacity 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    
+    /* --- ADDED --- */
+    /* Makes dots invisible during drag */
+    .scroller-container.dragging .dot {
+        opacity: 0;
     }
 
     #scroller-handle {
@@ -146,10 +157,10 @@
         transform: translate(-50%, -50%) scale(1);
         cursor: grab;
         
-        /* This cubic-bezier overshoots and settles, feeling like liquid */
-        /* CHANGED: Added transition for 'transform' to animate the shrink/grow */
-        transition: top 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55),
-                    transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55); 
+        /* CHANGED: Replaced bouncy cubic-bezier with a smoother 'ease-in-out' curve */
+        /* CHANGED: Increased duration for a smoother, more 'liquid' feel */
+        transition: top 0.8s cubic-bezier(0.65, 0, 0.35, 1),
+                    transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
         
         /* --- END OF EDITS --- */
         
@@ -159,7 +170,9 @@
 
     /* ADDED: New class for the "shrunken" state while dragging */
     #scroller-handle.grabbing {
-        transform: translate(-50%, -50%) scale(0.6); /* Shrink to 60% */
+        /* --- CHANGED --- */
+        /* Squish horizontally (scaleX) and elongate vertically (scaleY) */
+        transform: translate(-50%, -50%) scaleX(0.4) scaleY(1.6); 
         cursor: grabbing;
     }
 
@@ -252,12 +265,14 @@
 
         /* ADDED: Rule to adjust position when 'right' and 'dragging' on mobile */
         .scroller-container.right.dragging {
-            transform: translateX(calc(100vw - 40px - 12px)); /* 12px is new bold width */
+            /* CHANGED: Updated to use new 9px width */
+            transform: translateX(calc(100vw - 40px - 9px)); /* 9px is new bold width */
         }
 
         .dot {
             width: 16px; /* Doubled from 8px */
             height: 16px; /* Doubled from 8px */
+            /* transition: opacity... is inherited from the base .dot rule */
         }
 
         #scroller-handle {
@@ -316,19 +331,19 @@
     <div class="logo-item">
         <p class="logo-label">Комп'ютер</p>
         <a href="https://ollama.com" target="_blank" class="logo-link">
-            <img src="https://gitknu.github.io/gpt/files/ollama.png" alt="Ollama Logo" class="logo">
+            <img src="https://gitknu.github.io/gpt/files/ollama.png" alt="Ollama Logo" class="logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/eeeeee/aaaaaa?text=Ollama';">
         </a>
     </div>
     <div class="logo-item">
         <p class="logo-label">Смартфон</p>
         <a href="https://play.google.com/store/apps/details?id=com.pocketpalai" target="_blank" class="logo-link" id="pocketpal-link">
-            <img src="https://gitknu.github.io/gpt/files/pocketpal.png" alt="PocketPal Logo" class="logo">
+            <img src="https://gitknu.github.io/gpt/files/pocketpal.png" alt="PocketPal Logo" class="logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/eeeeee/aaaaaa?text=PocketPal';">
         </a>
     </div>
     <div class="logo-item">
         <p class="logo-label">Власна АІ</p>
         <a href="httpsD" target="_blank" class="logo-link">
-            <img src="https://gitknu.github.io/gpt/files/github.png" alt="GitHub Logo" class="logo">
+            <img src="https://gitknu.github.io/gpt/files/github.png" alt="GitHub Logo" class="logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/eeeeee/aaaaaa?text=GitHub';">
         </a>
     </div>
 </div>
