@@ -486,7 +486,7 @@
 
         // --- START: Scroller Logic ---
         const handle = document.getElementById('scroller-handle');
-        const scroller = handle.parentElement;
+        const scroller = handle.parentElement; // This is the scroller-container
         const dots = Array.from(scroller.getElementsByClassName('dot'));
         // --- ADDED: Get all segments ---
         const segments = Array.from(scroller.getElementsByClassName('thick-segment'));
@@ -514,8 +514,14 @@
             // --- NEW: Store start positions ---
             startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
             startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-            dragMode = 'pending';
-            // --- END NEW ---
+            
+            // --- MODIFIED: Detect drag target ---
+            if (e.target === handle) {
+                dragMode = 'pending'; // Handle can go vertical or horizontal
+            } else {
+                dragMode = 'horizontal'; // Clicks on line/dots default to horizontal
+            }
+            // --- END MODIFIED ---
             
             // --- NEW: Reset all segments on drag start ---
             segments.forEach((seg, i) => {
@@ -688,8 +694,8 @@
                 }
                 // --- END: Update Text Logic ---
             } 
-            // --- NEW: Handle horizontal drag ---
-            else if (dragMode === 'horizontal') {
+            // --- MODIFIED: Changed 'else if' to 'if' ---
+            if (dragMode === 'horizontal') {
                 e.preventDefault(); // Prevent horizontal page swipe
                 const screenWidth = window.innerWidth;
                 const isRightSide = scroller.classList.contains('right');
@@ -705,13 +711,13 @@
             }
         }
 
-        // Mouse events
-        handle.addEventListener('mousedown', startDrag);
+        // --- MODIFIED: Listeners moved to scroller ---
+        scroller.addEventListener('mousedown', startDrag);
         document.addEventListener('mouseup', endDrag);
         document.addEventListener('mousemove', onDrag);
 
         // Touch events for mobile
-        handle.addEventListener('touchstart', startDrag);
+        scroller.addEventListener('touchstart', startDrag);
         document.addEventListener('touchend', endDrag);
         document.addEventListener('touchmove', onDrag);
         // --- END: Scroller Logic ---
