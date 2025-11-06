@@ -100,11 +100,11 @@
         width: 9px; /* CHANGED: Set to max width for interaction area */
         background-color: transparent; /* CHANGED: Container is no longer the line */
         
-        /* --- EDIT: Add padding to increase touch area --- */
+        /* --- THIS IS THE FIX: Add padding to increase touch area --- */
         padding-left: 10px;
         padding-right: 10px;
         /* Total width is now 9px + 10px + 10px = 29px */
-        /* --- END OF EDIT --- */
+        /* --- END OF FIX --- */
         
         /* --- END OF CHANGES --- */
         
@@ -409,7 +409,7 @@
     </div>
     
     <!-- --- ADDED: New hint text --- -->
-    <p class="scroller-hint"><i>можна перетягнути у інший бік екрану</i></p>
+    <p class="scroller-hint"><i>можна перетягнуCти у інший бік екрану</i></p>
 
     <div class="scroller-container">
         <!-- ADDED: 6 segments for the 6 gaps between 7 dots -->
@@ -708,6 +708,7 @@
                 // --- END: Update Text Logic ---
             } 
             // --- MODIFIED: Changed 'else if' to 'if' ---
+            // This is the horizontal drag logic. It was not changed.
             if (dragMode === 'horizontal') {
                 e.preventDefault(); // Prevent horizontal page swipe
                 const screenWidth = window.innerWidth;
@@ -725,6 +726,8 @@
         }
 
         // --- MODIFIED: Listeners moved to scroller ---
+        // These listeners are on the 'scroller' container, which
+        // now has the 10px padding on each side.
         scroller.addEventListener('mousedown', startDrag);
         document.addEventListener('mouseup', endDrag);
         document.addEventListener('mousemove', onDrag);
