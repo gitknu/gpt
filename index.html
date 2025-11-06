@@ -123,7 +123,8 @@
         top: 0; /* Controlled by JS */
         
         /* --- CRITICAL: ONLY transition width --- */
-        transition: width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+        /* --- CHANGED: Faster transition --- */
+        transition: width 0.3s cubic-bezier(0.65, 0, 0.35, 1);
     }
 
     /* --- ADDED: Active state animates width --- */
@@ -172,8 +173,9 @@
         cursor: grab;
         
         /* CHANGED: ADDED transform back to the transition */
-        transition: top 0.8s cubic-bezier(0.65, 0, 0.35, 1),
-                    transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+        /* --- CHANGED: Faster transition --- */
+        transition: top 0.4s cubic-bezier(0.65, 0, 0.35, 1),
+                    transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
         
         /* REMOVED: border: 9px solid black; */
         box-sizing: border-box; 
@@ -199,7 +201,8 @@
         
         /* ADDED: Transition for the liquid's transform */
         transform: scale(1);
-        transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+        /* --- CHANGED: Faster transition --- */
+        transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
     }
 
 
@@ -508,12 +511,13 @@
             segments.forEach((seg, i) => {
                 seg.classList.remove('active');
                 // After a delay (for width animation), hide height
+                // --- CHANGED: Faster timeout ---
                 setTimeout(() => {
                     if (!isDragging) { // Only hide if we are still not dragging
                          seg.style.height = '0px';
                          seg.style.top = handle.style.top; // Shrink to handle
                     }
-                }, 500); // 500ms matches width transition
+                }, 300); // 300ms matches width transition
             });
         }
 
@@ -546,10 +550,11 @@
                 handle.classList.add('flowing'); // Add class to elongate blue dot
                 clearTimeout(flowTimer); // Clear any existing timer
                 // Set timer to remove flowing class after move animation (800ms)
+                // --- CHANGED: Faster timeout ---
                 flowTimer = setTimeout(() => {
                     handle.classList.remove('flowing');
                     handle.classList.remove('grabbing'); // --- ADDED HERE ---
-                }, 800); // Matches the `top` transition duration
+                }, 400); // Matches the `top` transition duration
                 // --- END: Flow Animation Logic ---
 
                 // Determine direction (1 for down, -1 for up)
@@ -590,6 +595,11 @@
                     }
                 }
                 // --- END: NEW Segment Logic ---
+
+                // --- ADDED: This is the fix for single-segment animation ---
+                // Update previousLevelIndex so the *next* move only animates from this point
+                previousLevelIndex = currentLevelIndex;
+                // --- END: FIX ---
                 
                 // 3. Wait for fade out, then change text and position for fade-in
                 setTimeout(() => {
