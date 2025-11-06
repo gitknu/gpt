@@ -225,7 +225,8 @@
         width: 100%;
         justify-content: center;
         margin-top: auto; /* Pushes logos to the bottom */
-        box-sizing: border-box; /* --- ADDED: THIS IS THE FIX --- */
+        box-sizing: border-box;
+        padding: 0 40px; /* --- ADDED: Give logos original padding --- */
     }
 /* --- END: EDITED BY GEMINI --- */
 
@@ -336,11 +337,10 @@
 
 /* --- START: EDITED BY GEMINI --- */
         .logo-container {
-            padding: 0 40px 20px; /* --- EDITED: Matched new mobile padding --- */
+            padding: 0 20px 20px; /* --- EDITED: Reverted to original mobile padding --- */
             margin-bottom: 0;
             gap: 15px;
             flex-wrap: wrap; /* --- ADDED: Prevents horizontal overflow --- */
-            /* The box-sizing: border-box from the main rule fixes the width */
         }
 /* --- END: EDITED BY GEMINI --- */
         .logo {
