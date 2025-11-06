@@ -266,86 +266,6 @@
         transform: scale(1.1);
     }
 
-    /* --- START: Data Visualization Styles (Enhanced by Gemini) --- */
-    .data-vis-container {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center; /* Center the whole viz */
-        font-family: 'Montserrat', sans-serif;
-        color: black;
-    }
-
-    .vis-main-area {
-        width: 100%;
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between; /* Space out rows */
-        align-items: center;
-        position: relative; /* For absolute positioning of animated elements */
-        min-height: 0; /* Fix for flex overflow */
-    }
-
-    /* Row for the source websites */
-    .vis-sources-row {
-        display: flex;
-        justify-content: center;
-        gap: 30px;
-        width: 100%;
-    }
-    .vis-source {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        transition: transform 0.3s, opacity 0.3s;
-    }
-    .vis-source-icon {
-        font-size: 2.5rem;
-    }
-    .vis-source-url {
-        font-size: 0.7rem;
-        margin-top: 5px;
-        font-family: 'Courier New', Courier, monospace;
-    }
-    .vis-source.pending {
-        opacity: 0.4;
-    }
-    .vis-source.active {
-        transform: scale(1.1);
-        font-weight: bold;
-    }
-    .vis-source.done {
-        opacity: 0.2;
-    }
-
-    /* The central scraper icon */
-    .vis-scraper-icon {
-        font-size: 4rem;
-        animation: gentle-bob 2s infinite ease-in-out;
-    }
-    @keyframes gentle-bob {
-        0% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-        100% { transform: translateY(0); }
-    }
-
-    /* The storage icon at the bottom */
-    .vis-storage-icon {
-        font-size: 3.5rem;
-    }
-
-    /* The animated data packet */
-    .vis-data-packet {
-        position: absolute;
-        font-size: 2rem;
-        opacity: 0;
-        z-index: 10;
-        /* JS will control top, left and transitions */
-    }
-
-
     .vis-log {
         margin-top: 15px;
         height: 100px; /* Fixed height for log area */
@@ -360,7 +280,110 @@
     .vis-log-entry {
         margin-bottom: 5px;
     }
-    /* --- END: Data Visualization Styles --- */
+
+    /* --- START: Data Collection Visualization Styles --- */
+    .data-vis-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: 'Montserrat', sans-serif;
+        color: black;
+    }
+    .vis-main-area {
+        width: 100%;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        position: relative;
+        min-height: 0;
+    }
+    .vis-sources-row {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        width: 100%;
+    }
+    .vis-source {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: transform 0.3s, opacity 0.3s;
+    }
+    .vis-source-icon { font-size: 2.5rem; }
+    .vis-source-url {
+        font-size: 0.7rem;
+        margin-top: 5px;
+        font-family: 'Courier New', Courier, monospace;
+    }
+    .vis-source.pending { opacity: 0.4; }
+    .vis-source.active {
+        transform: scale(1.1);
+        font-weight: bold;
+    }
+    .vis-source.done { opacity: 0.2; }
+    .vis-scraper-icon {
+        font-size: 4rem;
+        animation: gentle-bob 2s infinite ease-in-out;
+    }
+    @keyframes gentle-bob {
+        0% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0); }
+    }
+    .vis-storage-icon { font-size: 3.5rem; }
+    .vis-data-packet {
+        position: absolute;
+        font-size: 2rem;
+        opacity: 0;
+        z-index: 10;
+    }
+    /* --- END: Data Collection Visualization Styles --- */
+
+    /* --- START: Preprocessing Visualization Styles (Added by Gemini) --- */
+    .preprocessing-vis-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Montserrat', sans-serif;
+        color: black;
+    }
+    .vis-text-area {
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 1.5rem;
+        line-height: 1.6;
+        padding: 20px;
+        text-align: justify;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        width: 100%;
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .error-highlight {
+        background-color: #ffdddd;
+        border-radius: 3px;
+        transition: all 0.3s ease-in-out;
+    }
+    .error-fixing {
+        background-color: #ddffdd;
+        text-decoration: line-through;
+        opacity: 0.5;
+    }
+    .corrected-text {
+        background-color: #ddffdd;
+        font-weight: bold;
+        transition: all 0.3s ease-in-out;
+    }
+    /* --- END: Preprocessing Visualization Styles --- */
 
 
     /* --- Mobile Responsivity --- */
@@ -439,30 +462,26 @@
             /* --- END: Added by Gemini for visualization (mobile) --- */
         }
         
-        /* --- START: Updated by Gemini for better mobile fit --- */
-        .vis-sources-row {
-            gap: 15px; /* Less space between icons on mobile */
-        }
-        .vis-source-icon {
-            font-size: 2rem;
-        }
-        .vis-source-url {
-            font-size: 0.6rem; /* Smaller text for URL */
-        }
-        .vis-scraper-icon {
-            font-size: 3rem;
-        }
-        .vis-storage-icon {
-            font-size: 3rem;
-        }
+        /* Data collection mobile styles */
+        .vis-sources-row { gap: 15px; }
+        .vis-source-icon { font-size: 2rem; }
+        .vis-source-url { font-size: 0.6rem; }
+        .vis-scraper-icon { font-size: 3rem; }
+        .vis-storage-icon { font-size: 3rem; }
+        
         .vis-log {
             height: 60px;
             font-size: 0.75rem;
             margin-top: 10px;
         }
-        /* --- END: Updated by Gemini for better mobile fit --- */
 
-        /* REMOVED: .main-content-wrapper.right .working-area rule */
+        /* Preprocessing mobile styles (Added by Gemini) */
+        .vis-text-area {
+            font-size: 1rem;
+            line-height: 1.5;
+            padding: 10px;
+        }
+
 /* --- END: EDITED BY GEMINI --- */
 
 
@@ -626,35 +645,29 @@
         // Set initial position of the handle to the *last* dot (bottom)
         handle.style.top = `${dotPositions[dotPositions.length - 1]}px`;
 
-        // --- START: Added by Gemini (Visualization Functions) ---
+        // --- START: Visualization Functions ---
         
-        // Simple helper to create a delay
         const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-        // Function to add entries to the visualization log
         function addToVisLog(logArea, message) {
+            if (!logArea) return;
             const entry = document.createElement('div');
             entry.className = 'vis-log-entry';
             entry.textContent = `> ${message}`;
             logArea.appendChild(entry);
-            // Auto-scroll to bottom
             logArea.scrollTop = logArea.scrollHeight;
         }
 
-        // Function to clear the visualization
-        function clearDataCollectionVisualization() {
+        function clearVisualization() {
             workingArea.innerHTML = '';
-            isVisRunning = false; // Allow a new visualization to start
+            isVisRunning = false;
         }
 
-        // --- START: EDITED BY GEMINI ---
-        // Function to start and run the data collection visualization
+        // --- Data Collection Visualizer ---
         async function startDataCollectionVisualization() {
-            // Prevent multiple instances from running
             if (isVisRunning) return;
             isVisRunning = true;
 
-            // 1. Define the sites to scrape
             const sitesToScrape = [
                 { id: "site-1", url: "news.com" },
                 { id: "site-2", url: "reviews.com" },
@@ -662,47 +675,29 @@
                 { id: "site-4", url: "shop.net" }
             ];
 
-            // 2. Create the HTML structure for the new visualization (This happens only once)
             workingArea.innerHTML = `
                 <div class="data-vis-container">
                     <div class="vis-main-area" id="vis-main-area">
-                        
-                        <!-- Row 1: Source Websites -->
                         <div class="vis-sources-row">
                             ${sitesToScrape.map(site => `
                                 <div class="vis-source pending" id="${site.id}">
                                     <div class="vis-source-icon">🌐</div>
                                     <div class="vis-source-url">${site.url}</div>
-                                </div>
-                            `).join('')}
+                                </div>`).join('')}
                         </div>
-
-                        <!-- Row 2: Scraper Icon -->
-                        <div id="vis-scraper-container">
-                            <div class="vis-scraper-icon">🕷️</div>
-                        </div>
-
-                        <!-- Row 3: Storage Icon -->
-                        <div id="vis-storage-container">
-                             <div class="vis-storage-icon">🗄️</div>
-                        </div>
-
+                        <div id="vis-scraper-container"><div class="vis-scraper-icon">🕷️</div></div>
+                        <div id="vis-storage-container"><div class="vis-storage-icon">🗄️</div></div>
                     </div>
                     <div class="vis-log" id="vis-log"></div>
-                </div>
-            `;
+                </div>`;
 
-            // 3. Get references to the new elements
             const logArea = document.getElementById('vis-log');
             const mainArea = document.getElementById('vis-main-area');
             const scraperContainer = document.getElementById('vis-scraper-container');
             const storageContainer = document.getElementById('vis-storage-container');
             const visContainer = workingArea.querySelector('.data-vis-container');
             
-            // 4. Start the eternal animation loop. It will only stop if isVisRunning becomes false.
             while (isVisRunning) {
-
-                // --- A. Run one full animation cycle ---
                 addToVisLog(logArea, "Починаємо задачу збору даних...");
                 await wait(1000);
 
@@ -723,80 +718,136 @@
                     const scraperRect = scraperContainer.getBoundingClientRect();
                     const storageRect = storageContainer.getBoundingClientRect();
                     const mainAreaRect = mainArea.getBoundingClientRect();
-
                     const startTop = sourceRect.top - mainAreaRect.top + (sourceRect.height / 2);
                     const startLeft = sourceRect.left - mainAreaRect.left + (sourceRect.width / 2);
                     const midTop = scraperRect.top - mainAreaRect.top + (scraperRect.height / 2);
                     const midLeft = scraperRect.left - mainAreaRect.left + (scraperRect.width / 2);
                     const endTop = storageRect.top - mainAreaRect.top + (storageRect.height / 2);
                     const endLeft = storageRect.left - mainAreaRect.left + (storageRect.width / 2);
-
                     packet.style.top = `${startTop}px`;
                     packet.style.left = `${startLeft}px`;
                     packet.style.transform = 'translate(-50%, -50%) scale(0.5)';
-
                     await wait(50);
                     if (!isVisRunning) { if (mainArea.contains(packet)) mainArea.removeChild(packet); break; }
-                    
                     packet.style.transition = 'top 1s ease-in-out, left 1s ease-in-out, opacity 0.5s, transform 1s ease-in-out';
                     packet.style.opacity = 1;
                     packet.style.transform = 'translate(-50%, -50%) scale(1)';
                     packet.style.top = `${midTop}px`;
                     packet.style.left = `${midLeft}px`;
-                    
                     addToVisLog(logArea, `Збираємо дані...`);
                     await wait(1100);
                     if (!isVisRunning) { if (mainArea.contains(packet)) mainArea.removeChild(packet); break; }
-
                     packet.style.transition = 'top 0.8s ease-in, left 0.8s ease-in, opacity 0.8s ease-in, transform 0.8s ease-in';
                     packet.style.opacity = 0;
                     packet.style.transform = 'translate(-50%, -50%) scale(0.2)';
                     packet.style.top = `${endTop}px`;
                     packet.style.left = `${endLeft}px`;
-                    
                     addToVisLog(logArea, `Зберігаємо зібрані дані...`);
                     await wait(900);
                     if (mainArea.contains(packet)) mainArea.removeChild(packet);
                     if (!isVisRunning) break; 
-
                     sourceElement.classList.remove('active');
                     sourceElement.classList.add('done');
                     addToVisLog(logArea, `Завершено з ${site.url}.`);
-
                     await wait(500);
                     if (!isVisRunning) break;
                 }
-
                 if (!isVisRunning) break;
-
-                // --- B. Conclude the cycle and fade out ---
                 addToVisLog(logArea, "Збір даних завершено. Перезапуск...");
                 await wait(2000); 
-                
                 if (!isVisRunning) break;
-
                 visContainer.style.transition = 'opacity 0.5s ease-in-out';
                 visContainer.style.opacity = 0;
                 await wait(500);
-                
                 if (!isVisRunning) break;
-
-                // --- C. Reset the state while invisible and fade back in ---
                 const allSources = workingArea.querySelectorAll('.vis-source');
-                allSources.forEach(s => {
-                    s.classList.remove('done', 'active');
-                    s.classList.add('pending');
-                });
+                allSources.forEach(s => { s.classList.remove('done', 'active'); s.classList.add('pending'); });
                 logArea.innerHTML = '';
-
                 visContainer.style.opacity = 1;
                 await wait(500);
                 visContainer.style.transition = '';
             }
         }
-        // --- END: EDITED BY GEMINI ---
+        
+        // --- Preprocessing Visualizer (Added by Gemini) ---
+        async function startPreprocessingVisualization() {
+            if (isVisRunning) return;
+            isVisRunning = true;
 
-        // --- END: Added by Gemini (Visualization Functions) ---
+            const initialText = "Ось приклад тексту,з помилками.. ми будемо виправляти їх ,щоб показати препроцесинг .Тут є пунктуаціята орфографічьні помилки.";
+            const fixes = [
+                { find: "тексту,з", replace: "тексту, з", log: "Додаємо пробіл після коми..." },
+                { find: "..", replace: ".", log: "Видаляємо дублюючу крапку..." },
+                { find: ",щоб", replace: ", щоб", log: "Додаємо пробіл після коми..." },
+                { find: " .Тут", replace: ". Тут", log: "Видаляємо пробіл перед крапкою..." },
+                { find: "пунктуаціята", replace: "пунктуація та", log: "Розділяємо злиплі слова..." },
+                { find: "орфографічьні", replace: "орфографічні", log: "Виправляємо орфографічну помилку..." }
+            ];
+
+            workingArea.innerHTML = `
+                <div class="preprocessing-vis-container">
+                    <div class="vis-text-area" id="vis-text-area"></div>
+                    <div class="vis-log" id="vis-log"></div>
+                </div>`;
+            
+            const logArea = document.getElementById('vis-log');
+            const textArea = document.getElementById('vis-text-area');
+            const visContainer = workingArea.querySelector('.preprocessing-vis-container');
+
+            while (isVisRunning) {
+                textArea.innerHTML = `<span>${initialText}</span>`;
+                addToVisLog(logArea, "Починаємо процес очищення тексту...");
+                await wait(1500);
+                if (!isVisRunning) break;
+
+                for (const fix of fixes) {
+                    if (!isVisRunning) break;
+                    
+                    addToVisLog(logArea, fix.log);
+                    
+                    // Highlight the error
+                    textArea.innerHTML = textArea.innerHTML.replace(fix.find, `<span class="error-highlight">${fix.find}</span>`);
+                    await wait(1000);
+                    if (!isVisRunning) break;
+
+                    // Animate the fix
+                    const errorSpan = textArea.querySelector('.error-highlight');
+                    if (errorSpan) {
+                        errorSpan.classList.add('error-fixing');
+                        errorSpan.classList.remove('error-highlight');
+                    }
+                    await wait(500);
+                    if (!isVisRunning) break;
+
+                    // Apply the fix
+                    textArea.innerHTML = textArea.innerHTML.replace(/<span class="error-fixing">.*?<\/span>/, `<span class="corrected-text">${fix.replace}</span>`);
+                    await wait(1000);
+                    if (!isVisRunning) break;
+                    
+                    // Normalize the text (remove the corrected span)
+                    textArea.innerHTML = textArea.innerHTML.replace(/<span class="corrected-text">.*?<\/span>/, fix.replace);
+                    await wait(500);
+                    if (!isVisRunning) break;
+                }
+
+                if (!isVisRunning) break;
+                addToVisLog(logArea, "Очищення завершено. Перезапуск...");
+                await wait(2000);
+                if (!isVisRunning) break;
+
+                visContainer.style.transition = 'opacity 0.5s ease-in-out';
+                visContainer.style.opacity = 0;
+                await wait(500);
+                if (!isVisRunning) break;
+                
+                logArea.innerHTML = '';
+                visContainer.style.opacity = 1;
+                await wait(500);
+                visContainer.style.transition = '';
+            }
+        }
+        
+        // --- END: Visualization Functions ---
 
         // --- START: Call Visualization on initial load ---
         startDataCollectionVisualization();
@@ -805,27 +856,13 @@
         function startDrag(e) {
             isDragging = true;
             document.body.style.cursor = 'grabbing';
-
-            // --- MODIFIED by Gemini: Store *dot index* not pixel value ---
-            previousLevelIndex = currentLevelIndex; // Store the starting point
-
-            // --- NEW: Store start positions ---
+            previousLevelIndex = currentLevelIndex;
             startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
             startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-
-            // --- MODIFIED: Detect drag target ---
-            if (e.target === handle) {
-                dragMode = 'pending'; // Handle can go vertical or horizontal
-            } else {
-                dragMode = 'horizontal'; // Clicks on line/dots default to horizontal
-            }
-            // --- END MODIFIED ---
-
-            // --- NEW: Reset all segments on drag start ---
+            dragMode = (e.target === handle) ? 'pending' : 'horizontal';
             segments.forEach((seg, i) => {
                 seg.classList.remove('active');
                 seg.style.height = '0px';
-                // Set top position so it can shrink from the correct place if needed
                 seg.style.top = `${dotPositions[i]}px`;
             });
         }
@@ -833,214 +870,136 @@
         function endDrag(e) {
             if (!isDragging) return;
             isDragging = false;
-            dragMode = 'none'; // --- NEW ---
+            dragMode = 'none';
             document.body.style.cursor = 'default';
-
-            // --- ADDED ---
-            handle.classList.remove('grabbing'); // Remove class to grow handle
-            handle.classList.remove('flowing'); // --- ADDED: Ensure flowing is removed
-            clearTimeout(flowTimer); // --- ADDED: Clear any pending timer
-
-            // --- NEW: Hide all segments on drag end ---
-            // This makes them animate their width back to 4px and then hide
+            handle.classList.remove('grabbing', 'flowing');
+            clearTimeout(flowTimer);
             segments.forEach((seg, i) => {
                 seg.classList.remove('active');
-                // After a delay (for width animation), hide height
-                // --- CHANGED: Faster timeout ---
                 setTimeout(() => {
-                    if (!isDragging) { // Only hide if we are still not dragging
+                    if (!isDragging) {
                          seg.style.height = '0px';
-                         seg.style.top = handle.style.top; // Shrink to handle
+                         seg.style.top = handle.style.top;
                     }
-                }, 300); // 300ms matches width transition
+                }, 300);
             });
         }
 
         function onDrag(e) {
             if (!isDragging) return;
 
-            // --- NEW: Get current X and Y ---
             const currentX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
             const currentY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
 
             if (dragMode === 'pending') {
-                const deltaX = currentX - startX;
-                const deltaY = currentY - startY;
-
-                // Check for dominant axis after 10px of movement
-                if (Math.abs(deltaY) > 10) {
-                    dragMode = 'vertical';
-                } else if (Math.abs(deltaX) > 10) {
-                    dragMode = 'horizontal';
-                } else {
-                    return; // Wait for more movement
-                }
+                const deltaX = Math.abs(currentX - startX);
+                const deltaY = Math.abs(currentY - startY);
+                if (deltaY > 10) dragMode = 'vertical';
+                else if (deltaX > 10) dragMode = 'horizontal';
+                else return;
             }
 
-            // --- NEW: Handle vertical drag ---
             if (dragMode === 'vertical') {
-                e.preventDefault(); // Prevent page scroll ONLY on vertical drag
+                e.preventDefault();
 
-                const eventY = currentY; // Use the calculated currentY
                 const scrollerRect = scroller.getBoundingClientRect();
-
-                const mouseY = eventY - scrollerRect.top;
-
-                // Find the closest dot position to snap to
-                let closestDotY = dotPositions.reduce((prev, curr) => {
-                    return (Math.abs(curr - mouseY) < Math.abs(prev - mouseY) ? curr : prev);
-                });
-
-                // Snap the handle to the closest dot
+                const mouseY = currentY - scrollerRect.top;
+                let closestDotY = dotPositions.reduce((prev, curr) => (Math.abs(curr - mouseY) < Math.abs(prev - mouseY) ? curr : prev));
                 handle.style.top = `${closestDotY}px`;
 
-                // --- START: Update Text Logic ---
-                // Find the index of the closest dot
                 let closestIndex = dotPositions.indexOf(closestDotY);
-
-                // Update the text based on the index
                 if (closestIndex !== -1 && closestIndex !== currentLevelIndex) {
-
-                    // --- START: Flow Animation Logic ---
-                    handle.classList.add('grabbing'); // --- MOVED HERE ---
-                    handle.classList.add('flowing'); // Add class to elongate blue dot
-                    clearTimeout(flowTimer); // Clear any existing timer
-
-                    // --- CHANGED: Timer now resets segments too ---
+                    handle.classList.add('grabbing', 'flowing');
+                    clearTimeout(flowTimer);
                     flowTimer = setTimeout(() => {
-                        handle.classList.remove('flowing');
-                        handle.classList.remove('grabbing');
-                        // --- THIS IS THE FIX ---
-                        // Deactivate all segments when the flow animation ends
+                        handle.classList.remove('flowing', 'grabbing');
                         segments.forEach(seg => seg.classList.remove('active'));
-                    }, 400); // Matches the `top` transition duration
-                    // --- END: Flow Animation Logic ---
+                    }, 400);
 
-                    // Determine direction (1 for down, -1 for up)
                     const direction = closestIndex > currentLevelIndex ? 1 : -1;
-                    const transitionDelay = 200; // Must match CSS transition duration
-                    const slideDistance = 15; // How many pixels to slide
+                    const transitionDelay = 200;
+                    const slideDistance = 15;
 
-                    // 1. Slide and fade out
                     titleEn.style.opacity = 0;
                     titleEn.style.transform = `translateY(${direction * slideDistance}px)`;
                     titleUa.style.opacity = 0;
                     titleUa.style.transform = `translateY(${direction * slideDistance}px)`;
 
-                    // 2. Update current index
                     currentLevelIndex = closestIndex;
 
-                    // --- START: NEW Segment Logic ---
-                    // This logic now runs ONLY when the index changes
-
-                    // --- MODIFIED by Gemini: Use *dot index* not pixel value ---
                     const startIdx = Math.min(previousLevelIndex, currentLevelIndex);
                     const endIdx = Math.max(previousLevelIndex, currentLevelIndex);
-                    // --- END MODIFIED ---
 
-                    // Loop through all 6 segments
-                    for (let i = 0; i < segments.length; i++) {
-                        const segment = segments[i];
-
-                        // Check if this segment index (0-5) is in the active range
+                    segments.forEach((segment, i) => {
                         if (i >= startIdx && i < endIdx) {
-                            // This segment is active. Set its position and height *instantly*.
                             segment.style.top = `${dotPositions[i]}px`;
                             segment.style.height = `${dotPositions[i+1] - dotPositions[i]}px`;
-                            // Add 'active' class to animate its WIDTH
                             segment.classList.add('active');
                         } else {
-                            // This segment is not active.
                             segment.style.height = '0px';
                             segment.classList.remove('active');
                         }
+                    });
+
+                    // --- START: Visualization Trigger Logic ---
+                    if (previousLevelIndex !== currentLevelIndex) {
+                        clearVisualization(); // Clear any running visualization first
+                        setTimeout(() => { // Use a timeout to let the old one clear fully
+                            if (currentLevelIndex === 6) {
+                                startDataCollectionVisualization();
+                            } else if (currentLevelIndex === 5) {
+                                startPreprocessingVisualization();
+                            }
+                        }, 10); // A tiny delay is enough
                     }
-                    // --- END: NEW Segment Logic ---
+                    // --- END: Visualization Trigger Logic ---
 
-                    // --- START: Added by Gemini (Visualization Trigger) ---
-                    if (currentLevelIndex === 6) {
-                        // We snapped TO the data collection level
-                        startDataCollectionVisualization();
-                    } else if (previousLevelIndex === 6) {
-                        // We just LEFT the data collection level
-                        clearDataCollectionVisualization();
-                    }
-                    // --- END: Added by Gemini (Visualization Trigger) ---
-
-
-                    // --- ADDED: This is the fix for single-segment animation ---
-                    // Update previousLevelIndex so the *next* move only animates from this point
                     previousLevelIndex = currentLevelIndex;
-                    // --- END: FIX ---
 
-                    // 3. Wait for fade out, then change text and position for fade-in
                     setTimeout(() => {
-                        // Change text content
-                        // This now correctly maps to the inverted levelData array
                         titleEn.textContent = levelData[currentLevelIndex].en;
                         titleUa.textContent = levelData[currentLevelIndex].ua;
-
-                        // Temporarily disable transition to set the "from" position
                         titleEn.style.transition = 'none';
                         titleUa.style.transition = 'none';
-
-                        // Set "from" position (opposite direction)
                         titleEn.style.transform = `translateY(${-direction * slideDistance}px)`;
                         titleUa.style.transform = `translateY(${-direction * slideDistance}px)`;
-
-                        // Force the browser to apply the transform immediately
-                        titleEn.offsetHeight; // This is a trick to trigger a browser reflow
-
-                        // 4. Re-enable transitions and slide/fade in to final position
+                        titleEn.offsetHeight;
                         titleEn.style.transition = 'opacity 0.2s ease-in-out, transform 0.2s ease-in-out';
                         titleUa.style.transition = 'opacity 0.2s ease-in-out, transform 0.2s ease-in-out';
-
                         titleEn.style.opacity = 1;
                         titleEn.style.transform = 'translateY(0)';
                         titleUa.style.opacity = 1;
                         titleUa.style.transform = 'translateY(0)';
-
                     }, transitionDelay);
                 }
-                // --- END: Update Text Logic ---
             }
-            // --- MODIFIED: Changed 'else if' to 'if' ---
+            
             if (dragMode === 'horizontal') {
-                e.preventDefault(); // Prevent horizontal page swipe
+                e.preventDefault();
                 const screenWidth = window.innerWidth;
-
                 const isRightSide = topGroup.classList.contains('right');
+                const dragDistance = currentX - startX;
+                const minDrag = (screenWidth / 2) - 10;
 
-                // --- START OF FIX: Set drag distance to (Half Screen - 10px) ---
-                const dragDistance = currentX - startX; // Get horizontal drag distance
-                const minDrag = (screenWidth / 2) - 10; // Min drag distance is (Half Screen - 10px)
-
-                if (isRightSide && dragDistance < -minDrag) { // Dragged left
+                if (isRightSide && dragDistance < -minDrag) {
                     topGroup.classList.remove('right');
-                    mainContentWrapper.classList.remove('right'); // Toggle wrapper class
-                    endDrag(e); // Stop the drag immediately after toggle
-                } else if (!isRightSide && dragDistance > minDrag) { // Dragged right
+                    mainContentWrapper.classList.remove('right');
+                    endDrag(e);
+                } else if (!isRightSide && dragDistance > minDrag) {
                     topGroup.classList.add('right');
-                    mainContentWrapper.classList.add('right'); // Toggle wrapper class
-                    endDrag(e); // Stop the drag immediately after toggle
+                    mainContentWrapper.classList.add('right');
+                    endDrag(e);
                 }
-                // --- END OF FIX ---
             }
         }
 
-        // --- START OF FIX: Replaced bad code with correct listeners ---
-        // --- MODIFIED: Listeners moved to scroller ---
-        // These listeners are on the 'scroller' container, which
-        // is now back to 9px wide.
+        // Event Listeners
         scroller.addEventListener('mousedown', startDrag);
         document.addEventListener('mouseup', endDrag);
         document.addEventListener('mousemove', onDrag);
-
-        // Touch events for mobile
         scroller.addEventListener('touchstart', startDrag);
         document.addEventListener('touchend', endDrag);
         document.addEventListener('touchmove', onDrag);
-        // --- END: Scroller Logic ---
     });
 </script>
 </body>
