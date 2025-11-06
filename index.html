@@ -133,47 +133,74 @@
         background-color: black;
         border-radius: 50%;
         flex-shrink: 0;
-        /* --- ADDED --- */
-        /* Add transition for opacity to fade dots during drag */
-        transition: opacity 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+        /* --- REMOVED --- */
+        /* Removed transition: opacity... */
     }
     
-    /* --- ADDED --- */
-    /* Makes dots invisible during drag */
-    .scroller-container.dragging .dot {
-        opacity: 0;
-    }
+    /* --- REMOVED --- */
+    /* Removed the .scroller-container.dragging .dot { opacity: 0; } rule */
 
     #scroller-handle {
-        width: 36px; /* CHANGED: Reduced from 40px (approx 7% of 514px) */
-        height: 36px; /* CHANGED: Reduced from 40px (approx 7% of 514px) */
-        background-color: #0b5394; /* CHANGED: Set to requested color */
+        width: 36px; /* This is the outer black dot */
+        height: 36px;
+        background-color: black; /* CHANGED: This is now the black dot */
         border-radius: 50%;
         position: absolute;
         left: 50%;
         
         /* --- START OF EDITS --- */
-        /* CHANGED: Set default transform and add transform to transition */
-        transform: translate(-50%, -50%) scale(1);
+        /* ADDED: scale(1) to animate from */
+        transform: translate(-50%, -50%) scale(1); 
         cursor: grab;
         
-        /* CHANGED: Replaced bouncy cubic-bezier with a smoother 'ease-in-out' curve */
-        /* CHANGED: Increased duration for a smoother, more 'liquid' feel */
+        /* CHANGED: ADDED transform back to the transition */
         transition: top 0.8s cubic-bezier(0.65, 0, 0.35, 1),
                     transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
         
+        /* REMOVED: border: 9px solid black; */
+        box-sizing: border-box; 
+
+        /* ADDED: Centering for the pseudo-element */
+        display: flex;
+        justify-content: center;
+        align-items: center;
         /* --- END OF EDITS --- */
-        
-        border: 9px solid black; /* CHANGED: Was 4px */
-        box-sizing: border-box;  /* Ensures border is inside the width/height */
     }
+
+    /* --- ADDED: This is the blue "liquid" --- */
+    #scroller-handle::before {
+        content: '';
+        display: block;
+        /* Size calculation: 36px (parent) - 9px (original border) * 2 = 18px */
+        width: 18px; 
+        height: 18px;
+        background-color: #0b5394; /* The blue liquid */
+        border-radius: 50%;
+        
+        /* ADDED: Transition for the liquid's transform */
+        transform: scale(1);
+        transition: transform 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
 
     /* ADDED: New class for the "shrunken" state while dragging */
     #scroller-handle.grabbing {
-        /* --- CHANGED --- */
-        /* Squish horizontally (scaleX) and elongate vertically (scaleY) */
-        transform: translate(-50%, -50%) scaleX(0.4) scaleY(1.6); 
+        /* --- ADDED: This squishes the black dot --- */
+        /* scaleX(0.25) makes 36px dot -> 9px wide (matching the line) */
+        /* scaleY(1.6) elongates it */
+        transform: translate(-50%, -50%) scaleX(0.25) scaleY(1.6); 
         cursor: grabbing;
+    }
+
+    /* --- ADDED: This rule now animates the blue liquid ONLY --- */
+    #scroller-handle.grabbing::before {
+        /* --- This counter-animates the blue liquid --- */
+        /* Parent is scaleX(0.25). Child needs scaleX(4) to *look* squished */
+        /* But we want it to match the line (9px). 18px * 0.25(parent) * 2(child) = 9px */
+        /* Parent is scaleY(1.6). Child needs scaleY(1/1.6) = 0.625 to stay circular */
+        /* Let's make it elongate *with* the parent: scaleY(1.0) */
+        /* Total Y scale = 1.6 (parent) * 1.0 (child) = 1.6 */
+        transform: scaleX(2) scaleY(1.0); 
     }
 
     #scroller-handle:active {
@@ -279,12 +306,21 @@
             width: 24px; /* CHANGED: Reduced from 36px (approx 7% of 343px) */
             height: 24px; /* CHANGED: Reduced from 36px (approx 7% of 343px) */
             
-            /* --- CHANGED --- */
-            border-width: 7px; /* CHANGED: Was 3px */
-            /* --- END CHANGED --- */
+            /* --- REMOVED --- */
+            /* border-width: 7px; */
+            /* --- END REMOVED --- */
 
             /* The .grabbing class and transitions are inherited */
         }
+
+        /* --- ADDED: Mobile size for blue liquid --- */
+        #scroller-handle::before {
+            /* Size calculation: 24px (parent) - 7px (original border) * 2 = 10px */
+            width: 10px;
+            height: 10px;
+        }
+
+        /* The .grabbing::before transform is inherited, no change needed */
 
         .logo-container {
             width: 100%;
