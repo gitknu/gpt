@@ -250,6 +250,7 @@
 /* --- END: EDITED BY GEMINI --- */
 
 
+/* --- START: EDITED BY GEMINI --- */
     .logo-container {
         display: flex;
         flex-direction: row; 
@@ -259,7 +260,9 @@
         width: 100%; 
         justify-content: center;
         margin-top: auto; /* Pushes logos to the bottom */
+        box-sizing: border-box; /* --- ADDED: THIS IS THE FIX --- */
     }
+/* --- END: EDITED BY GEMINI --- */
 
     .logo-item {
         display: flex;
@@ -372,6 +375,7 @@
             margin-bottom: 0; 
             gap: 15px; 
             flex-wrap: wrap; /* --- ADDED: Prevents horizontal overflow --- */
+            /* The box-sizing: border-box from the main rule fixes the width */
         }
 /* --- END: EDITED BY GEMINI --- */
         .logo {
