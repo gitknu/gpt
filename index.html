@@ -81,8 +81,8 @@
         height: 514px; /* 6/7ths of original 600px */
         
         /* --- START OF CHANGES --- */
-        width: 4px; /* CHANGED: Back to 4px base width */
-        background-color: black; /* CHANGED: Container is the line again */
+        width: 9px; /* CHANGED: Set to max width for interaction area */
+        background-color: transparent; /* CHANGED: Container is no longer the line */
         /* --- END OF CHANGES --- */
         
         display: flex;
@@ -92,34 +92,56 @@
         position: relative;
         flex-shrink: 0; /* Prevents scroller from shrinking */
         
-        /* CHANGED: Added width transition back */
-        transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1),
-                    width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+        /* REMOVED: width transition */
+        transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
         transform: translateX(0); /* ADDED: Default "left" position */
     }
     
-    /* REMOVED: .scroller-container::before pseudo-element */
-
-    /* REMOVED: #thick-line-segment styles */
-    
-    /* ADDED: Rule for when dragging (enlarges line width) */
-    .scroller-container.dragging {
-        width: 9px; 
+    /* --- ADDED: This is the thin, base line --- */
+    .scroller-container::before {
+        content: '';
+        position: absolute;
+        width: 4px;
+        height: 100%;
+        background-color: black;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1;
     }
+
+    /* --- REMOVED: #thick-line-segment --- */
+    
+    /* --- ADDED: Style for individual segments --- */
+    .thick-segment {
+        position: absolute;
+        width: 4px; /* Start at thin width */
+        background-color: black;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2; /* Above thin line */
+        height: 0; /* Controlled by JS */
+        top: 0; /* Controlled by JS */
+        
+        /* --- CRITICAL: ONLY transition width --- */
+        transition: width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+    /* --- ADDED: Active state animates width --- */
+    .thick-segment.active {
+        width: 9px; /* Animate to thick width */
+    }
+    
+    /* REMOVED: .scroller-container.dragging { ... } rule */
 
     /* ADDED: Rule to move *only* the scroller */
     .scroller-container.right {
         /* --- START: EDITED FOR TRANSITION --- */
-        /* CHANGED: Use 4px (base width) in calculation */
-        transform: translateX(calc(100vw - 80px - 4px));
+        /* CHANGED: Use 9px (the new container width) in calculation */
+        transform: translateX(calc(100vw - 80px - 9px));
         /* --- END: EDITED FOR TRANSITION --- */
     }
 
-    /* ADDED: Rule to adjust position when 'right' and 'dragging' */
-    .scroller-container.right.dragging {
-        /* CHANGED: Updated to use new 9px width */
-        transform: translateX(calc(100vw - 80px - 9px)); /* 9px is new bold width */
-    }
+    /* REMOVED: .scroller-container.right.dragging rule (no longer needed) */
 
     .dot {
         width: 20px; /* Doubled from 10px */
@@ -128,9 +150,9 @@
         border-radius: 50%;
         flex-shrink: 0;
         
-        /* --- REMOVED: z-index --- */
-        position: relative; 
-        z-index: 2; /* Keep dots above the line */
+        /* --- ADDED: z-index --- */
+        position: relative; /* Required for z-index */
+        z-index: 3; /* Above thick line */
     }
     
     /* --- REMOVED --- */
@@ -161,7 +183,7 @@
         justify-content: center;
         align-items: center;
         
-        z-index: 3; /* --- ADDED: Topmost element --- */
+        z-index: 4; /* --- ADDED: Topmost element --- */
         /* --- END OF EDITS --- */
     }
 
@@ -181,21 +203,25 @@
     }
 
 
-    /* ADDED: New class for the "shrunken" state while dragging */
+    /* Class for the "shrunken" state while dragging */
     #scroller-handle.grabbing {
-        /* --- THE CRITICAL FIX --- */
-        /* --- REMOVED scaleY(1.6) --- */
         /* This squishes the black dot horizontally ONLY */
         transform: translate(-50%, -50%) scaleX(0.25) scaleY(1); 
         cursor: grabbing;
     }
 
-    /* --- ADDED: This rule now animates the blue liquid ONLY --- */
+    /* --- MODIFIED: This is the "at dot" state --- */
     #scroller-handle.grabbing::before {
-        /* --- THE LIQUID FLOW --- */
-        /* scaleX(2) counter-squishes horizontally to 9px */
-        /* scaleY(2.0) elongates ONLY the blue liquid to "flow" */
-        transform: scaleX(2) scaleY(2.0); 
+        /* scaleX(2) -> 9px width */
+        /* scaleY(0.5) -> 9px height (to match 9px width) */
+        transform: scaleX(2) scaleY(0.5); 
+    }
+
+    /* --- ADDED: This is the "flowing" state --- */
+    #scroller-handle.grabbing.flowing::before {
+        /* scaleX(2) -> 9px width */
+        /* scaleY(2.0) -> 36px height (to "flow") */
+        transform: scaleX(2) scaleY(2.0);
     }
 
     #scroller-handle:active {
@@ -281,15 +307,11 @@
         /* .scroller-container.right { margin-left: auto; margin-right: 0; } is inherited */
         /* ADDED: Override transform for mobile */
         .scroller-container.right {
-            /* 100vw (full width) - 40px (20px L/R padding) - 4px (base width) */
-            transform: translateX(calc(100vw - 40px - 4px));
+            /* 100vw (full width) - 40px (20px L/R padding) - 9px (new container width) */
+            transform: translateX(calc(100vw - 40px - 9px));
         }
 
-        /* ADDED: Rule to adjust position when 'right' and 'dragging' on mobile */
-        .scroller-container.right.dragging {
-            /* CHANGED: Updated to use new 9px width */
-            transform: translateX(calc(100vw - 40px - 9px)); /* 9px is new bold width */
-        }
+        /* REMOVED: .scroller-container.right.dragging rule */
 
         .dot {
             width: 16px; /* Doubled from 8px */
@@ -315,7 +337,7 @@
             height: 10px;
         }
 
-        /* The .grabbing::before transform is inherited, no change needed */
+        /* The .grabbing::before, .grabbing.flowing::before transforms are inherited */
 
         .logo-container {
             width: 100%;
@@ -346,6 +368,14 @@
         <span class="title-ua">процес збору даних</span>
     </div>
     <div class="scroller-container">
+        <!-- ADDED: 6 segments for the 6 gaps between 7 dots -->
+        <div class="thick-segment" id="segment-0"></div>
+        <div class="thick-segment" id="segment-1"></div>
+        <div class="thick-segment" id="segment-2"></div>
+        <div class="thick-segment" id="segment-3"></div>
+        <div class="thick-segment" id="segment-4"></div>
+        <div class="thick-segment" id="segment-5"></div>
+        
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
@@ -353,7 +383,7 @@
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
-        <!-- REMOVED: thick-line-segment -->
+        <!-- REMOVED: #thick-line-segment -->
         <div id="scroller-handle"></div>
     </div>
 </div>
@@ -427,7 +457,7 @@
         const titleUa = document.querySelector('.title-ua');
         // Set initial level index to 6 (Bottom dot, which is now Level 1)
         let currentLevelIndex = 6; // Keep track of the current level
-        // REMOVED: previousLevelIndex
+        let previousLevelIndex = 6; // --- ADDED: Keep track of previous dot
         // --- END: Text Data for Scroller ---
 
 
@@ -435,8 +465,11 @@
         const handle = document.getElementById('scroller-handle');
         const scroller = handle.parentElement;
         const dots = Array.from(scroller.getElementsByClassName('dot'));
-        // REMOVED: thickLine
+        // --- ADDED: Get all segments ---
+        const segments = Array.from(scroller.getElementsByClassName('thick-segment'));
+        // --- REMOVED: thickLine ---
         let isDragging = false;
+        let flowTimer; // --- ADDED: Timer for flow animation
 
         const dotPositions = dots.map(dot => dot.offsetTop + dot.offsetHeight / 2);
 
@@ -445,26 +478,43 @@
 
         function startDrag(e) {
             isDragging = true;
-            // handle.style.cursor = 'grabbing'; // No longer needed, CSS class handles it
-            document.body.style.cursor = 'grabbing'; // Optional: change cursor for the whole page
+            document.body.style.cursor = 'grabbing'; 
             
             // --- ADDED ---
-            // REMOVED: previousLevelIndex
-            handle.classList.add('grabbing'); // Add class to shrink handle
-            scroller.classList.add('dragging'); // Add class for positioning
+            previousLevelIndex = currentLevelIndex; // Store the starting point
+            // --- REMOVED: handle.classList.add('grabbing'); ---
+            
+            // --- NEW: Reset all segments on drag start ---
+            segments.forEach((seg, i) => {
+                seg.classList.remove('active');
+                seg.style.height = '0px';
+                // Set top position so it can shrink from the correct place if needed
+                seg.style.top = `${dotPositions[i]}px`; 
+            });
         }
 
         function endDrag(e) {
             if (!isDragging) return;
             isDragging = false;
-            // handle.style.cursor = 'grab'; // No longer needed, CSS class handles it
             document.body.style.cursor = 'default';
             
             // --- ADDED ---
             handle.classList.remove('grabbing'); // Remove class to grow handle
-            scroller.classList.remove('dragging'); // Remove class for positioning
+            handle.classList.remove('flowing'); // --- ADDED: Ensure flowing is removed
+            clearTimeout(flowTimer); // --- ADDED: Clear any pending timer
             
-            // --- REMOVED: Hide thick line ---
+            // --- NEW: Hide all segments on drag end ---
+            // This makes them animate their width back to 4px and then hide
+            segments.forEach((seg, i) => {
+                seg.classList.remove('active');
+                // After a delay (for width animation), hide height
+                setTimeout(() => {
+                    if (!isDragging) { // Only hide if we are still not dragging
+                         seg.style.height = '0px';
+                         seg.style.top = handle.style.top; // Shrink to handle
+                    }
+                }, 500); // 500ms matches width transition
+            });
         }
 
         function onDrag(e) {
@@ -491,8 +541,17 @@
             // Update the text based on the index
             if (closestIndex !== -1 && closestIndex !== currentLevelIndex) {
                 
-                // --- REMOVED: Store previous index *before* updating ---
-                
+                // --- START: Flow Animation Logic ---
+                handle.classList.add('grabbing'); // --- MOVED HERE ---
+                handle.classList.add('flowing'); // Add class to elongate blue dot
+                clearTimeout(flowTimer); // Clear any existing timer
+                // Set timer to remove flowing class after move animation (800ms)
+                flowTimer = setTimeout(() => {
+                    handle.classList.remove('flowing');
+                    handle.classList.remove('grabbing'); // --- ADDED HERE ---
+                }, 800); // Matches the `top` transition duration
+                // --- END: Flow Animation Logic ---
+
                 // Determine direction (1 for down, -1 for up)
                 const direction = closestIndex > currentLevelIndex ? 1 : -1;
                 const transitionDelay = 200; // Must match CSS transition duration
@@ -507,7 +566,30 @@
                 // 2. Update current index
                 currentLevelIndex = closestIndex;
                 
-                // --- REMOVED: Thick Line Logic ---
+                // --- START: NEW Segment Logic ---
+                // This logic now runs ONLY when the index changes
+                
+                const startIdx = Math.min(previousLevelIndex, currentLevelIndex);
+                const endIdx = Math.max(previousLevelIndex, currentLevelIndex);
+
+                // Loop through all 6 segments
+                for (let i = 0; i < segments.length; i++) {
+                    const segment = segments[i];
+                    
+                    // Check if this segment index (0-5) is in the active range
+                    if (i >= startIdx && i < endIdx) {
+                        // This segment is active. Set its position and height *instantly*.
+                        segment.style.top = `${dotPositions[i]}px`;
+                        segment.style.height = `${dotPositions[i+1] - dotPositions[i]}px`;
+                        // Add 'active' class to animate its WIDTH
+                        segment.classList.add('active');
+                    } else {
+                        // This segment is not active.
+                        segment.style.height = '0px';
+                        segment.classList.remove('active');
+                    }
+                }
+                // --- END: NEW Segment Logic ---
                 
                 // 3. Wait for fade out, then change text and position for fade-in
                 setTimeout(() => {
@@ -522,9 +604,8 @@
 
                     // Set "from" position (opposite direction)
                     titleEn.style.transform = `translateY(${-direction * slideDistance}px)`;
-                    // --- THE FIX ---
-                    titleUa.style.transform = `translateY(${-direction * slideDistance}px)`; // Was slideFistance
-                    // --- END THE FIX ---
+                    // --- FIXED TYPO HERE ---
+                    titleUa.style.transform = `translateY(${-direction * slideDistance}px)`;
 
                     // Force the browser to apply the transform immediately
                     titleEn.offsetHeight; // This is a trick to trigger a browser reflow
