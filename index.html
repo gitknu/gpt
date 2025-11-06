@@ -9,7 +9,7 @@
 <!-- Updated to include font-weight 800 for extrabold -->
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;800&display=swap" rel="stylesheet">
 <style>
-/* --- ALL CSS is unchanged --- */
+/* --- START: EDITED BY GEMINI --- */
     body, html {
         height: 100%;
         margin: 0;
@@ -17,10 +17,11 @@
         background-color: white;
         display: flex;
         flex-direction: column; /* Stack items vertically */
-        justify-content: space-between; /* Pushes top content to top, logos to bottom */
+        /* REMOVED: justify-content: space-between; */
         font-family: sans-serif;
         box-sizing: border-box; /* Ensure padding/borders don't add to height */
     }
+/* --- END: EDITED BY GEMINI --- */
 
     /* --- START: Top Content Styles --- */
 
@@ -105,37 +106,37 @@
     }
     /* --- END CORRECTION --- */
 
+    /* --- START: EDITED BY GEMINI --- */
+    /* New wrapper for scroller and dashed box */
+    .main-content-wrapper {
+        display: flex;
+        flex-direction: row; /* Scroller and box are side-by-side */
+        flex-grow: 1; /* This wrapper fills the vertical space */
+        width: 100%;
+        box-sizing: border-box;
+        margin: 10px 40px 0 40px; /* 10px top, 40px L/R */
+        position: relative; /* For layout */
+    }
+    /* --- END: EDITED BY GEMINI --- */
+
     /* --- START: Scroller Styles --- */
     .scroller-container {
-        /* Margins are now on the parent .top-group */
-        /* margin-left: 0; */ /* This is now controlled below for animation */
         /* --- START: EDITED BY GEMINI --- */
-        margin-top: 0; /* Was 10px, now controlled by .working-area padding */
+        margin-top: 0; /* Was 10px, now on wrapper */
+        order: 1; /* Default position */
         /* --- END: EDITED BY GEMINI --- */
         height: 514px; /* 6/7ths of original 600px */
-
-        /* --- START OF CHANGES --- */
-        width: 9px; /* CHANGED: Set to max width for interaction area */
-        background-color: transparent; /* CHANGED: Container is no longer the line */
-
-        /* --- START OF FIX: Removed padding --- */
-        /* padding-left: 10px; */
-        /* padding-right: 10px; */
-        /* Total width is now 9px */
-        /* --- END OF FIX --- */
-
-        /* --- END OF CHANGES --- */
-
+        width: 9px; 
+        background-color: transparent;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
         position: relative;
-        flex-shrink: 0; /* Prevents scroller from shrinking */
+        flex-shrink: 0; 
 
-        /* REMOVED: width transition */
-        transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
-        transform: translateX(0); /* ADDED: Default "left" position */
+        /* REMOVED: transition: transform ... (now handled by flex order) */
+        /* REMOVED: transform: translateX(0); */
     }
 
     /* --- ADDED: This is the thin, base line --- */
@@ -145,28 +146,21 @@
         width: 4px;
         height: 100%;
         background-color: black;
-        /* This still works: 50% of the 9px container is the center */
         left: 50%;
         transform: translateX(-50%);
         z-index: 1;
     }
-
-    /* --- REMOVED: #thick-line-segment --- */
 
     /* --- ADDED: Style for individual segments --- */
     .thick-segment {
         position: absolute;
         width: 4px; /* Start at thin width */
         background-color: black;
-        /* This still works: 50% of the 9px container is the center */
         left: 50%;
         transform: translateX(-50%);
         z-index: 2; /* Above thin line */
         height: 0; /* Controlled by JS */
         top: 0; /* Controlled by JS */
-
-        /* --- CRITICAL: ONLY transition width --- */
-        /* --- CHANGED: Faster transition --- */
         transition: width 0.3s cubic-bezier(0.65, 0, 0.35, 1);
     }
 
@@ -175,101 +169,62 @@
         width: 9px; /* Animate to thick width */
     }
 
-    /* REMOVED: .scroller-container.dragging { ... } rule */
-
-    /* --- START: EDITED BY GEMINI --- */
-    /* ADDED: Rule to move *only* the scroller, now targeted via .working-area */
-    .working-area.right .scroller-container {
-    /* --- END: EDITED BY GEMINI --- */
-        /* --- START OF FIX: Reverted 29px to 9px --- */
-        /* CHANGED: Use 9px (the original container width) in calculation */
-        transform: translateX(calc(100vw - 80px - 9px));
-        /* --- END OF FIX --- */
-    }
-
-    /* REMOVED: .scroller-container.right.dragging rule (no longer needed) */
+    /* REMOVED: .top-group.right .scroller-container rule */
 
     .dot {
-        width: 20px; /* Doubled from 10px */
-        height: 20px; /* Doubled from 10px */
+        width: 20px; 
+        height: 20px; 
         background-color: black;
         border-radius: 50%;
         flex-shrink: 0;
-
-        /* --- ADDED: z-index --- */
-        position: relative; /* Required for z-index */
+        position: relative; 
         z-index: 3; /* Above thick line */
     }
-
-    /* --- REMOVED --- */
-    /* Removed the .scroller-container.dragging .dot { opacity: 0; } rule */
 
     #scroller-handle {
         width: 36px; /* This is the outer black dot */
         height: 36px;
-        background-color: black; /* CHANGED: This is now the black dot */
+        background-color: black; 
         border-radius: 50%;
         position: absolute;
-        /* This still works: 50% of the 9px container is the center */
         left: 50%;
-
-        /* --- START OF EDITS --- */
-        /* ADDED: scale(1) to animate from */
         transform: translate(-50%, -50%) scale(1);
         cursor: grab;
-
-        /* CHANGED: ADDED transform back to the transition */
-        /* --- CHANGED: Faster transition --- */
         transition: top 0.4s cubic-bezier(0.65, 0, 0.35, 1),
                     transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
-
-        /* REMOVED: border: 9px solid black; */
         box-sizing: border-box;
-
-        /* ADDED: Centering for the pseudo-element */
         display: flex;
         justify-content: center;
         align-items: center;
-
-        z-index: 4; /* --- ADDED: Topmost element --- */
-        /* --- END OF EDITS --- */
+        z-index: 4; /* Topmost element */
     }
 
     /* --- ADDED: This is the blue "liquid" --- */
     #scroller-handle::before {
         content: '';
         display: block;
-        /* Size calculation: 36px (parent) - 9px (original border) * 2 = 18px */
         width: 18px;
         height: 18px;
         background-color: #0b5394; /* The blue liquid */
         border-radius: 50%;
-
-        /* ADDED: Transition for the liquid's transform */
         transform: scale(1);
-        /* --- CHANGED: Faster transition --- */
         transition: transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
     }
 
 
     /* Class for the "shrunken" state while dragging */
     #scroller-handle.grabbing {
-        /* This squishes the black dot horizontally ONLY */
         transform: translate(-50%, -50%) scaleX(0.25) scaleY(1);
         cursor: grabbing;
     }
 
     /* --- MODIFIED: This is the "at dot" state --- */
     #scroller-handle.grabbing::before {
-        /* scaleX(2) -> 9px width */
-        /* scaleY(0.5) -> 9px height (to match 9px width) */
         transform: scaleX(2) scaleY(0.5);
     }
 
     /* --- ADDED: This is the "flowing" state --- */
     #scroller-handle.grabbing.flowing::before {
-        /* scaleX(2) -> 9px width */
-        /* scaleY(2.0) -> 36px height (to "flow") */
         transform: scaleX(2) scaleY(2.0);
     }
 
@@ -280,43 +235,42 @@
 
     /* --- ADDED: Dashed border for the working area --- */
     .working-area {
-        flex-grow: 1; /* Takes all available vertical space in the middle */
+        /* --- START: EDITED BY GEMINI --- */
+        flex-grow: 1; /* Fills horizontal space */
+        order: 2; /* Default position */
         border: 2px dashed black;
-        /* --- START: EDITED BY GEMINI --- */
-        /* Desktop Calculation:
-          Previous Margin: 63px
-          Added Padding: 10px
-          New Margin: 73px
-        */
-        margin-left: 73px; /* Was 63px */
-        margin-right: 73px; /* Was 63px */
-        /* --- END: EDITED BY GEMINI --- */
-        /* --- CHANGED: Removed vertical margins --- */
-        /* margin-top: 10px; */
-        /* margin-bottom: 10px; */
-        /* --- END: Changed --- */
-        /* Ensure it doesn't shrink */
-        /* min-height: 50px; */ /* REMOVED BY GEMINI */
-
-        /* --- START: EDITED BY GEMINI --- */
-        display: flex;
-        align-items: center; /* Vertically center the scroller */
-        padding-top: 10px;
-        padding-bottom: 10px;
-        box-sizing: border-box;
+        /* Space from scroller (13.5px overhang + 10.5px padding) */
+        margin-left: 24px; 
+        margin-right: 0; /* Default */
+        /* REMOVED: min-height */
+        /* REMOVED: display: flex and align-items */
         /* --- END: EDITED BY GEMINI --- */
     }
-    /* --- END: Added style --- */
+    
+    /* --- START: EDITED BY GEMINI --- */
+    /* Rules for when scroller is on the right */
+    .main-content-wrapper.right .scroller-container {
+        order: 3;
+    }
+    .main-content-wrapper.right .working-area {
+        order: 2;
+        margin-left: 0;
+        margin-right: 24px; /* Add space on the right */
+    }
+    /* --- END: EDITED BY GEMINI --- */
 
 
     .logo-container {
         display: flex;
-        flex-direction: row; /* Aligns logo items in a row */
-        align-items: flex-end; /* Aligns items based on their bottom edge */
-        gap: 20px; /* space between logo items */
-        margin-bottom: 20px; /* Adds space from the bottom edge */
-        width: 100%; /* Added to allow centering */
-        justify-content: center; /* Added to center the logos */
+        flex-direction: row; 
+        align-items: flex-end; 
+        gap: 20px; 
+        margin-bottom: 20px; 
+        width: 100%; 
+        justify-content: center;
+        /* --- START: EDITED BY GEMINI --- */
+        margin-top: auto; /* Pushes logos to the bottom */
+        /* --- END: EDITED BY GEMINI --- */
     }
 
     .logo-item {
@@ -353,14 +307,9 @@
 
         /* Adjust top group for mobile */
         .top-group {
-            /* CHANGED: Use padding instead of margin */
             padding: 0 20px;
-            /* --- CHANGED: Raised higher --- */
             margin-top: 10px;
-            /* align-self: flex-start is inherited */
         }
-
-        /* REMOVED: .top-group.right media query */
 
         /* Adjust title for mobile */
         .data-title-container {
@@ -372,7 +321,6 @@
         }
 
         .title-ua {
-            /* Font weight is inherited from the main rule (800) */
             font-size: 0.83rem; /* 13.28px - CHANGED (adjusted to match mobile width with new weight) */
         }
 
@@ -382,90 +330,53 @@
             margin-top: 4px;
         }
 
-        .scroller-container {
-            /* Margins are now on the parent .top-group */
-            /* REMOVED: margin-left: 0; (This would break the .right state on mobile) */
-            /* --- CHANGED: Reduced margin --- */
-            /* margin-top: 10px; */ /* REMOVED BY GEMINI */
-            height: 343px; /* 6/7ths of original 400px */
-            /* The transition and margin-left/right rules are inherited */
-            /* The padding: 0 10px; is inherited */
-        }
-
-        /* .scroller-container.right { margin-left: auto; margin-right: 0; } is inherited */
         /* --- START: EDITED BY GEMINI --- */
-        /* ADDED: Override transform for mobile */
-        .working-area.right .scroller-container {
+        .main-content-wrapper {
+            margin: 10px 20px 0 20px; /* 10px top, 20px L/R */
+        }
         /* --- END: EDITED BY GEMINI --- */
-            /* --- START OF FIX: Reverted 29px to 9px --- */
-            /* 100vw (full width) - 40px (20px L/R padding) - 9px (original container width) */
-            transform: translateX(calc(100vw - 40px - 9px));
-            /* --- END OF FIX --- */
+
+        .scroller-container {
+            margin-top: 0; /* Now on wrapper */
+            height: 343px; /* 6/7ths of original 400px */
         }
 
-        /* REMOVED: .scroller-container.right.dragging rule */
+        /* REMOVED: .working-area.right .scroller-container { ... } rule */
 
         .dot {
-            width: 16px; /* Doubled from 8px */
-            height: 16px; /* Doubled from 8px */
-            /* transition: opacity... is inherited from the base .dot rule */
+            width: 16px; 
+            height: 16px; 
         }
 
         #scroller-handle {
-            width: 24px; /* CHANGED: Reduced from 36px (approx 7% of 343px) */
-            height: 24px; /* CHANGED: Reduced from 36px (approx 7% of 343px) */
-
-            /* --- REMOVED --- */
-            /* border-width: 7px; */
-            /* --- END REMOVED --- */
-
-            /* The .grabbing class and transitions are inherited */
+            width: 24px; 
+            height: 24px; 
         }
 
-        /* --- ADDED: Mobile size for blue liquid --- */
         #scroller-handle::before {
-            /* Size calculation: 24px (parent) - 7px (original border) * 2 = 10px */
             width: 10px;
             height: 10px;
         }
 
-        /* The .grabbing::before, .grabbing.flowing::before transforms are inherited */
-
         /* --- ADDED: Mobile style for working area --- */
         .working-area {
             /* --- START: EDITED BY GEMINI --- */
-            /* Mobile Calculation:
-              Previous Margin: 37px
-              Added Padding: 5px
-              New Margin: 42px
-            */
-            margin-left: 42px; /* Was 37px */
-            margin-right: 42px; /* Was 37px */
-            /* --- END: EDITED BY GEMINI --- */
-            /* --- CHANGED: Removed vertical margins --- */
-            /* margin-top: 5px; */
-            /* margin-bottom: 5px; */
-            /* --- END: Changed --- */
-            /* min-height: 30px; */ /* REMOVED BY GEMINI */
-            flex-grow: 1; /* <-- THIS WAS THE MISSING LINE */
-
-            /* --- START: EDITED BY GEMINI --- */
-            display: flex;
-            align-items: center; /* Vertically center the scroller */
-            padding-top: 5px;
-            padding-bottom: 5px;
-            box-sizing: border-box;
+            margin-left: 12px; /* Half of desktop */
+            margin-right: 0;
             /* --- END: EDITED BY GEMINI --- */
         }
-        /* --- END: Added style --- */
+
+        /* --- START: EDITED BY GEMINI --- */
+        .main-content-wrapper.right .working-area {
+            margin-left: 0;
+            margin-right: 12px; /* Half of desktop */
+        }
+        /* --- END: EDITED BY GEMINI --- */
 
         .logo-container {
-            width: 100%;
-            box-sizing: border-box; /* Ensures padding doesn't add to the total width */
-            padding: 0 20px 20px; /* 0 for top, 20px for left/right, 20px for bottom */
-            margin-bottom: 0; /* Bottom spacing is now handled by padding */
-            justify-content: center; /* This was already here and correct */
-            gap: 15px; /* Adjust the gap for smaller screens */
+            padding: 0 20px 20px; 
+            margin-bottom: 0; 
+            gap: 15px; 
         }
         .logo {
             width: 90px; /* Logos size on mobile */
@@ -496,16 +407,12 @@
             <span class="arrow-right">↷</span>
         </i>
     </p>
-
-    <!-- --- START: EDITED BY GEMINI --- -->
-    <!-- SCROLLER CONTAINER MOVED OUT OF .top-group -->
-    <!-- --- END: EDITED BY GEMINI --- -->
 </div>
 
-<!-- ADDED: Dashed box for the main working area -->
-<div class="working-area">
-    <!-- --- START: EDITED BY GEMINI --- -->
-    <!-- SCROLLER CONTAINER MOVED INTO .working-area -->
+<!-- --- START: EDITED BY GEMINI --- -->
+<!-- New wrapper for scroller and content -->
+<div class="main-content-wrapper">
+    <!-- Scroller is now here -->
     <div class="scroller-container">
         <!-- ADDED: 6 segments for the 6 gaps between 7 dots -->
         <div class="thick-segment" id="segment-0"></div>
@@ -525,8 +432,12 @@
         <!-- REMOVED: #thick-line-segment -->
         <div id="scroller-handle"></div>
     </div>
-    <!-- --- END: EDITED BY GEMINI --- -->
+
+    <!-- Dashed box is now here -->
+    <div class="working-area"></div>
 </div>
+<!-- --- END: EDITED BY GEMINI --- -->
+
 
 <!-- Logo content is placed here, positioned at the bottom by the body's flex settings -->
 <div class="logo-container">
@@ -566,10 +477,11 @@
         }
         // --- END: PocketPal Link Logic ---
 
-        // --- REMOVED: Side Toggle Logic ---
-        // const titleContainer = document.querySelector('.data-title-container');
+        // --- START: EDITED BY GEMINI ---
         const scrollerContainer = document.querySelector('.scroller-container');
-        // --- END: Side Toggle Logic ---
+        const mainContentWrapper = document.querySelector('.main-content-wrapper');
+        const topGroup = document.querySelector('.top-group');
+        // --- END: EDITED BY GEMINI ---
 
 
         // --- START: Text Data for Scroller (INVERTED) ---
@@ -811,9 +723,8 @@
                 const screenWidth = window.innerWidth;
                 
                 // --- START: EDITED BY GEMINI ---
-                const workingArea = scroller.parentElement; // scroller's parent is .working-area
-                const topGroup = document.querySelector('.top-group'); // Get .top-group separately
-                const isRightSide = topGroup.classList.contains('right'); // Check parent
+                // Use the constants defined at the top
+                const isRightSide = topGroup.classList.contains('right'); 
                 // --- END: EDITED BY GEMINI ---
 
                 // --- START OF FIX: Set drag distance to (Half Screen - 10px) ---
@@ -822,14 +733,14 @@
 
                 if (isRightSide && dragDistance < -minDrag) { // Dragged left
                     // --- START: EDITED BY GEMINI ---
-                    topGroup.classList.remove('right'); // Modify parent's class
-                    workingArea.classList.remove('right'); // ALSO modify working-area's class
+                    topGroup.classList.remove('right'); 
+                    mainContentWrapper.classList.remove('right'); // Toggle wrapper class
                     // --- END: EDITED BY GEMINI ---
                     endDrag(e); // Stop the drag immediately after toggle
                 } else if (!isRightSide && dragDistance > minDrag) { // Dragged right
                     // --- START: EDITED BY GEMINI ---
-                    topGroup.classList.add('right'); // Modify parent's class
-                    workingArea.classList.add('right'); // ALSO modify working-area's class
+                    topGroup.classList.add('right'); 
+                    mainContentWrapper.classList.add('right'); // Toggle wrapper class
                     // --- END: EDITED BY GEMINI ---
                     endDrag(e); // Stop the drag immediately after toggle
                 }
