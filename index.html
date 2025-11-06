@@ -79,44 +79,38 @@
         /* margin-left: 0; */ /* This is now controlled below for animation */
         margin-top: 20px; /* Added space to avoid overlap with title */
         height: 514px; /* 6/7ths of original 600px */
-        width: 4px; /* Doubled from 2px */
-        background-color: black;
+        
+        /* --- START OF CHANGES --- */
+        width: 4px; /* CHANGED: Back to 4px base width */
+        background-color: black; /* CHANGED: Container is the line again */
+        /* --- END OF CHANGES --- */
+        
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
         position: relative;
         flex-shrink: 0; /* Prevents scroller from shrinking */
-        /* REMOVED: align-self: flex-start; */
         
-        /* --- START: EDITED FOR SMOOTHER TRANSITION --- */
-        /* Use margins for animatable horizontal positioning */
-        /* REMOVED: margin-left: 0; */
-        /* REMOVED: margin-right: auto; */
-        /* CHANGED: Replaced bouncy cubic-bezier with a smoother 'ease-in-out' curve */
-        /* CHANGED: Increased duration for a smoother, more 'liquid' feel */
+        /* CHANGED: Added width transition back */
         transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1),
                     width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
         transform: translateX(0); /* ADDED: Default "left" position */
-        /* --- END: EDITED FOR SMOOTHER TRANSITION --- */
     }
     
-    /* ADDED: New rule for when dragging */
+    /* REMOVED: .scroller-container::before pseudo-element */
+
+    /* REMOVED: #thick-line-segment styles */
+    
+    /* ADDED: Rule for when dragging (enlarges line width) */
     .scroller-container.dragging {
-        /* CHANGED: Enlarged less (was 12px, now 9px) */
         width: 9px; 
     }
 
     /* ADDED: Rule to move *only* the scroller */
     .scroller-container.right {
-        /* REMOVED: align-self: flex-end; */
-
         /* --- START: EDITED FOR TRANSITION --- */
-        /* Set new margins to trigger the transition */
-        /* REMOVED: margin-left: auto; */
-        /* REMOVED: margin-right: 0; */
-        /* ADDED: New "right" position using transform. */
-        /* 100vw (full width) - 80px (40px L/R padding) - 4px (scroller width) */
+        /* CHANGED: Use 4px (base width) in calculation */
         transform: translateX(calc(100vw - 80px - 4px));
         /* --- END: EDITED FOR TRANSITION --- */
     }
@@ -133,8 +127,10 @@
         background-color: black;
         border-radius: 50%;
         flex-shrink: 0;
-        /* --- REMOVED --- */
-        /* Removed transition: opacity... */
+        
+        /* --- REMOVED: z-index --- */
+        position: relative; 
+        z-index: 2; /* Keep dots above the line */
     }
     
     /* --- REMOVED --- */
@@ -164,6 +160,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        
+        z-index: 3; /* --- ADDED: Topmost element --- */
         /* --- END OF EDITS --- */
     }
 
@@ -185,22 +183,19 @@
 
     /* ADDED: New class for the "shrunken" state while dragging */
     #scroller-handle.grabbing {
-        /* --- ADDED: This squishes the black dot --- */
-        /* scaleX(0.25) makes 36px dot -> 9px wide (matching the line) */
-        /* scaleY(1.6) elongates it */
-        transform: translate(-50%, -50%) scaleX(0.25) scaleY(1.6); 
+        /* --- THE CRITICAL FIX --- */
+        /* --- REMOVED scaleY(1.6) --- */
+        /* This squishes the black dot horizontally ONLY */
+        transform: translate(-50%, -50%) scaleX(0.25) scaleY(1); 
         cursor: grabbing;
     }
 
     /* --- ADDED: This rule now animates the blue liquid ONLY --- */
     #scroller-handle.grabbing::before {
-        /* --- This counter-animates the blue liquid --- */
-        /* Parent is scaleX(0.25). Child needs scaleX(4) to *look* squished */
-        /* But we want it to match the line (9px). 18px * 0.25(parent) * 2(child) = 9px */
-        /* Parent is scaleY(1.6). Child needs scaleY(1/1.6) = 0.625 to stay circular */
-        /* Let's make it elongate *with* the parent: scaleY(1.0) */
-        /* Total Y scale = 1.6 (parent) * 1.0 (child) = 1.6 */
-        transform: scaleX(2) scaleY(1.0); 
+        /* --- THE LIQUID FLOW --- */
+        /* scaleX(2) counter-squishes horizontally to 9px */
+        /* scaleY(2.0) elongates ONLY the blue liquid to "flow" */
+        transform: scaleX(2) scaleY(2.0); 
     }
 
     #scroller-handle:active {
@@ -286,7 +281,7 @@
         /* .scroller-container.right { margin-left: auto; margin-right: 0; } is inherited */
         /* ADDED: Override transform for mobile */
         .scroller-container.right {
-            /* 100vw (full width) - 40px (20px L/R padding) - 4px (scroller width) */
+            /* 100vw (full width) - 40px (20px L/R padding) - 4px (base width) */
             transform: translateX(calc(100vw - 40px - 4px));
         }
 
@@ -358,6 +353,7 @@
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
+        <!-- REMOVED: thick-line-segment -->
         <div id="scroller-handle"></div>
     </div>
 </div>
@@ -431,6 +427,7 @@
         const titleUa = document.querySelector('.title-ua');
         // Set initial level index to 6 (Bottom dot, which is now Level 1)
         let currentLevelIndex = 6; // Keep track of the current level
+        // REMOVED: previousLevelIndex
         // --- END: Text Data for Scroller ---
 
 
@@ -438,6 +435,7 @@
         const handle = document.getElementById('scroller-handle');
         const scroller = handle.parentElement;
         const dots = Array.from(scroller.getElementsByClassName('dot'));
+        // REMOVED: thickLine
         let isDragging = false;
 
         const dotPositions = dots.map(dot => dot.offsetTop + dot.offsetHeight / 2);
@@ -451,8 +449,9 @@
             document.body.style.cursor = 'grabbing'; // Optional: change cursor for the whole page
             
             // --- ADDED ---
+            // REMOVED: previousLevelIndex
             handle.classList.add('grabbing'); // Add class to shrink handle
-            scroller.classList.add('dragging'); // Add class to thicken line
+            scroller.classList.add('dragging'); // Add class for positioning
         }
 
         function endDrag(e) {
@@ -463,7 +462,9 @@
             
             // --- ADDED ---
             handle.classList.remove('grabbing'); // Remove class to grow handle
-            scroller.classList.remove('dragging'); // Remove class to thin line
+            scroller.classList.remove('dragging'); // Remove class for positioning
+            
+            // --- REMOVED: Hide thick line ---
         }
 
         function onDrag(e) {
@@ -490,6 +491,8 @@
             // Update the text based on the index
             if (closestIndex !== -1 && closestIndex !== currentLevelIndex) {
                 
+                // --- REMOVED: Store previous index *before* updating ---
+                
                 // Determine direction (1 for down, -1 for up)
                 const direction = closestIndex > currentLevelIndex ? 1 : -1;
                 const transitionDelay = 200; // Must match CSS transition duration
@@ -504,6 +507,8 @@
                 // 2. Update current index
                 currentLevelIndex = closestIndex;
                 
+                // --- REMOVED: Thick Line Logic ---
+                
                 // 3. Wait for fade out, then change text and position for fade-in
                 setTimeout(() => {
                     // Change text content
@@ -517,7 +522,9 @@
 
                     // Set "from" position (opposite direction)
                     titleEn.style.transform = `translateY(${-direction * slideDistance}px)`;
-                    titleUa.style.transform = `translateY(${-direction * slideDistance}px)`;
+                    // --- THE FIX ---
+                    titleUa.style.transform = `translateY(${-direction * slideDistance}px)`; // Was slideFistance
+                    // --- END THE FIX ---
 
                     // Force the browser to apply the transform immediately
                     titleEn.offsetHeight; // This is a trick to trigger a browser reflow
