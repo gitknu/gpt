@@ -497,6 +497,139 @@
     }
     /* --- END: Tokenization Visualization Styles --- */
 
+    /* --- START: Pretraining Visualization Styles --- */
+    .pretraining-vis-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-family: 'Montserrat', sans-serif;
+        color: black;
+    }
+    .pretraining-phase {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        transition: opacity 0.5s ease-in-out;
+    }
+    .pretraining-phase.hidden {
+        display: none;
+        opacity: 0;
+    }
+    /* Phase 1: Connection Building */
+    .vis-corpus-analysis-area {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+    .vis-corpus-text-area {
+        font-size: 1.3rem;
+        font-family: 'Courier New', Courier, monospace;
+        padding: 15px;
+        border: 1px solid #eee;
+        border-radius: 5px;
+        line-height: 1.8;
+        position: relative;
+    }
+    .vis-corpus-word {
+        transition: background-color 0.3s;
+    }
+    .vis-scan-window {
+        position: absolute;
+        border: 2px solid #0b5394;
+        border-radius: 5px;
+        background-color: rgba(11, 83, 148, 0.1);
+        transition: left 0.5s ease-in-out, width 0.5s ease-in-out;
+    }
+    .vis-corpus-word.active-pair {
+        background-color: #f0e68c;
+    }
+    .vis-weight-matrix-area {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr); /* Adjust based on vocab size */
+        gap: 5px;
+        font-size: 0.8rem;
+    }
+    .vis-weight-cell {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+        padding: 4px;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+    .vis-weight-cell .token-pair {
+        font-size: 0.65rem;
+        color: #888;
+    }
+    .vis-weight-cell .weight-value {
+        font-weight: bold;
+        font-family: 'Courier New', Courier, monospace;
+    }
+    .vis-weight-cell.highlight-update {
+        background-color: #ddffdd;
+        transform: scale(1.1);
+    }
+    .vis-weight-cell.highlight-predict {
+        background-color: rgba(173, 216, 230, 0.7); /* Light Blue */
+    }
+    /* Phase 2: Masked Prediction */
+    .vis-prediction-area {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .vis-model-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .vis-model-icon {
+        font-size: 4rem;
+        animation: model-pulse 2.5s infinite ease-in-out;
+    }
+    @keyframes model-pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+    .vis-knowledge-gears { font-size: 1.5rem; margin-top: -10px; opacity: 0.7; }
+    .vis-knowledge-gears .gear1 { display: inline-block; animation: spin-clockwise 5s linear infinite; }
+    .vis-knowledge-gears .gear2 { display: inline-block; animation: spin-counter-clockwise 5s linear infinite; margin-left: -8px; }
+    @keyframes spin-clockwise { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes spin-counter-clockwise { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+    .vis-text-processing-area {
+        font-size: 1.4rem;
+        font-family: 'Courier New', Courier, monospace;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        min-height: 60px;
+        width: 100%;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+    .vis-masked-word { background-color: #ffd700; color: black; padding: 2px 8px; border-radius: 4px; font-weight: bold; position: relative; }
+    .vis-prediction-popup {
+        position: absolute;
+        bottom: 110%; left: 50%;
+        transform: translateX(-50%);
+        background-color: white; border: 1px solid black; border-radius: 5px;
+        padding: 5px 10px; font-size: 1rem; opacity: 0;
+        transition: opacity 0.3s, transform 0.3s;
+        white-space: nowrap;
+    }
+    .vis-prediction-popup.visible { opacity: 1; transform: translateX(-50%) translateY(-5px); }
+    .vis-prediction-popup.correct { background-color: #ddffdd; border-color: green; }
+    .vis-prediction-popup.incorrect { background-color: #ffdddd; border-color: red; text-decoration: line-through; }
+    .vis-stats-area { width: 100%; display: flex; justify-content: space-around; padding: 10px; font-size: 1rem; font-family: 'Montserrat', sans-serif; }
+    /* --- END: Pretraining Visualization Styles --- */
+
 
     /* --- Mobile Responsivity --- */
     @media (max-width: 600px) {
@@ -601,6 +734,14 @@
         .vis-vocab-area { min-height: 60px; gap: 5px; }
         .vis-vocab-entry { font-size: 0.75rem; padding: 3px 8px; }
         .vis-sequence-area { font-size: 1rem; padding: 10px; min-height: 40px; }
+        
+        /* Pretraining mobile styles */
+        .vis-corpus-text-area { font-size: 1rem; }
+        .vis-weight-matrix-area { grid-template-columns: repeat(3, 1fr); font-size: 0.7rem; }
+        .vis-model-icon { font-size: 3rem; }
+        .vis-knowledge-gears { font-size: 1.2rem; }
+        .vis-text-processing-area { font-size: 1rem; min-height: 50px; }
+        .vis-stats-area { font-size: 0.8rem; }
 
 
 /* --- END: EDITED BY GEMINI --- */
@@ -890,7 +1031,7 @@
             }
         }
         
-        // --- Preprocessing Visualizer (EDITED BY GEMINI) ---
+        // --- Preprocessing Visualizer ---
         async function startPreprocessingVisualization() {
             if (isVisRunning) return;
             isVisRunning = true;
@@ -959,7 +1100,6 @@
                         
                         addToVisLog(logArea, fix.log);
                         
-                        // Highlight the error
                         let highlightedHtml = textArea.innerHTML.replace(fix.find, `<span class="error-highlight">${typeof fix.find === 'string' ? fix.find : fix.find.source}</span>`);
                         if (textArea.innerHTML !== highlightedHtml) {
                            textArea.innerHTML = highlightedHtml;
@@ -967,7 +1107,6 @@
                         await wait(1000);
                         if (!isVisRunning) break;
 
-                        // Animate the fix
                         const errorSpan = textArea.querySelector('.error-highlight');
                         if (errorSpan) {
                             errorSpan.classList.add('error-fixing');
@@ -976,9 +1115,8 @@
                         await wait(500);
                         if (!isVisRunning) break;
 
-                        // Apply the fix
                         let fixedHtml = textArea.innerHTML.replace(/<span class="error-fixing">.*?<\/span>/, `<span class="corrected-text">${fix.replace}</span>`);
-                        if(typeof fix.find !== 'string') { // Regex fix
+                        if(typeof fix.find !== 'string') { 
                            fixedHtml = textArea.innerHTML.replace(/<span class="error-highlight">.*?<\/span>/, `<span class="corrected-text">${fix.replace}</span>`);
                            textArea.innerHTML = `<span>${textArea.textContent.replace(fix.find, fix.replace)}</span>`;
                         } else {
@@ -988,7 +1126,6 @@
                         await wait(1000);
                         if (!isVisRunning) break;
                         
-                        // Normalize the text (remove the corrected span)
                         textArea.innerHTML = `<span>${textArea.textContent}</span>`;
                         await wait(500);
                         if (!isVisRunning) break;
@@ -1000,7 +1137,6 @@
                     await wait(500);
                     if (!isVisRunning) break;
                     
-                    // File animation
                     const packet = document.createElement('div');
                     packet.className = 'vis-file-packet';
                     packet.innerHTML = `📄<div class="vis-file-packet-name">${job.originalFilename}</div>`;
@@ -1102,21 +1238,18 @@
                 for (const sentence of sentences) {
                     if (!isVisRunning) break;
 
-                    // 1. Show sentence
                     sentenceArea.innerHTML = sentence.split(' ').map(word => `<span class="vis-word-token">${word}</span>`).join('');
-                    sequenceArea.innerHTML = ''; // Clear previous sequence
+                    sequenceArea.innerHTML = ''; 
                     addToVisLog(logArea, `Обробка речення: "${sentence}"`);
                     await wait(2000);
                     if (!isVisRunning) break;
 
-                    // 2. Split into tokens
                     const wordTokens = sentenceArea.querySelectorAll('.vis-word-token');
                     addToVisLog(logArea, "Розбиття на окремі токени...");
                     wordTokens.forEach(token => token.classList.add('spacing'));
                     await wait(1500);
                     if (!isVisRunning) break;
 
-                    // 3. Build vocabulary and sequence
                     const currentSequence = [];
                     for (const token of wordTokens) {
                         if (!isVisRunning) break;
@@ -1174,7 +1307,6 @@
                 await wait(500);
                 if (!isVisRunning) break;
                 
-                // Reset for next full loop
                 logArea.innerHTML = '';
                 sentenceArea.innerHTML = '';
                 vocabArea.innerHTML = '';
@@ -1185,6 +1317,238 @@
                 visContainer.style.opacity = 1;
                 await wait(500);
                 visContainer.style.transition = '';
+            }
+        }
+        
+        // --- Unsupervised Pretraining Visualizer ---
+        async function startUnsupervisedPretrainingVisualization() {
+            if (isVisRunning) return;
+            isVisRunning = true;
+
+            const corpus = "the quick brown fox jumps over the lazy dog the lazy fox slept all day";
+            const unique_tokens = [...new Set(corpus.split(' '))].sort();
+            const token_pairs = unique_tokens.flatMap((t1, i) => unique_tokens.slice(i + 1).map(t2 => [t1, t2].sort().join('-'))).filter((v, i, a) => a.indexOf(v) === i);
+
+            workingArea.innerHTML = `
+                <div class="pretraining-vis-container">
+                    <!-- Phase 1: Connection Building -->
+                    <div class="pretraining-phase" id="phase-1-connections">
+                        <div class="vis-corpus-analysis-area">
+                            <div class="vis-corpus-text-area" id="vis-corpus-text-area"></div>
+                            <div class="vis-weight-matrix-area" id="vis-weight-matrix-area"></div>
+                        </div>
+                    </div>
+
+                    <!-- Phase 2: Masked Prediction -->
+                    <div class="pretraining-phase hidden" id="phase-2-prediction">
+                        <div class="vis-prediction-area">
+                            <div class="vis-model-area">
+                                <div class="vis-model-icon">🧠</div>
+                                <div class="vis-knowledge-gears">
+                                    <span class="gear1">⚙️</span>
+                                    <span class="gear2">⚙️</span>
+                                </div>
+                            </div>
+                            <div class="vis-text-processing-area" id="vis-text-processing-area"></div>
+                             <div class="vis-stats-area">
+                                <div>Epoch: <span id="stat-epoch">1</span></div>
+                                <div>Loss: <span id="stat-loss">0.87</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="vis-log" id="vis-log"></div>
+                </div>`;
+
+            const logArea = document.getElementById('vis-log');
+            const phase1Container = document.getElementById('phase-1-connections');
+            const phase2Container = document.getElementById('phase-2-prediction');
+            const corpusTextArea = document.getElementById('vis-corpus-text-area');
+            const weightMatrixArea = document.getElementById('vis-weight-matrix-area');
+            
+            // --- PHASE 1: Build Connections ---
+            const corpusWords = corpus.split(' ');
+            corpusTextArea.innerHTML = corpusWords.map((word, index) => `<span class="vis-corpus-word" id="cword-${index}">${word}</span>`).join(' ');
+            const wordElements = corpusWords.map((_, index) => document.getElementById(`cword-${index}`));
+            
+            weightMatrixArea.style.gridTemplateColumns = `repeat(${Math.min(unique_tokens.length, 6)}, 1fr)`;
+            const weights = {};
+            for (const pair of token_pairs) {
+                const [t1, t2] = pair.split('-');
+                weights[pair] = 0;
+                const cell = document.createElement('div');
+                cell.className = 'vis-weight-cell';
+                cell.id = `cell-${pair}`;
+                cell.innerHTML = `<div class="token-pair">${t1} ↔ ${t2}</div><div class="weight-value" id="weight-${pair}">0</div>`;
+                weightMatrixArea.appendChild(cell);
+            }
+
+            addToVisLog(logArea, "Аналіз тексту для знаходження зв'язків між токенами...");
+            await wait(1500);
+            
+            const scanWindow = document.createElement('div');
+            scanWindow.className = 'vis-scan-window';
+            corpusTextArea.appendChild(scanWindow);
+
+            const windowSize = 4;
+            for (let i = 0; i <= corpusWords.length - windowSize; i++) {
+                if (!isVisRunning) return;
+                
+                const windowWords = corpusWords.slice(i, i + windowSize);
+                const windowWordEls = wordElements.slice(i, i + windowSize);
+                
+                const firstEl = windowWordEls[0];
+                const lastEl = windowWordEls[windowWordEls.length - 1];
+                scanWindow.style.left = `${firstEl.offsetLeft}px`;
+                scanWindow.style.top = `${firstEl.offsetTop}px`;
+                scanWindow.style.width = `${lastEl.offsetLeft + lastEl.offsetWidth - firstEl.offsetLeft}px`;
+                scanWindow.style.height = `${firstEl.offsetHeight}px`;
+
+                addToVisLog(logArea, `Сканування: [${windowWords.join(' ')}]`);
+                await wait(1000);
+                
+                for(let j = 0; j < windowWords.length; j++) {
+                    for (let k = j + 1; k < windowWords.length; k++) {
+                        if (!isVisRunning) return;
+                        
+                        wordElements.forEach(el => el.classList.remove('active-pair'));
+                        windowWordEls[j].classList.add('active-pair');
+                        windowWordEls[k].classList.add('active-pair');
+                        
+                        const token1 = windowWords[j];
+                        const token2 = windowWords[k];
+                        const pairKey = [token1, token2].sort().join('-');
+                        
+                        if (weights.hasOwnProperty(pairKey)) {
+                            weights[pairKey]++;
+                            const cellEl = document.getElementById(`cell-${pairKey}`);
+                            const weightEl = document.getElementById(`weight-${pairKey}`);
+                            
+                            addToVisLog(logArea, `Зв'язок: ${token1} ↔ ${token2}. Вага: ${weights[pairKey]}`);
+                            cellEl.classList.add('highlight-update');
+                            weightEl.textContent = weights[pairKey];
+                            
+                            await wait(750);
+                            cellEl.classList.remove('highlight-update');
+                        }
+                    }
+                }
+                 wordElements.forEach(el => el.classList.remove('active-pair'));
+                 await wait(500);
+            }
+            scanWindow.style.opacity = 0;
+
+
+            // --- Transition to Phase 2 ---
+            addToVisLog(logArea, "Побудовано карту зв'язків. Починаємо тренування.");
+            await wait(2000);
+            if (!isVisRunning) return;
+            
+            phase1Container.style.opacity = 0;
+            phase2Container.classList.remove('hidden');
+            await wait(50);
+            phase2Container.style.opacity = 1;
+            phase1Container.style.display = 'none'; // Use display:none after transition
+            
+            // Re-use weight matrix in a more compact form for phase 2
+            const predictionArea = document.getElementById('phase-2-prediction').querySelector('.vis-prediction-area');
+            weightMatrixArea.style.opacity = '0.5';
+            predictionArea.insertBefore(weightMatrixArea, predictionArea.children[1]);
+
+            // --- PHASE 2: Masked Prediction Loop ---
+            const sentences = [
+                { text: "the fox jumps over the dog", mask: 1, alternatives: ["cat", "wolf"] },
+                { text: "a quick brown fox jumps", mask: 2, alternatives: ["red", "grey"] },
+                { text: "the dog slept all day", mask: 1, alternatives: ["cat", "boy"] }
+            ];
+            const textArea = document.getElementById('vis-text-processing-area');
+            const epochStat = document.getElementById('stat-epoch');
+            const lossStat = document.getElementById('stat-loss');
+            
+            let epoch = 1;
+            let loss = 0.87;
+
+            while(isVisRunning) {
+                epochStat.textContent = epoch;
+                lossStat.textContent = loss.toFixed(2);
+                addToVisLog(logArea, `Починаємо Епоху ${epoch}. Рівень помилки: ${loss.toFixed(2)}`);
+                await wait(1500);
+
+                for(const sentenceData of sentences) {
+                    if (!isVisRunning) break;
+
+                    const words = sentenceData.text.split(' ');
+                    const correctWord = words[sentenceData.mask];
+
+                    addToVisLog(logArea, "Аналізуємо наступний текст...");
+                    textArea.innerHTML = words.join(' ');
+                    await wait(1500);
+                    if (!isVisRunning) break;
+
+                    addToVisLog(logArea, `Приховуємо слово для тренування.`);
+                    const contextWords = words.filter((_, idx) => idx !== sentenceData.mask);
+                    words[sentenceData.mask] = `<span class="vis-masked-word">[MASK]<div class="vis-prediction-popup"></div></span>`;
+                    textArea.innerHTML = words.join(' ');
+                    await wait(1500);
+                    if (!isVisRunning) break;
+                    
+                    const maskedElement = textArea.querySelector('.vis-masked-word');
+                    const popup = maskedElement.querySelector('.vis-prediction-popup');
+                    addToVisLog(logArea, "Модель намагається вгадати слово, використовуючи ваги...");
+
+                    // Highlight relevant weights
+                    const activeCells = [];
+                    for(const cword of contextWords) {
+                         for (const token of unique_tokens) {
+                            const pairKey = [cword, token].sort().join('-');
+                            if(weights.hasOwnProperty(pairKey)) {
+                                const cell = document.getElementById(`cell-${pairKey}`);
+                                cell.classList.add('highlight-predict');
+                                activeCells.push(cell);
+                            }
+                         }
+                    }
+
+                    await wait(2000);
+                    if (!isVisRunning) break;
+                    activeCells.forEach(cell => cell.classList.remove('highlight-predict'));
+
+                    const isCorrect = Math.random() > loss;
+                    if (!isCorrect) {
+                        const wrongWord = sentenceData.alternatives[Math.floor(Math.random() * sentenceData.alternatives.length)];
+                        popup.textContent = `🔮 ${wrongWord}?`;
+                        popup.classList.add('incorrect', 'visible');
+                        addToVisLog(logArea, `Неправильно: "${wrongWord}". Оновлення вагів...`);
+                        await wait(2000);
+                        if (!isVisRunning) break;
+                        popup.classList.remove('visible');
+                        await wait(300);
+                    }
+
+                    popup.textContent = `✅ ${correctWord}!`;
+                    popup.classList.remove('incorrect');
+                    popup.classList.add('correct', 'visible');
+                    addToVisLog(logArea, `Правильно: "${correctWord}"!`);
+                    await wait(2000);
+                    if (!isVisRunning) break;
+
+                    textArea.innerHTML = sentenceData.text;
+                    await wait(1000);
+                }
+
+                if (!isVisRunning) break;
+                epoch++;
+                loss *= 0.65; 
+                if (loss < 0.1) {
+                     addToVisLog(logArea, "Навчання завершено! Перезапуск...");
+                     await wait(2000);
+                     if (!isVisRunning) break;
+                     startUnsupervisedPretrainingVisualization(); 
+                     return;
+                } else {
+                     addToVisLog(logArea, "Епоха завершена. Зниження рівня помилки...");
+                     await wait(2000);
+                }
             }
         }
         
@@ -1292,6 +1656,8 @@
                                 startPreprocessingVisualization();
                             } else if (currentLevelIndex === 4) {
                                 startTokenizationVisualization();
+                            } else if (currentLevelIndex === 3) {
+                                startUnsupervisedPretrainingVisualization();
                             }
                         }, 10); // A tiny delay is enough
                     }
@@ -1346,4 +1712,4 @@
     });
 </script>
 </body>
-</html>
+</html>```
