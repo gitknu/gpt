@@ -232,8 +232,8 @@
         /* REMOVED: order: 2; */
         border: 2px dashed black;
         /* CRITICAL: Set fixed margins on BOTH sides */
-        margin-left: 24px; 
-        margin-right: 24px; 
+        margin-left: 40px; /* EDITED: Increased from 24px */
+        margin-right: 40px; /* EDITED: Increased from 24px */
         /* ADDED: Set height to match scroller */
         height: 514px;
         box-sizing: border-box; /* Account for border */
@@ -250,7 +250,6 @@
 /* --- END: EDITED BY GEMINI --- */
 
 
-/* --- START: EDITED BY GEMINI --- */
     .logo-container {
         display: flex;
         flex-direction: row; 
@@ -260,9 +259,7 @@
         width: 100%; 
         justify-content: center;
         margin-top: auto; /* Pushes logos to the bottom */
-        box-sizing: border-box; /* --- ADDED: THIS IS THE FIX --- */
     }
-/* --- END: EDITED BY GEMINI --- */
 
     .logo-item {
         display: flex;
@@ -358,8 +355,8 @@
         /* --- ADDED: Mobile style for working area --- */
         .working-area {
             /* CRITICAL: Set fixed margins on BOTH sides for mobile */
-            margin-left: 12px; /* Half of desktop */
-            margin-right: 12px; /* Half of desktop */
+            margin-left: 20px; /* EDITED: Increased from 12px */
+            margin-right: 20px; /* EDITED: Increased from 12px */
             /* ADDED: Set height to match mobile scroller */
             height: 343px;
             box-sizing: border-box;
@@ -375,7 +372,6 @@
             margin-bottom: 0; 
             gap: 15px; 
             flex-wrap: wrap; /* --- ADDED: Prevents horizontal overflow --- */
-            /* The box-sizing: border-box from the main rule fixes the width */
         }
 /* --- END: EDITED BY GEMINI --- */
         .logo {
@@ -694,7 +690,7 @@
 
                         // Set "from" position (opposite direction)
                         titleEn.style.transform = `translateY(${-direction * slideDistance}px)`;
-                        titleUa.style.transform = `translateY(${-direction * slideDistance}px)`;
+                        titleUa.style.transform = `translateY(${-direction * slideLDistance}px)`;
 
                         // Force the browser to apply the transform immediately
                         titleEn.offsetHeight; // This is a trick to trigger a browser reflow
@@ -721,7 +717,7 @@
 
                 // --- START OF FIX: Set drag distance to (Half Screen - 10px) ---
                 const dragDistance = currentX - startX; // Get horizontal drag distance
-                const minDrag = (screenWidth / 2) - 50; // Min drag distance is (Half Screen - 10px)
+                const minDrag = (screenWidth / 2) - 10; // Min drag distance is (Half Screen - 10px)
 
                 if (isRightSide && dragDistance < -minDrag) { // Dragged left
                     topGroup.classList.remove('right'); 
