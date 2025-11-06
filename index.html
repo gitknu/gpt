@@ -89,6 +89,22 @@
         user-select: none;
     }
 
+    /* --- CORRECTED: Style for arrow hints --- */
+    .scroller-hint .arrow-left {
+        display: inline; /* Show left arrow by default (scroller is on the left) */
+    }
+    .scroller-hint .arrow-right {
+        display: none; /* Hide right arrow by default */
+    }
+
+    .top-group.right .scroller-hint .arrow-left {
+        display: none; /* Hide left arrow when scroller is on the right */
+    }
+    .top-group.right .scroller-hint .arrow-right {
+        display: inline; /* Show right arrow when scroller is on the right */
+    }
+    /* --- END CORRECTION --- */
+
     /* --- START: Scroller Styles --- */
     .scroller-container {
         /* Margins are now on the parent .top-group */
@@ -160,8 +176,8 @@
 
     /* REMOVED: .scroller-container.dragging { ... } rule */
 
-    /* ADDED: Rule to move *only* the scroller */
-    .scroller-container.right {
+    /* ADDED: Rule to move *only* the scroller, now targeted via .top-group */
+    .top-group.right .scroller-container {
         /* --- START OF FIX: Reverted 29px to 9px --- */
         /* CHANGED: Use 9px (the original container width) in calculation */
         transform: translateX(calc(100vw - 80px - 9px));
@@ -345,7 +361,7 @@
 
         /* .scroller-container.right { margin-left: auto; margin-right: 0; } is inherited */
         /* ADDED: Override transform for mobile */
-        .scroller-container.right {
+        .top-group.right .scroller-container {
             /* --- START OF FIX: Reverted 29px to 9px --- */
             /* 100vw (full width) - 40px (20px L/R padding) - 9px (original container width) */
             transform: translateX(calc(100vw - 40px - 9px));
@@ -409,8 +425,14 @@
         <span class="title-ua">процес збору даних</span>
     </div>
 
-    <!-- --- ADDED: New hint text --- -->
-    <p class="scroller-hint"><i>можна потягнути на інший бік екрану</i></p>
+    <!-- --- MODIFIED: New hint text with spans for arrows --- -->
+    <p class="scroller-hint">
+        <i>
+            <span class="arrow-left">↶</span>
+            можна потягнути на інший бік екрану
+            <span class="arrow-right">↷</span>
+        </i>
+    </p>
 
     <div class="scroller-container">
         <!-- ADDED: 6 segments for the 6 gaps between 7 dots -->
@@ -712,17 +734,18 @@
             if (dragMode === 'horizontal') {
                 e.preventDefault(); // Prevent horizontal page swipe
                 const screenWidth = window.innerWidth;
-                const isRightSide = scroller.classList.contains('right');
+                const topGroup = scroller.parentElement; // Get the parent .top-group element
+                const isRightSide = topGroup.classList.contains('right'); // Check parent
 
                 // --- START OF FIX: Set drag distance to (Half Screen - 10px) ---
                 const dragDistance = currentX - startX; // Get horizontal drag distance
                 const minDrag = (screenWidth / 2) - 10; // Min drag distance is (Half Screen - 10px)
 
                 if (isRightSide && dragDistance < -minDrag) { // Dragged left
-                    scroller.classList.remove('right');
+                    topGroup.classList.remove('right'); // Modify parent's class
                     endDrag(e); // Stop the drag immediately after toggle
                 } else if (!isRightSide && dragDistance > minDrag) { // Dragged right
-                    scroller.classList.add('right');
+                    topGroup.classList.add('right'); // Modify parent's class
                     endDrag(e); // Stop the drag immediately after toggle
                 }
                 // --- END OF FIX ---
