@@ -550,23 +550,25 @@
     .vis-weight-matrix-area {
         display: grid;
         grid-template-columns: repeat(6, 1fr); /* Adjust based on vocab size */
-        gap: 4px; /* EDITED: Reduced gap */
-        font-size: 0.75rem; /* EDITED: Slightly smaller */
+        gap: 3px; /* EDITED: Reduced gap further */
+        font-size: 0.7rem; /* EDITED: Slightly smaller */
     }
     .vis-weight-cell {
         border: 1px solid #ccc;
         border-radius: 4px;
         text-align: center;
-        padding: 2px; /* EDITED: Reduced padding */
+        padding: 1px; /* EDITED: Reduced padding further */
         transition: background-color 0.3s, transform 0.2s;
+        overflow: hidden; /* EDITED: Prevent overflow within cell */
     }
     .vis-weight-cell .token-pair {
-        font-size: 0.6rem; /* EDITED: Smaller */
+        font-size: 0.55rem; /* EDITED: Smaller */
         color: #888;
     }
     .vis-weight-cell .weight-value {
         font-weight: bold;
         font-family: 'Courier New', Courier, monospace;
+        font-size: 0.7rem; /* EDITED: Made slightly smaller */
     }
     .vis-weight-cell.highlight-update {
         background-color: #ddffdd;
@@ -802,8 +804,8 @@
     }
     .vis-human-ranker {
         position: absolute;
-        font-size: 2.2rem; /* EDITED: Smaller */
-        left: -45px; /* EDITED: Adjusted position */
+        font-size: 2rem; /* EDITED: Smaller */
+        left: -35px; /* EDITED: Adjusted position to be safely inside */
         top: 0;
         opacity: 0;
         transition: all 0.8s cubic-bezier(0.65, 0, 0.35, 1);
