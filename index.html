@@ -22,7 +22,7 @@
 
     .top-group {
         width: 100%;
-        padding: 0 40px;
+        padding: 0 80px; /* --- EDITED: Increased horizontal padding --- */
         margin-top: 20px;
         box-sizing: border-box; /* Include padding in width */
         display: flex;
@@ -51,7 +51,7 @@
         font-size: 2rem; /* 32px */
         line-height: 1.2;
         text-align: center; /* --- ADDED --- */
-        color: #b80000; 
+        color: #b80000;
         transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
 
@@ -59,7 +59,7 @@
         font-weight: 800; /* Extrabold - CHANGED */
         font-size: 1.1rem; /* 17.6px - CHANGED (adjusted to match width with new weight) */
         line-height: 1.2;
-        text-align: center; 
+        text-align: center;
         transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
 
@@ -93,8 +93,8 @@
         flex-grow: 1; /* This wrapper fills the vertical space */
         width: 100%;
         box-sizing: border-box;
-        margin: 10px 0 0 0; 
-        padding: 0 40px; /* This is the outer page padding */
+        margin: 10px 0 0 0;
+        padding: 0 80px; /* --- EDITED: Increased horizontal padding --- */
         position: relative; /* CRITICAL: For absolute positioning child */
     }
 /* --- END: EDITED BY GEMINI --- */
@@ -105,7 +105,7 @@
     .scroller-container {
         margin-top: 0;
         height: 514px; /* 6/7ths of original 600px */
-        width: 9px; 
+        width: 9px;
         background-color: transparent;
         display: flex;
         flex-direction: column;
@@ -113,7 +113,7 @@
         align-items: center;
         position: absolute; /* CRITICAL: Now absolutely positioned */
         top: 0; /* Align to top of wrapper */
-        left: 40px; 
+        left: 80px; /* --- EDITED: Matched new padding --- */
         transition: left 0.4s cubic-bezier(0.65, 0, 0.35, 1);
     }
 
@@ -145,19 +145,19 @@
     }
 
     .dot {
-        width: 20px; 
-        height: 20px; 
+        width: 20px;
+        height: 20px;
         background-color: black;
         border-radius: 50%;
         flex-shrink: 0;
-        position: relative; 
+        position: relative;
         z-index: 3; /* Above thick line */
     }
 
     #scroller-handle {
         width: 36px; /* This is the outer black dot */
         height: 36px;
-        background-color: black; 
+        background-color: black;
         border-radius: 50%;
         position: absolute;
         left: 50%;
@@ -203,25 +203,26 @@
 
     .working-area {
         border: 2px dashed black;
+        border-radius: 10px;
         /* CRITICAL: Set fixed margins on BOTH sides */
-        margin-left: 24px; 
-        margin-right: 24px; 
+        margin-left: 24px;
+        margin-right: 24px;
         /* ADDED: Set height to match scroller */
         height: 514px;
         box-sizing: border-box; /* Account for border */
     }
-    
+
     .main-content-wrapper.right .scroller-container {
-        left: calc(100% - 40px - 9px);
+        left: calc(100% - 80px - 9px); /* --- EDITED: Matched new padding --- */
     }
 
     .logo-container {
         display: flex;
-        flex-direction: row; 
-        align-items: flex-end; 
-        gap: 20px; 
-        margin-bottom: 20px; 
-        width: 100%; 
+        flex-direction: row;
+        align-items: flex-end;
+        gap: 20px;
+        margin-bottom: 20px;
+        width: 100%;
         justify-content: center;
         margin-top: auto; /* Pushes logos to the bottom */
         box-sizing: border-box; /* --- ADDED: THIS IS THE FIX --- */
@@ -262,7 +263,7 @@
 
         /* Adjust top group for mobile */
         .top-group {
-            padding: 0 20px;
+            padding: 0 40px; /* --- EDITED: Increased horizontal padding for mobile --- */
             margin-top: 10px;
         }
 
@@ -288,29 +289,29 @@
 /* --- START: EDITED BY GEMINI --- */
         .main-content-wrapper {
             margin: 10px 0 0 0;
-            padding: 0 20px; /* Mobile page padding */
+            padding: 0 40px; /* --- EDITED: Increased horizontal padding for mobile --- */
         }
 
         .scroller-container {
             margin-top: 0;
             height: 343px; /* 6/7ths of original 400px */
-            left: 20px; /* Align to left padding edge on mobile */
+            left: 40px; /* --- EDITED: Matched new mobile padding --- */
         }
 
         /* CRITICAL: Mobile rule for scroller on the right */
         .main-content-wrapper.right .scroller-container {
-            left: calc(100% - 20px - 9px);
+            left: calc(100% - 40px - 9px); /* --- EDITED: Matched new mobile padding --- */
         }
 /* --- END: EDITED BY GEMINI --- */
 
         .dot {
-            width: 16px; 
-            height: 16px; 
+            width: 16px;
+            height: 16px;
         }
 
         #scroller-handle {
-            width: 24px; 
-            height: 24px; 
+            width: 24px;
+            height: 24px;
         }
 
         #scroller-handle::before {
@@ -335,9 +336,9 @@
 
 /* --- START: EDITED BY GEMINI --- */
         .logo-container {
-            padding: 0 20px 20px; 
-            margin-bottom: 0; 
-            gap: 15px; 
+            padding: 0 40px 20px; /* --- EDITED: Matched new mobile padding --- */
+            margin-bottom: 0;
+            gap: 15px;
             flex-wrap: wrap; /* --- ADDED: Prevents horizontal overflow --- */
             /* The box-sizing: border-box from the main rule fixes the width */
         }
@@ -680,19 +681,19 @@
             if (dragMode === 'horizontal') {
                 e.preventDefault(); // Prevent horizontal page swipe
                 const screenWidth = window.innerWidth;
-                
-                const isRightSide = topGroup.classList.contains('right'); 
+
+                const isRightSide = topGroup.classList.contains('right');
 
                 // --- START OF FIX: Set drag distance to (Half Screen - 10px) ---
                 const dragDistance = currentX - startX; // Get horizontal drag distance
                 const minDrag = (screenWidth / 2) - 10; // Min drag distance is (Half Screen - 10px)
 
                 if (isRightSide && dragDistance < -minDrag) { // Dragged left
-                    topGroup.classList.remove('right'); 
+                    topGroup.classList.remove('right');
                     mainContentWrapper.classList.remove('right'); // Toggle wrapper class
                     endDrag(e); // Stop the drag immediately after toggle
                 } else if (!isRightSide && dragDistance > minDrag) { // Dragged right
-                    topGroup.classList.add('right'); 
+                    topGroup.classList.add('right');
                     mainContentWrapper.classList.add('right'); // Toggle wrapper class
                     endDrag(e); // Stop the drag immediately after toggle
                 }
