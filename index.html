@@ -574,11 +574,14 @@
                     handle.classList.add('grabbing'); // --- MOVED HERE ---
                     handle.classList.add('flowing'); // Add class to elongate blue dot
                     clearTimeout(flowTimer); // Clear any existing timer
-                    // Set timer to remove flowing class after move animation (800ms)
-                    // --- CHANGED: Faster timeout ---
+                    
+                    // --- CHANGED: Timer now resets segments too ---
                     flowTimer = setTimeout(() => {
                         handle.classList.remove('flowing');
-                        handle.classList.remove('grabbing'); // --- ADDED HERE ---
+                        handle.classList.remove('grabbing');
+                        // --- THIS IS THE FIX ---
+                        // Deactivate all segments when the flow animation ends
+                        segments.forEach(seg => seg.classList.remove('active'));
                     }, 400); // Matches the `top` transition duration
                     // --- END: Flow Animation Logic ---
 
