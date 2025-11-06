@@ -20,18 +20,19 @@
         box-sizing: border-box; /* Ensure padding/borders don't add to height */
     }
 
+    /* --- START: EDITED BY GEMINI --- */
     .top-group {
         width: 100%;
-        padding: 0 80px; /* --- EDITED: Increased horizontal padding --- */
+        padding: 0 50px; /* Reduced horizontal padding */
         margin-top: 20px;
         box-sizing: border-box; /* Include padding in width */
         display: flex;
         flex-direction: column;
         align-items: flex-start;
     }
+    /* --- END: EDITED BY GEMINI --- */
 
 
-    /* --- START: EDITED BY GEMINI --- */
     .data-title-container {
         font-family: 'Montserrat', sans-serif;
         color: black;
@@ -66,7 +67,6 @@
         transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
         white-space: nowrap; /* Ensure text stays on one line */
     }
-    /* --- END: EDITED BY GEMINI --- */
 
 
     .scroller-hint {
@@ -95,19 +95,20 @@
         display: inline; /* Show right arrow when scroller is on the right */
     }
 
+    /* --- START: EDITED BY GEMINI --- */
     .main-content-wrapper {
         flex-grow: 1; /* This wrapper fills the vertical space */
         width: 100%;
         box-sizing: border-box;
         margin: 10px 0 0 0;
-        padding: 0 80px; /* --- EDITED: Increased horizontal padding --- */
+        padding: 0 50px; /* Reduced horizontal padding */
         position: relative; /* CRITICAL: For absolute positioning child */
     }
-/* --- END: EDITED BY GEMINI --- */
+    /* --- END: EDITED BY GEMINI --- */
 
 
     /* --- START: Scroller Styles --- */
-/* --- START: EDITED BY GEMINI --- */
+    /* --- START: EDITED BY GEMINI --- */
     .scroller-container {
         margin-top: 0;
         height: 514px; /* 6/7ths of original 600px */
@@ -119,9 +120,10 @@
         align-items: center;
         position: absolute; /* CRITICAL: Now absolutely positioned */
         top: 0; /* Align to top of wrapper */
-        left: 80px; /* --- EDITED: Matched new padding --- */
+        left: 50px; /* Matched new padding */
         transition: left 0.4s cubic-bezier(0.65, 0, 0.35, 1);
     }
+    /* --- END: EDITED BY GEMINI --- */
 
     .scroller-container::before {
         content: '';
@@ -225,9 +227,11 @@
         /* --- END: Added by Gemini for visualization --- */
     }
 
+    /* --- START: EDITED BY GEMINI --- */
     .main-content-wrapper.right .scroller-container {
-        left: calc(100% - 80px - 9px); /* --- EDITED: Matched new padding --- */
+        left: calc(100% - 50px - 9px); /* Matched new padding */
     }
+    /* --- END: EDITED BY GEMINI --- */
 
     .logo-container {
         display: flex;
@@ -418,7 +422,7 @@
         padding: 2px 4px;
         border-radius: 3px;
         border: 1px solid #ccc;
-        transition: background-color 0.3s ease-in-out;
+        transition: background-color: 0.3s ease-in-out;
     }
     /* --- END: Preprocessing Visualization Styles --- */
 
@@ -737,7 +741,7 @@
         gap: 10px; /* EDITED: Reduced gap */
     }
     .vis-response-box {
-        transition: border-color 0.5s, background-color 0.5s;
+        transition: border-color 0.5s, background-color: 0.5s;
     }
     .vis-response-box.incorrect {
         border-color: #b80000;
