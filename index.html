@@ -270,8 +270,12 @@
         margin-top: 15px;
         height: 100px; /* Fixed height for log area */
         width: 100%;
-        border-top: 1px solid #eee; /* A subtle separator instead of a full border */
-        padding-top: 10px;
+        /* --- EDITED FOR MATRIX THEME --- */
+        background-color: #000000;
+        border-top: 1px solid #00FF00;
+        padding: 10px;
+        box-sizing: border-box;
+        /* --- END EDITS --- */
         overflow-y: auto;
         font-size: 0.85rem;
         font-family: 'Courier New', Courier, monospace;
@@ -279,6 +283,10 @@
     }
     .vis-log-entry {
         margin-bottom: 5px;
+        /* --- EDITED FOR MATRIX THEME --- */
+        color: #00FF00;
+        text-shadow: 0 0 4px #00FF00;
+        /* --- END EDITS --- */
     }
 
     /* --- START: Data Collection Visualization Styles --- */
@@ -356,7 +364,8 @@
         position: relative; /* ADDED for packet positioning */
     }
     .vis-text-area {
-        font-family: 'Times New Roman', Times, serif;
+        /* --- FONT EDITED FOR CONSISTENCY --- */
+        font-family: 'Courier New', Courier, monospace;
         font-size: 1.1rem; /* EDITED: Slightly smaller */
         line-height: 1.5; /* EDITED: Tighter line spacing */
         padding: 15px; /* EDITED: Reduced padding */
