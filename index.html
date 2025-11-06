@@ -383,24 +383,27 @@
     /* --- Mobile Responsivity --- */
     @media (max-width: 600px) {
 
-        /* Adjust top group for mobile */
+        /* --- START: EDITED BY GEMINI --- */
+        /* Adjust top group for mobile to match logo padding and give header more space */
         .top-group {
-            padding: 0 40px; /* --- EDITED: Increased horizontal padding for mobile --- */
+            padding: 0 20px; /* --- EDITED: Matched logo padding for consistent width --- */
             margin-top: 10px;
         }
 
         /* Adjust title for mobile */
         .data-title-container {
             height: 57px; /* 1/7th of original 400px */
+            width: 100%; /* --- ADDED: Make container fill available width to prevent wrapping --- */
         }
 
         .title-en {
-            font-size: 1.5rem; /* 24px */
+            font-size: 1.4rem; /* 22.4px - EDITED: Slightly smaller to prevent wrapping */
         }
 
         .title-ua {
-            font-size: 0.83rem; /* 13.28px - CHANGED (adjusted to match mobile width with new weight) */
+            font-size: 0.8rem; /* 12.8px - EDITED: Slightly smaller to prevent wrapping */
         }
+        /* --- END: EDITED BY GEMINI --- */
 
         /* --- ADDED: Mobile hint styles --- */
         .scroller-hint {
@@ -564,19 +567,19 @@
     <div class="logo-item">
         <p class="logo-label">Комп'ютер</p>
         <a href="https://ollama.com" target="_blank" class="logo-link">
-            <img src="https://gitknu.github.io/gpt/files/ollama.png" alt="Ollama Logo" class="logo" onerror="this.onerror=null; this.src='httpshttps://placehold.co/150x150/eeeeee/aaaaaa?text=Ollama';">
+            <img src="https://gitknu.github.io/gpt/files/ollama.png" alt="Ollama Logo" class="logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/eeeeee/aaaaaa?text=Ollama';">
         </a>
     </div>
     <div class="logo-item">
         <p class="logo-label">Смартфон</p>
         <a href="https://play.google.com/store/apps/details?id=com.pocketpalai" target="_blank" class="logo-link" id="pocketpal-link">
-            <img src="https://gitknu.github.io/gpt/files/pocketpal.png" alt="PocketPal Logo" class="logo" onerror="this.onerror=null; this.src='httpshttps://placehold.co/150x150/eeeeee/aaaaaa?text=PocketPal';">
+            <img src="https://gitknu.github.io/gpt/files/pocketpal.png" alt="PocketPal Logo" class="logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/eeeeee/aaaaaa?text=PocketPal';">
         </a>
     </div>
     <div class="logo-item">
         <p class="logo-label">Власна АІ</p>
         <a href="https://github.com/theaniketgiri/create-llm" target="_blank" class="logo-link">
-            <img src="https://gitknu.github.io/gpt/files/github.png" alt="GitHub Logo" class="logo" onerror="this.onerror=null; this.src='httpshttps://placehold.co/150x150/eeeeee/aaaaaa?text=GitHub';">
+            <img src="https://gitknu.github.io/gpt/files/github.png" alt="GitHub Logo" class="logo" onerror="this.onerror=null; this.src='https://placehold.co/150x150/eeeeee/aaaaaa?text=GitHub';">
         </a>
     </div>
 </div>
