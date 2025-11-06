@@ -28,9 +28,9 @@
     .top-group {
         /* CHANGED: Removed margins, added padding, set to full width */
         width: 100%;
-        padding: 0 40px; 
+        padding: 0 40px;
         /* --- CHANGED: Raised header --- */
-        margin-top: 20px; 
+        margin-top: 20px;
         box-sizing: border-box; /* Include padding in width */
         display: flex;
         flex-direction: column;
@@ -51,7 +51,7 @@
         justify-content: center; /* Vertically center the text block */
         overflow: hidden; /* Added to clip the text during transition */
         /* --- CHANGED: Removed cursor pointer --- */
-        /* cursor: pointer; */ 
+        /* cursor: pointer; */
         user-select: none; /* ADDED: Prevent text selection on click */
         align-self: center; /* CHANGED: Center the title block */
         align-items: center; /* ADDED: Center the text lines inside */
@@ -80,13 +80,13 @@
     .scroller-hint {
         font-family: 'Montserrat', sans-serif;
         font-weight: 500; /* Not bold, as requested */
-        font-size: 0.9rem; /* 14.4px */
-        color: #555;
+        font-size: 0.675rem; /* 75% of original 0.9rem */
+        color: #cccccc; /* Barely visible grey color */
         margin-top: 8px; /* Space from title */
         margin-bottom: 0; /* No extra space, scroller has its own */
         align-self: center;
         text-align: center;
-        user-select: none; 
+        user-select: none;
     }
 
     /* --- START: Scroller Styles --- */
@@ -94,33 +94,33 @@
         /* Margins are now on the parent .top-group */
         /* margin-left: 0; */ /* This is now controlled below for animation */
         /* --- CHANGED: Reduced top margin --- */
-        margin-top: 10px; 
+        margin-top: 10px;
         height: 514px; /* 6/7ths of original 600px */
-        
+
         /* --- START OF CHANGES --- */
         width: 9px; /* CHANGED: Set to max width for interaction area */
         background-color: transparent; /* CHANGED: Container is no longer the line */
-        
+
         /* --- START OF FIX: Removed padding --- */
         /* padding-left: 10px; */
         /* padding-right: 10px; */
         /* Total width is now 9px */
         /* --- END OF FIX --- */
-        
+
         /* --- END OF CHANGES --- */
-        
+
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
         position: relative;
         flex-shrink: 0; /* Prevents scroller from shrinking */
-        
+
         /* REMOVED: width transition */
         transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
         transform: translateX(0); /* ADDED: Default "left" position */
     }
-    
+
     /* --- ADDED: This is the thin, base line --- */
     .scroller-container::before {
         content: '';
@@ -135,7 +135,7 @@
     }
 
     /* --- REMOVED: #thick-line-segment --- */
-    
+
     /* --- ADDED: Style for individual segments --- */
     .thick-segment {
         position: absolute;
@@ -147,7 +147,7 @@
         z-index: 2; /* Above thin line */
         height: 0; /* Controlled by JS */
         top: 0; /* Controlled by JS */
-        
+
         /* --- CRITICAL: ONLY transition width --- */
         /* --- CHANGED: Faster transition --- */
         transition: width 0.3s cubic-bezier(0.65, 0, 0.35, 1);
@@ -157,7 +157,7 @@
     .thick-segment.active {
         width: 9px; /* Animate to thick width */
     }
-    
+
     /* REMOVED: .scroller-container.dragging { ... } rule */
 
     /* ADDED: Rule to move *only* the scroller */
@@ -176,12 +176,12 @@
         background-color: black;
         border-radius: 50%;
         flex-shrink: 0;
-        
+
         /* --- ADDED: z-index --- */
         position: relative; /* Required for z-index */
         z-index: 3; /* Above thick line */
     }
-    
+
     /* --- REMOVED --- */
     /* Removed the .scroller-container.dragging .dot { opacity: 0; } rule */
 
@@ -193,25 +193,25 @@
         position: absolute;
         /* This still works: 50% of the 9px container is the center */
         left: 50%;
-        
+
         /* --- START OF EDITS --- */
         /* ADDED: scale(1) to animate from */
-        transform: translate(-50%, -50%) scale(1); 
+        transform: translate(-50%, -50%) scale(1);
         cursor: grab;
-        
+
         /* CHANGED: ADDED transform back to the transition */
         /* --- CHANGED: Faster transition --- */
         transition: top 0.4s cubic-bezier(0.65, 0, 0.35, 1),
                     transform 0.3s cubic-bezier(0.65, 0, 0.35, 1);
-        
+
         /* REMOVED: border: 9px solid black; */
-        box-sizing: border-box; 
+        box-sizing: border-box;
 
         /* ADDED: Centering for the pseudo-element */
         display: flex;
         justify-content: center;
         align-items: center;
-        
+
         z-index: 4; /* --- ADDED: Topmost element --- */
         /* --- END OF EDITS --- */
     }
@@ -221,11 +221,11 @@
         content: '';
         display: block;
         /* Size calculation: 36px (parent) - 9px (original border) * 2 = 18px */
-        width: 18px; 
+        width: 18px;
         height: 18px;
         background-color: #0b5394; /* The blue liquid */
         border-radius: 50%;
-        
+
         /* ADDED: Transition for the liquid's transform */
         transform: scale(1);
         /* --- CHANGED: Faster transition --- */
@@ -236,7 +236,7 @@
     /* Class for the "shrunken" state while dragging */
     #scroller-handle.grabbing {
         /* This squishes the black dot horizontally ONLY */
-        transform: translate(-50%, -50%) scaleX(0.25) scaleY(1); 
+        transform: translate(-50%, -50%) scaleX(0.25) scaleY(1);
         cursor: grabbing;
     }
 
@@ -244,7 +244,7 @@
     #scroller-handle.grabbing::before {
         /* scaleX(2) -> 9px width */
         /* scaleY(0.5) -> 9px height (to match 9px width) */
-        transform: scaleX(2) scaleY(0.5); 
+        transform: scaleX(2) scaleY(0.5);
     }
 
     /* --- ADDED: This is the "flowing" state --- */
@@ -301,7 +301,7 @@
 
     /* --- Mobile Responsivity --- */
     @media (max-width: 600px) {
-        
+
         /* Adjust top group for mobile */
         .top-group {
             /* CHANGED: Use padding instead of margin */
@@ -310,14 +310,14 @@
             margin-top: 10px;
             /* align-self: flex-start is inherited */
         }
-        
+
         /* REMOVED: .top-group.right media query */
 
         /* Adjust title for mobile */
         .data-title-container {
             height: 57px; /* 1/7th of original 400px */
         }
-        
+
         .title-en {
             font-size: 1.5rem; /* 24px */
         }
@@ -326,10 +326,10 @@
             /* Font weight is inherited from the main rule (800) */
             font-size: 0.83rem; /* 13.28px - CHANGED (adjusted to match mobile width with new weight) */
         }
-        
+
         /* --- ADDED: Mobile hint styles --- */
         .scroller-hint {
-            font-size: 0.8rem; /* 12.8px */
+            font-size: 0.6rem; /* 75% of 0.8rem */
             margin-top: 4px;
         }
 
@@ -337,12 +337,12 @@
             /* Margins are now on the parent .top-group */
             /* REMOVED: margin-left: 0; (This would break the .right state on mobile) */
             /* --- CHANGED: Reduced margin --- */
-            margin-top: 10px; 
+            margin-top: 10px;
             height: 343px; /* 6/7ths of original 400px */
             /* The transition and margin-left/right rules are inherited */
             /* The padding: 0 10px; is inherited */
         }
-        
+
         /* .scroller-container.right { margin-left: auto; margin-right: 0; } is inherited */
         /* ADDED: Override transform for mobile */
         .scroller-container.right {
@@ -363,7 +363,7 @@
         #scroller-handle {
             width: 24px; /* CHANGED: Reduced from 36px (approx 7% of 343px) */
             height: 24px; /* CHANGED: Reduced from 36px (approx 7% of 343px) */
-            
+
             /* --- REMOVED --- */
             /* border-width: 7px; */
             /* --- END REMOVED --- */
@@ -408,7 +408,7 @@
         <span class="title-en">Data collection:</span>
         <span class="title-ua">процес збору даних</span>
     </div>
-    
+
     <!-- --- ADDED: New hint text --- -->
     <p class="scroller-hint"><i>можна потягнути на інший бік екрану</i></p>
 
@@ -420,7 +420,7 @@
         <div class="thick-segment" id="segment-3"></div>
         <div class="thick-segment" id="segment-4"></div>
         <div class="thick-segment" id="segment-5"></div>
-        
+
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
@@ -473,14 +473,14 @@
 
         // --- REMOVED: Side Toggle Logic ---
         // const titleContainer = document.querySelector('.data-title-container');
-        const scrollerContainer = document.querySelector('.scroller-container'); 
+        const scrollerContainer = document.querySelector('.scroller-container');
         // --- END: Side Toggle Logic ---
 
 
         // --- START: Text Data for Scroller (INVERTED) ---
         const levelData = [
             // Index 0 (Top Dot) is now Level 7
-            { en: "RLHF:", ua: "навчання по відгуках" }, 
+            { en: "RLHF:", ua: "навчання по відгуках" },
             { en: "Reward model training:", ua: "створення моделі винагороди" },
             { en: "Supervised finetuning:", ua: "донавчання (зі вчителем)" },
             { en: "Unsupervised pretraining:", ua: "попереднє навчання (без вчителя)" },
@@ -521,14 +521,14 @@
 
         function startDrag(e) {
             isDragging = true;
-            document.body.style.cursor = 'grabbing'; 
-            
+            document.body.style.cursor = 'grabbing';
+
             previousLevelIndex = currentLevelIndex; // Store the starting point
-            
+
             // --- NEW: Store start positions ---
             startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
             startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
-            
+
             // --- MODIFIED: Detect drag target ---
             if (e.target === handle) {
                 dragMode = 'pending'; // Handle can go vertical or horizontal
@@ -536,13 +536,13 @@
                 dragMode = 'horizontal'; // Clicks on line/dots default to horizontal
             }
             // --- END MODIFIED ---
-            
+
             // --- NEW: Reset all segments on drag start ---
             segments.forEach((seg, i) => {
                 seg.classList.remove('active');
                 seg.style.height = '0px';
                 // Set top position so it can shrink from the correct place if needed
-                seg.style.top = `${dotPositions[i]}px`; 
+                seg.style.top = `${dotPositions[i]}px`;
             });
         }
 
@@ -551,12 +551,12 @@
             isDragging = false;
             dragMode = 'none'; // --- NEW ---
             document.body.style.cursor = 'default';
-            
+
             // --- ADDED ---
             handle.classList.remove('grabbing'); // Remove class to grow handle
             handle.classList.remove('flowing'); // --- ADDED: Ensure flowing is removed
             clearTimeout(flowTimer); // --- ADDED: Clear any pending timer
-            
+
             // --- NEW: Hide all segments on drag end ---
             // This makes them animate their width back to 4px and then hide
             segments.forEach((seg, i) => {
@@ -578,11 +578,11 @@
             // --- NEW: Get current X and Y ---
             const currentX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
             const currentY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
-            
+
             if (dragMode === 'pending') {
                 const deltaX = currentX - startX;
                 const deltaY = currentY - startY;
-                
+
                 // Check for dominant axis after 10px of movement
                 if (Math.abs(deltaY) > 10) {
                     dragMode = 'vertical';
@@ -596,10 +596,10 @@
             // --- NEW: Handle vertical drag ---
             if (dragMode === 'vertical') {
                 e.preventDefault(); // Prevent page scroll ONLY on vertical drag
-                
+
                 const eventY = currentY; // Use the calculated currentY
                 const scrollerRect = scroller.getBoundingClientRect();
-                
+
                 const mouseY = eventY - scrollerRect.top;
 
                 // Find the closest dot position to snap to
@@ -609,19 +609,19 @@
 
                 // Snap the handle to the closest dot
                 handle.style.top = `${closestDotY}px`;
-                
+
                 // --- START: Update Text Logic ---
                 // Find the index of the closest dot
                 let closestIndex = dotPositions.indexOf(closestDotY);
 
                 // Update the text based on the index
                 if (closestIndex !== -1 && closestIndex !== currentLevelIndex) {
-                    
+
                     // --- START: Flow Animation Logic ---
                     handle.classList.add('grabbing'); // --- MOVED HERE ---
                     handle.classList.add('flowing'); // Add class to elongate blue dot
                     clearTimeout(flowTimer); // Clear any existing timer
-                    
+
                     // --- CHANGED: Timer now resets segments too ---
                     flowTimer = setTimeout(() => {
                         handle.classList.remove('flowing');
@@ -645,17 +645,17 @@
 
                     // 2. Update current index
                     currentLevelIndex = closestIndex;
-                    
+
                     // --- START: NEW Segment Logic ---
                     // This logic now runs ONLY when the index changes
-                    
+
                     const startIdx = Math.min(previousLevelIndex, currentLevelIndex);
                     const endIdx = Math.max(previousLevelIndex, currentLevelIndex);
 
                     // Loop through all 6 segments
                     for (let i = 0; i < segments.length; i++) {
                         const segment = segments[i];
-                        
+
                         // Check if this segment index (0-5) is in the active range
                         if (i >= startIdx && i < endIdx) {
                             // This segment is active. Set its position and height *instantly*.
@@ -675,14 +675,14 @@
                     // Update previousLevelIndex so the *next* move only animates from this point
                     previousLevelIndex = currentLevelIndex;
                     // --- END: FIX ---
-                    
+
                     // 3. Wait for fade out, then change text and position for fade-in
                     setTimeout(() => {
                         // Change text content
                         // This now correctly maps to the inverted levelData array
                         titleEn.textContent = levelData[currentLevelIndex].en;
                         titleUa.textContent = levelData[currentLevelIndex].ua;
-                        
+
                         // Temporarily disable transition to set the "from" position
                         titleEn.style.transition = 'none';
                         titleUa.style.transition = 'none';
@@ -698,7 +698,7 @@
                         // 4. Re-enable transitions and slide/fade in to final position
                         titleEn.style.transition = 'opacity 0.2s ease-in-out, transform 0.2s ease-in-out';
                         titleUa.style.transition = 'opacity 0.2s ease-in-out, transform 0.2s ease-in-out';
-                        
+
                         titleEn.style.opacity = 1;
                         titleEn.style.transform = 'translateY(0)';
                         titleUa.style.opacity = 1;
@@ -707,13 +707,13 @@
                     }, transitionDelay);
                 }
                 // --- END: Update Text Logic ---
-            } 
+            }
             // --- MODIFIED: Changed 'else if' to 'if' ---
             if (dragMode === 'horizontal') {
                 e.preventDefault(); // Prevent horizontal page swipe
                 const screenWidth = window.innerWidth;
                 const isRightSide = scroller.classList.contains('right');
-                
+
                 // --- START OF FIX: Set drag distance to (Half Screen - 10px) ---
                 const dragDistance = currentX - startX; // Get horizontal drag distance
                 const minDrag = (screenWidth / 2) - 10; // Min drag distance is (Half Screen - 10px)
