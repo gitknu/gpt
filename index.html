@@ -1750,7 +1750,6 @@
 
             workingArea.innerHTML = `
                 <div class="finetuning-vis-container">
-                    <!-- NEW: This div is for the initial data loading animation -->
                     <div class="vis-qa-dataset-area" id="vis-qa-dataset-area">
                         <strong>Набір даних (Q&A):</strong>
                         <div class="vis-qa-dataset-list" id="vis-qa-dataset-list">
@@ -1782,7 +1781,7 @@
                     </div>
                      <div class="vis-stats-area">
                         <div>Epoch: <span id="stat-epoch-ft">1</span></div>
-                        <div>Loss: <span id="stat-loss-ft">0.55</span></div>
+                        <div>Loss: <span id="stat-loss-ft">0.75</span></div>
                     </div>
                     <div class="vis-log" id="vis-log"></div>
                 </div>`;
@@ -1800,14 +1799,13 @@
             const epochStat = document.getElementById('stat-epoch-ft');
             const lossStat = document.getElementById('stat-loss-ft');
             
-            // --- START NEW ANIMATION SEQUENCE ---
             addToVisLog(logArea, `Завантаження набору даних для донавчання...`);
             await wait(1500);
 
             for(const item of qaPairItems) {
                 if (!isVisRunning) return;
                 item.classList.add('feeding');
-                await wait(400); // Stagger the animation
+                await wait(400);
             }
 
             addToVisLog(logArea, `Набір даних завантажено в модель.`);
@@ -1818,10 +1816,9 @@
             finetuningMain.style.opacity = '1';
             await wait(500);
             qaDatasetArea.style.display = 'none';
-            // --- END NEW ANIMATION SEQUENCE ---
 
             let epoch = 1;
-            let loss = 0.55;
+            let loss = 0.75; // Start with a higher chance of being wrong
 
             while(isVisRunning) {
                 epochStat.textContent = epoch;
@@ -1845,46 +1842,66 @@
                     addToVisLog(logArea, `Запит: "${pair.prompt}"`);
                     await wait(1500);
                     if (!isVisRunning) break;
+                    
+                    // --- MODIFIED LOGIC: Model can be right or wrong based on loss ---
+                    const isInitiallyWrong = Math.random() < loss;
 
-                    // Model gives initial (wrong) answer
-                    modelResponseText.textContent = pair.initial;
-                    addToVisLog(logArea, `Відповідь моделі (до корекції): "${pair.initial}"`);
-                    await wait(1500);
-                    if (!isVisRunning) break;
+                    if (isInitiallyWrong) {
+                        // Model gives initial (wrong) answer
+                        modelResponseText.textContent = pair.initial;
+                        addToVisLog(logArea, `Відповідь моделі (неправильна): "${pair.initial}"`);
+                        await wait(1500);
+                        if (!isVisRunning) break;
 
-                    // Show target answer and compare
-                    targetResponseText.textContent = pair.target;
-                    modelResponseBox.classList.add('incorrect');
-                    targetResponseBox.classList.add('correct');
-                    addToVisLog(logArea, `Порівняння з правильною відповіддю: "${pair.target}"`);
-                    await wait(1000);
-                    if (!isVisRunning) break;
+                        // Show target answer and compare
+                        targetResponseText.textContent = pair.target;
+                        modelResponseBox.classList.add('incorrect');
+                        targetResponseBox.classList.add('correct');
+                        addToVisLog(logArea, `Порівняння з правильною відповіддю: "${pair.target}"`);
+                        await wait(1000);
+                        if (!isVisRunning) break;
 
-                    // Show update arrow and log correction
-                    updateArrow.classList.add('visible');
-                    addToVisLog(logArea, `Помилка! Коригуємо ваги моделі...`);
-                    await wait(1500);
-                    if (!isVisRunning) break;
+                        // Show update arrow and log correction
+                        updateArrow.classList.add('visible');
+                        addToVisLog(logArea, `Помилка! Коригуємо ваги моделі...`);
+                        await wait(1500);
+                        if (!isVisRunning) break;
 
-                    // Animate the text correction
-                    modelResponseText.innerHTML = `<span class="text-correction">${pair.initial}</span> <span class="text-corrected">${pair.target}</span>`;
-                    modelResponseBox.classList.remove('incorrect');
-                    modelResponseBox.classList.add('correct');
-                    updateArrow.classList.remove('visible');
-                    addToVisLog(logArea, `Ваги оновлено. Модель вивчила правильну відповідь.`);
-                    await wait(2500);
-                    if (!isVisRunning) break;
+                        // Animate the text correction
+                        modelResponseText.innerHTML = `<span class="text-correction">${pair.initial}</span> <span class="text-corrected">${pair.target}</span>`;
+                        modelResponseBox.classList.remove('incorrect');
+                        modelResponseBox.classList.add('correct');
+                        updateArrow.classList.remove('visible');
+                        addToVisLog(logArea, `Ваги оновлено. Модель вивчила правильну відповідь.`);
+                        await wait(2500);
+                        if (!isVisRunning) break;
+                    } else {
+                        // Model gives correct answer
+                        modelResponseText.textContent = pair.target;
+                        modelResponseBox.classList.add('correct');
+                        addToVisLog(logArea, `Відповідь моделі (правильна): "${pair.target}"`);
+                        await wait(1500);
+                        if (!isVisRunning) break;
+
+                        addToVisLog(logArea, `Правильно! Ваги підсилюються.`);
+                        await wait(2500);
+                        if (!isVisRunning) break;
+                    }
                 }
 
                 if (!isVisRunning) break;
                 epoch++;
-                loss *= 0.5;
-                 if (loss < 0.1) {
+                loss *= 0.45; // Decrease loss more significantly per epoch
+                 if (loss < 0.05) {
                      addToVisLog(logArea, "Донавчання завершено! Перезапуск...");
                      await wait(2000);
                      if (!isVisRunning) break;
+                     // Reset and restart the visualization
+                     loss = 0.75; 
+                     epoch = 1;
+                     // We need to re-run the whole function to reset HTML elements properly
                      startSupervisedFinetuningVisualization();
-                     return;
+                     return; 
                 } else {
                      addToVisLog(logArea, "Епоха завершена. Зниження рівня помилки...");
                      await wait(2000);
