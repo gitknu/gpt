@@ -350,13 +350,14 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between; /* CHANGED for storage icon */
         font-family: 'Montserrat', sans-serif;
         color: black;
+        position: relative; /* ADDED for packet positioning */
     }
     .vis-text-area {
         font-family: 'Times New Roman', Times, serif;
-        font-size: 1.5rem;
+        font-size: 1.2rem; /* Adjusted for more text */
         line-height: 1.6;
         padding: 20px;
         text-align: justify;
@@ -367,6 +368,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        min-height: 150px; /* Ensure space for text */
     }
     .error-highlight {
         background-color: #ffdddd;
@@ -382,6 +384,26 @@
         background-color: #ddffdd;
         font-weight: bold;
         transition: all 0.3s ease-in-out;
+    }
+    .vis-file-packet {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: 2rem;
+        opacity: 0;
+        z-index: 10;
+        transition: top 1s ease-in-out, left 1s ease-in-out, opacity 0.5s, transform 1s ease-in-out;
+    }
+    .vis-file-packet-name {
+        font-size: 0.7rem;
+        margin-top: 5px;
+        font-family: 'Courier New', Courier, monospace;
+        background-color: white;
+        padding: 2px 4px;
+        border-radius: 3px;
+        border: 1px solid #ccc;
+        transition: background-color 0.3s ease-in-out;
     }
     /* --- END: Preprocessing Visualization Styles --- */
 
@@ -477,9 +499,10 @@
 
         /* Preprocessing mobile styles (Added by Gemini) */
         .vis-text-area {
-            font-size: 1rem;
+            font-size: 0.9rem; /* Adjusted */
             line-height: 1.5;
             padding: 10px;
+            min-height: 100px;
         }
 
 /* --- END: EDITED BY GEMINI --- */
@@ -769,69 +792,166 @@
             }
         }
         
-        // --- Preprocessing Visualizer (Added by Gemini) ---
+        // --- Preprocessing Visualizer (EDITED BY GEMINI) ---
         async function startPreprocessingVisualization() {
             if (isVisRunning) return;
             isVisRunning = true;
 
-            const initialText = "Ось приклад тексту,з помилками.. ми будемо виправляти їх ,щоб показати препроцесинг .Тут є пунктуаціята орфографічьні помилки.";
-            const fixes = [
-                { find: "тексту,з", replace: "тексту, з", log: "Додаємо пробіл після коми..." },
-                { find: "..", replace: ".", log: "Видаляємо дублюючу крапку..." },
-                { find: ",щоб", replace: ", щоб", log: "Додаємо пробіл після коми..." },
-                { find: " .Тут", replace: ". Тут", log: "Видаляємо пробіл перед крапкою..." },
-                { find: "пунктуаціята", replace: "пунктуація та", log: "Розділяємо злиплі слова..." },
-                { find: "орфографічьні", replace: "орфографічні", log: "Виправляємо орфографічну помилку..." }
+            const processingJobs = [
+                {
+                    originalFilename: "article.docx",
+                    finalFilename: "data_01.txt",
+                    initialText: "Ось приклад тексту,з помилками.. ми будемо виправляти їх ,щоб показати препроцесинг.",
+                    fixes: [
+                        { find: "тексту,з", replace: "тексту, з", log: "Додаємо пробіл після коми..." },
+                        { find: "..", replace: ".", log: "Видаляємо дублюючу крапку..." },
+                        { find: "їх ,щоб", replace: "їх, щоб", log: "Виправляємо пробіл перед комою..." }
+                    ]
+                },
+                {
+                    originalFilename: "unformatted_data",
+                    finalFilename: "data_02.txt",
+                    initialText: "   Тут багато зайвих пробілів і ВЕЛИКИХ літер. Все це треба виправити  .",
+                    fixes: [
+                        { find: "   ", replace: " ", log: "Видаляємо зайві пробіли на початку..." },
+                        { find: "ВЕЛИКИХ", replace: "великих", log: "Приводимо текст до нижнього регістру..." },
+                        { find: "  .", replace: ".", log: "Видаляємо зайві пробіли в кінці..." }
+                    ]
+                },
+                {
+                    originalFilename: "reviews.json",
+                    finalFilename: "data_03.txt",
+                    initialText: "Це текст з HTML тегами <b>жирний</b> та <i>курсив</i>. Потрібно їх видалити.",
+                    fixes: [
+                        { find: /<b>(.*?)<\/b>/g, replace: "$1", log: "Видаляємо тег <b>..." },
+                        { find: /<i>(.*?)<\/i>/g, replace: "$1", log: "Видаляємо тег <i>..." }
+                    ]
+                }
             ];
 
             workingArea.innerHTML = `
-                <div class="preprocessing-vis-container">
+                <div class="preprocessing-vis-container" id="preprocessing-vis-container">
                     <div class="vis-text-area" id="vis-text-area"></div>
+                    <div id="vis-storage-container"><div class="vis-storage-icon">🗄️</div></div>
                     <div class="vis-log" id="vis-log"></div>
                 </div>`;
             
             const logArea = document.getElementById('vis-log');
             const textArea = document.getElementById('vis-text-area');
-            const visContainer = workingArea.querySelector('.preprocessing-vis-container');
+            const visContainer = document.getElementById('preprocessing-vis-container');
+            const storageContainer = document.getElementById('vis-storage-container');
 
             while (isVisRunning) {
-                textArea.innerHTML = `<span>${initialText}</span>`;
-                addToVisLog(logArea, "Починаємо процес очищення тексту...");
+                addToVisLog(logArea, "Починаємо процес очищення та форматування файлів...");
                 await wait(1500);
                 if (!isVisRunning) break;
 
-                for (const fix of fixes) {
+                for (const job of processingJobs) {
                     if (!isVisRunning) break;
-                    
-                    addToVisLog(logArea, fix.log);
-                    
-                    // Highlight the error
-                    textArea.innerHTML = textArea.innerHTML.replace(fix.find, `<span class="error-highlight">${fix.find}</span>`);
+
+                    textArea.innerHTML = `<span>${job.initialText}</span>`;
+                    textArea.style.transition = 'opacity 0.3s';
+                    textArea.style.opacity = 1;
+                    addToVisLog(logArea, `Обробка файлу: ${job.originalFilename}`);
                     await wait(1000);
                     if (!isVisRunning) break;
 
-                    // Animate the fix
-                    const errorSpan = textArea.querySelector('.error-highlight');
-                    if (errorSpan) {
-                        errorSpan.classList.add('error-fixing');
-                        errorSpan.classList.remove('error-highlight');
+                    for (const fix of job.fixes) {
+                        if (!isVisRunning) break;
+                        
+                        addToVisLog(logArea, fix.log);
+                        
+                        // Highlight the error
+                        let highlightedHtml = textArea.innerHTML.replace(fix.find, `<span class="error-highlight">${typeof fix.find === 'string' ? fix.find : fix.find.source}</span>`);
+                        if (textArea.innerHTML !== highlightedHtml) {
+                           textArea.innerHTML = highlightedHtml;
+                        }
+                        await wait(1000);
+                        if (!isVisRunning) break;
+
+                        // Animate the fix
+                        const errorSpan = textArea.querySelector('.error-highlight');
+                        if (errorSpan) {
+                            errorSpan.classList.add('error-fixing');
+                            errorSpan.classList.remove('error-highlight');
+                        }
+                        await wait(500);
+                        if (!isVisRunning) break;
+
+                        // Apply the fix
+                        let fixedHtml = textArea.innerHTML.replace(/<span class="error-fixing">.*?<\/span>/, `<span class="corrected-text">${fix.replace}</span>`);
+                        if(typeof fix.find !== 'string') { // Regex fix
+                           fixedHtml = textArea.innerHTML.replace(/<span class="error-highlight">.*?<\/span>/, `<span class="corrected-text">${fix.replace}</span>`);
+                           textArea.innerHTML = `<span>${textArea.textContent.replace(fix.find, fix.replace)}</span>`;
+                        } else {
+                           textArea.innerHTML = fixedHtml;
+                        }
+
+                        await wait(1000);
+                        if (!isVisRunning) break;
+                        
+                        // Normalize the text (remove the corrected span)
+                        textArea.innerHTML = `<span>${textArea.textContent}</span>`;
+                        await wait(500);
+                        if (!isVisRunning) break;
                     }
+                    if (!isVisRunning) break;
+
+                    addToVisLog(logArea, "Очищення завершено. Зберігаємо файл...");
+                    textArea.style.opacity = 0.3;
                     await wait(500);
                     if (!isVisRunning) break;
-
-                    // Apply the fix
-                    textArea.innerHTML = textArea.innerHTML.replace(/<span class="error-fixing">.*?<\/span>/, `<span class="corrected-text">${fix.replace}</span>`);
-                    await wait(1000);
-                    if (!isVisRunning) break;
                     
-                    // Normalize the text (remove the corrected span)
-                    textArea.innerHTML = textArea.innerHTML.replace(/<span class="corrected-text">.*?<\/span>/, fix.replace);
+                    // File animation
+                    const packet = document.createElement('div');
+                    packet.className = 'vis-file-packet';
+                    packet.innerHTML = `📄<div class="vis-file-packet-name">${job.originalFilename}</div>`;
+                    visContainer.appendChild(packet);
+
+                    const textRect = textArea.getBoundingClientRect();
+                    const storageRect = storageContainer.getBoundingClientRect();
+                    const containerRect = visContainer.getBoundingClientRect();
+
+                    const startTop = textRect.top - containerRect.top + (textRect.height / 2);
+                    const startLeft = textRect.left - containerRect.left + (textRect.width / 2);
+                    const endTop = storageRect.top - containerRect.top + (storageRect.height / 2);
+                    const endLeft = storageRect.left - containerRect.left + (storageRect.width / 2);
+
+                    packet.style.top = `${startTop}px`;
+                    packet.style.left = `${startLeft}px`;
+                    packet.style.transform = 'translate(-50%, -50%) scale(0.5)';
+
+                    await wait(50);
+                    if (!isVisRunning) { if (visContainer.contains(packet)) visContainer.removeChild(packet); break; }
+                    
+                    packet.style.opacity = 1;
+                    packet.style.transform = 'translate(-50%, -50%) scale(1)';
+                    packet.style.top = `${endTop}px`;
+                    packet.style.left = `${endLeft}px`;
+
+                    await wait(1100);
+                    if (!isVisRunning) { if (visContainer.contains(packet)) visContainer.removeChild(packet); break; }
+
+                    addToVisLog(logArea, `Перейменовуємо в ${job.finalFilename}`);
+                    const nameTag = packet.querySelector('.vis-file-packet-name');
+                    nameTag.style.backgroundColor = '#ddffdd';
+                    nameTag.textContent = job.finalFilename;
+                    
+                    await wait(1000);
+                    if (!isVisRunning) { if (visContainer.contains(packet)) visContainer.removeChild(packet); break; }
+                    
+                    packet.style.opacity = 0;
+                    await wait(500);
+                    if (visContainer.contains(packet)) visContainer.removeChild(packet);
+                    if (!isVisRunning) break;
+
+                    textArea.innerHTML = '';
                     await wait(500);
                     if (!isVisRunning) break;
                 }
 
                 if (!isVisRunning) break;
-                addToVisLog(logArea, "Очищення завершено. Перезапуск...");
+                addToVisLog(logArea, "Всі файли оброблено. Перезапуск...");
                 await wait(2000);
                 if (!isVisRunning) break;
 
