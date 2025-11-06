@@ -18,54 +18,61 @@
         flex-direction: column; /* Stack items vertically */
         font-family: sans-serif;
         box-sizing: border-box; /* Ensure padding/borders don't add to height */
+        overflow-x: hidden; /* Prevent horizontal scrollbars */
     }
 
-    /* --- START: EDITED BY GEMINI --- */
     .top-group {
         width: 100%;
-        padding: 0 50px; /* Reduced horizontal padding */
+        padding: 0 50px;
         margin-top: 20px;
-        box-sizing: border-box; /* Include padding in width */
+        box-sizing: border-box;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
     }
-    /* --- END: EDITED BY GEMINI --- */
 
 
+    /* --- START: EDITED BY GEMINI --- */
     .data-title-container {
         font-family: 'Montserrat', sans-serif;
         color: black;
         margin: 0;
-        height: 86px; /* 1/7th of original 600px */
+        height: 86px;
         display: flex;
         flex-direction: column;
-        justify-content: center; /* Vertically center the text block */
-        overflow: hidden;
+        justify-content: center;
         user-select: none;
-        width: 100%; /* Make container take full width of parent */
         align-items: center;
+        
+        /* This makes the container full-width, breaking out of the parent's padding */
+        width: 100vw;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
     }
+    /* --- END: EDITED BY GEMINI --- */
 
     .title-en {
         font-weight: 800; /* Extrabold */
-        /* Use clamp for responsive font size: min, preferred, max */
         font-size: clamp(1.8rem, 4.2vw, 2.6rem);
         line-height: 1.2;
         text-align: center;
         color: #b80000;
         transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
         white-space: nowrap; /* Ensure text stays on one line */
+        padding: 0 20px; /* Add padding to the text itself so it never touches the edges */
+        box-sizing: border-box;
     }
 
     .title-ua {
         font-weight: 800; /* Extrabold - CHANGED */
-        /* Use clamp for responsive font size: min, preferred, max */
         font-size: clamp(1.1rem, 2.3vw, 1.5rem);
         line-height: 1.2;
         text-align: center;
         transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
         white-space: nowrap; /* Ensure text stays on one line */
+        padding: 0 20px; /* Add padding to the text itself so it never touches the edges */
+        box-sizing: border-box;
     }
 
 
@@ -95,20 +102,17 @@
         display: inline; /* Show right arrow when scroller is on the right */
     }
 
-    /* --- START: EDITED BY GEMINI --- */
     .main-content-wrapper {
         flex-grow: 1; /* This wrapper fills the vertical space */
         width: 100%;
         box-sizing: border-box;
         margin: 10px 0 0 0;
-        padding: 0 50px; /* Reduced horizontal padding */
+        padding: 0 50px;
         position: relative; /* CRITICAL: For absolute positioning child */
     }
-    /* --- END: EDITED BY GEMINI --- */
 
 
     /* --- START: Scroller Styles --- */
-    /* --- START: EDITED BY GEMINI --- */
     .scroller-container {
         margin-top: 0;
         height: 514px; /* 6/7ths of original 600px */
@@ -123,7 +127,6 @@
         left: 50px; /* Matched new padding */
         transition: left 0.4s cubic-bezier(0.65, 0, 0.35, 1);
     }
-    /* --- END: EDITED BY GEMINI --- */
 
     .scroller-container::before {
         content: '';
@@ -227,11 +230,9 @@
         /* --- END: Added by Gemini for visualization --- */
     }
 
-    /* --- START: EDITED BY GEMINI --- */
     .main-content-wrapper.right .scroller-container {
         left: calc(100% - 50px - 9px); /* Matched new padding */
     }
-    /* --- END: EDITED BY GEMINI --- */
 
     .logo-container {
         display: flex;
@@ -243,9 +244,8 @@
         justify-content: center;
         margin-top: auto; /* Pushes logos to the bottom */
         box-sizing: border-box;
-        padding: 0 40px; /* --- ADDED: Give logos original padding --- */
+        padding: 0 40px;
     }
-/* --- END: EDITED BY GEMINI --- */
 
     .logo-item {
         display: flex;
@@ -554,7 +554,7 @@
         position: relative;
     }
     .vis-corpus-word {
-        transition: background-color 0.3s;
+        transition: background-color: 0.3s;
     }
     .vis-scan-window {
         position: absolute;
@@ -741,7 +741,7 @@
         gap: 10px; /* EDITED: Reduced gap */
     }
     .vis-response-box {
-        transition: border-color 0.5s, background-color: 0.5s;
+        transition: border-color 0.5s, background-color 0.5s;
     }
     .vis-response-box.incorrect {
         border-color: #b80000;
@@ -886,7 +886,7 @@
 
         /* Adjust top group for mobile */
         .top-group {
-            padding: 0 40px; /* --- EDITED: Increased horizontal padding for mobile --- */
+            padding: 0 40px;
             margin-top: 10px;
         }
 
@@ -895,17 +895,13 @@
             height: 57px; /* 1/7th of original 400px */
         }
 
-        /* --- START: EDITED BY GEMINI --- */
         .title-en {
-            /* Adjust clamp values for mobile for a larger relative size */
             font-size: clamp(1.4rem, 5.5vw, 1.8rem);
         }
 
         .title-ua {
-            /* Adjust clamp values for mobile for a larger relative size */
             font-size: clamp(0.8rem, 3.5vw, 1.1rem);
         }
-        /* --- END: EDITED BY GEMINI --- */
 
 
         /* --- ADDED: Mobile hint styles --- */
@@ -914,23 +910,20 @@
             margin-top: 4px;
         }
 
-/* --- START: EDITED BY GEMINI --- */
         .main-content-wrapper {
             margin: 10px 0 0 0;
-            padding: 0 40px; /* --- EDITED: Increased horizontal padding for mobile --- */
+            padding: 0 40px;
         }
 
         .scroller-container {
             margin-top: 0;
             height: 343px; /* 6/7ths of original 400px */
-            left: 40px; /* --- EDITED: Matched new mobile padding --- */
+            left: 40px;
         }
 
-        /* CRITICAL: Mobile rule for scroller on the right */
         .main-content-wrapper.right .scroller-container {
-            left: calc(100% - 40px - 9px); /* --- EDITED: Matched new mobile padding --- */
+            left: calc(100% - 40px - 9px);
         }
-/* --- END: EDITED BY GEMINI --- */
 
         .dot {
             width: 16px;
@@ -947,19 +940,13 @@
             height: 10px;
         }
 
-/* --- START: EDITED BY GEMINI --- */
-        /* --- ADDED: Mobile style for working area --- */
         .working-area {
-            /* CRITICAL: Set fixed margins on BOTH sides for mobile */
-            margin-left: 12px; /* Half of desktop */
-            margin-right: 12px; /* Half of desktop */
-            /* ADDED: Set height to match mobile scroller */
+            margin-left: 12px;
+            margin-right: 12px;
             height: 343px;
             box-sizing: border-box;
-            /* --- START: Added by Gemini for visualization (mobile) --- */
             padding: 10px;
             font-size: 0.8rem;
-            /* --- END: Added by Gemini for visualization (mobile) --- */
         }
         
         /* Data collection mobile styles */
@@ -1069,18 +1056,12 @@
         .vis-reward-score { font-size: 0.7rem; padding: 2px 5px; top: -5px; right: -5px;} /* EDITED */
         /* --- END: Reward Model mobile styles --- */
 
-
-/* --- END: EDITED BY GEMINI --- */
-
-
-/* --- START: EDITED BY GEMINI --- */
         .logo-container {
-            padding: 0 20px 20px; /* --- EDITED: Reverted to original mobile padding --- */
+            padding: 0 20px 20px;
             margin-bottom: 0;
             gap: 15px;
             flex-wrap: wrap; /* --- ADDED: Prevents horizontal overflow --- */
         }
-/* --- END: EDITED BY GEMINI --- */
         .logo {
             width: 90px; /* Logos size on mobile */
         }
