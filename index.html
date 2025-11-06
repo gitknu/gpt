@@ -638,12 +638,56 @@
         flex-direction: column;
         font-family: 'Montserrat', sans-serif;
         color: black;
+        position: relative; /* ADDED for dataset overlay */
     }
+    /* NEW: Dataset Area for initial loading animation */
+    .vis-qa-dataset-area {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80%;
+        max-height: 80%;
+        background: #ffffff;
+        border: 2px solid #0b5394;
+        border-radius: 8px;
+        padding: 15px;
+        z-index: 20;
+        transition: opacity 0.5s ease-in-out;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+    }
+    .vis-qa-dataset-area strong {
+        font-weight: 800;
+        margin-bottom: 10px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+    .vis-qa-dataset-list {
+        overflow-y: auto; /* For long lists */
+    }
+    .vis-qa-pair-item {
+        font-family: 'Courier New', monospace;
+        font-size: 1rem;
+        padding: 5px;
+        border-bottom: 1px solid #eee;
+        transition: transform 0.8s ease-in, opacity 0.8s ease-in;
+        opacity: 1;
+        transform: translateX(0);
+    }
+    .vis-qa-pair-item span { color: #b80000; }
+    .vis-qa-pair-item.feeding {
+        transform: translateX(50px);
+        opacity: 0;
+    }
+
     .vis-finetuning-main {
         flex-grow: 1;
         display: flex;
         align-items: center;
         gap: 20px;
+        transition: opacity 0.5s ease-in-out; /* Added for fade-in */
     }
     .vis-qa-area {
         flex-grow: 1;
@@ -848,6 +892,14 @@
         /* --- END: Pretraining mobile styles (EDITED) --- */
 
         /* --- START: Finetuning mobile styles --- */
+        /* NEW Mobile styles for finetuning data loading */
+        .vis-qa-dataset-area {
+            width: 90%;
+            padding: 10px;
+        }
+        .vis-qa-pair-item {
+            font-size: 0.8rem;
+        }
         .vis-finetuning-main {
             flex-direction: column;
             gap: 10px;
@@ -1692,12 +1744,21 @@
             const qaPairs = [
                 { prompt: "Столиця України?", initial: "Львів", target: "Київ" },
                 { prompt: "Скільки буде 2 + 2?", initial: "3", target: "4" },
-                { prompt: "Третя планета від Сонця?", initial: "Марс", target: "Земля" }
+                { prompt: "Третя планета від Сонця?", initial: "Марс", target: "Земля" },
+                { prompt: "Який колір у неба?", initial: "Зелений", target: "Синій" }
             ];
 
             workingArea.innerHTML = `
                 <div class="finetuning-vis-container">
-                    <div class="vis-finetuning-main">
+                    <!-- NEW: This div is for the initial data loading animation -->
+                    <div class="vis-qa-dataset-area" id="vis-qa-dataset-area">
+                        <strong>Набір даних (Q&A):</strong>
+                        <div class="vis-qa-dataset-list" id="vis-qa-dataset-list">
+                         ${qaPairs.map(p => `<div class="vis-qa-pair-item"><span>Q:</span> ${p.prompt} <br><span>A:</span> ${p.target}</div>`).join('')}
+                        </div>
+                    </div>
+
+                    <div class="vis-finetuning-main" id="vis-finetuning-main" style="opacity: 0;">
                         <div class="vis-qa-area">
                             <div class="vis-prompt-box">
                                 <strong>Запит:</strong>
@@ -1727,6 +1788,9 @@
                 </div>`;
             
             const logArea = document.getElementById('vis-log');
+            const qaDatasetArea = document.getElementById('vis-qa-dataset-area');
+            const finetuningMain = document.getElementById('vis-finetuning-main');
+            const qaPairItems = Array.from(workingArea.querySelectorAll('.vis-qa-pair-item'));
             const promptText = document.getElementById('vis-prompt-text');
             const modelResponseText = document.getElementById('vis-model-response-text');
             const targetResponseText = document.getElementById('vis-target-response-text');
@@ -1735,7 +1799,26 @@
             const updateArrow = document.getElementById('vis-update-arrow');
             const epochStat = document.getElementById('stat-epoch-ft');
             const lossStat = document.getElementById('stat-loss-ft');
-            const visContainer = workingArea.querySelector('.finetuning-vis-container');
+            
+            // --- START NEW ANIMATION SEQUENCE ---
+            addToVisLog(logArea, `Завантаження набору даних для донавчання...`);
+            await wait(1500);
+
+            for(const item of qaPairItems) {
+                if (!isVisRunning) return;
+                item.classList.add('feeding');
+                await wait(400); // Stagger the animation
+            }
+
+            addToVisLog(logArea, `Набір даних завантажено в модель.`);
+            await wait(1000);
+            if (!isVisRunning) return;
+
+            qaDatasetArea.style.opacity = '0';
+            finetuningMain.style.opacity = '1';
+            await wait(500);
+            qaDatasetArea.style.display = 'none';
+            // --- END NEW ANIMATION SEQUENCE ---
 
             let epoch = 1;
             let loss = 0.55;
@@ -1926,7 +2009,7 @@
 
                     setTimeout(() => {
                         titleEn.textContent = levelData[currentLevelIndex].en;
-                        titleUa.textContent = levelData[currentLevel-index].ua;
+                        titleUa.textContent = levelData[currentLevelIndex].ua;
                         titleEn.style.transition = 'none';
                         titleUa.style.transition = 'none';
                         titleEn.style.transform = `translateY(${-direction * slideDistance}px)`;
