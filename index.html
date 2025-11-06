@@ -20,6 +20,7 @@
         /* REMOVED: justify-content: space-between; */
         font-family: sans-serif;
         box-sizing: border-box; /* Ensure padding/borders don't add to height */
+        /* --- REMOVED: overflow-x: hidden; --- */
     }
 /* --- END: EDITED BY GEMINI --- */
 
@@ -58,11 +59,13 @@
         align-items: center; /* ADDED: Center the text lines inside */
     }
 
+/* --- START: EDITED BY GEMINI --- */
     .title-en {
         font-weight: 800; /* Extrabold */
         font-size: 2rem; /* 32px */
         line-height: 1.2;
-        white-space: nowrap; /* Prevent wrapping */
+        /* --- REMOVED: white-space: nowrap; --- */
+        text-align: center; /* --- ADDED --- */
         color: #b80000; /* Added requested color */
         /* Updated transition for opacity and transform */
         transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
@@ -72,10 +75,12 @@
         font-weight: 800; /* Extrabold - CHANGED */
         font-size: 1.1rem; /* 17.6px - CHANGED (adjusted to match width with new weight) */
         line-height: 1.2;
-        white-space: nowrap; /* Prevent wrapping */
+        /* --- REMOVED: white-space: nowrap; --- */
+        text-align: center; /* --- ADDED --- */
         /* Updated transition for opacity and transform */
         transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
+/* --- END: EDITED BY GEMINI --- */
 
     /* --- ADDED: Style for new hint text --- */
     .scroller-hint {
@@ -106,7 +111,6 @@
     }
     /* --- END CORRECTION --- */
 
-    /* --- START: EDITED BY GEMINI --- */
     /* New wrapper for scroller and dashed box */
     .main-content-wrapper {
         display: flex;
@@ -120,14 +124,11 @@
         /* --- END: MODIFIED TO FIT SCREEN --- */
         position: relative; /* For layout */
     }
-    /* --- END: EDITED BY GEMINI --- */
 
     /* --- START: Scroller Styles --- */
     .scroller-container {
-        /* --- START: EDITED BY GEMINI --- */
         margin-top: 0; /* Was 10px, now on wrapper */
         order: 1; /* Default position */
-        /* --- END: EDITED BY GEMINI --- */
         height: 514px; /* 6/7ths of original 600px */
         width: 9px; 
         background-color: transparent;
@@ -238,7 +239,6 @@
 
     /* --- ADDED: Dashed border for the working area --- */
     .working-area {
-        /* --- START: EDITED BY GEMINI --- */
         flex-grow: 1; /* Fills horizontal space */
         order: 2; /* Default position */
         border: 2px dashed black;
@@ -247,10 +247,8 @@
         margin-right: 0; /* Default */
         /* REMOVED: min-height */
         /* REMOVED: display: flex and align-items */
-        /* --- END: EDITED BY GEMINI --- */
     }
     
-    /* --- START: EDITED BY GEMINI --- */
     /* Rules for when scroller is on the right */
     .main-content-wrapper.right .scroller-container {
         order: 3;
@@ -260,7 +258,6 @@
         margin-left: 0;
         margin-right: 24px; /* Add space on the right */
     }
-    /* --- END: EDITED BY GEMINI --- */
 
 
     .logo-container {
@@ -271,9 +268,7 @@
         margin-bottom: 20px; 
         width: 100%; 
         justify-content: center;
-        /* --- START: EDITED BY GEMINI --- */
         margin-top: auto; /* Pushes logos to the bottom */
-        /* --- END: EDITED BY GEMINI --- */
     }
 
     .logo-item {
@@ -333,14 +328,12 @@
             margin-top: 4px;
         }
 
-        /* --- START: EDITED BY GEMINI --- */
         .main-content-wrapper {
             /* --- START: MODIFIED TO FIT SCREEN --- */
             margin: 10px 0 0 0; /* Was 10px 20px 0 20px */
             padding: 0 20px; /* ADDED */
             /* --- END: MODIFIED TO FIT SCREEN --- */
         }
-        /* --- END: EDITED BY GEMINI --- */
 
         .scroller-container {
             margin-top: 0; /* Now on wrapper */
@@ -366,18 +359,14 @@
 
         /* --- ADDED: Mobile style for working area --- */
         .working-area {
-            /* --- START: EDITED BY GEMINI --- */
             margin-left: 12px; /* Half of desktop */
             margin-right: 0;
-            /* --- END: EDITED BY GEMINI --- */
         }
 
-        /* --- START: EDITED BY GEMINI --- */
         .main-content-wrapper.right .working-area {
             margin-left: 0;
             margin-right: 12px; /* Half of desktop */
         }
-        /* --- END: EDITED BY GEMINI --- */
 
         .logo-container {
             padding: 0 20px 20px; 
@@ -415,7 +404,6 @@
     </p>
 </div>
 
-<!-- --- START: EDITED BY GEMINI --- -->
 <!-- New wrapper for scroller and content -->
 <div class="main-content-wrapper">
     <!-- Scroller is now here -->
@@ -442,7 +430,6 @@
     <!-- Dashed box is now here -->
     <div class="working-area"></div>
 </div>
-<!-- --- END: EDITED BY GEMINI --- -->
 
 
 <!-- Logo content is placed here, positioned at the bottom by the body's flex settings -->
@@ -483,11 +470,9 @@
         }
         // --- END: PocketPal Link Logic ---
 
-        // --- START: EDITED BY GEMINI ---
         const scrollerContainer = document.querySelector('.scroller-container');
         const mainContentWrapper = document.querySelector('.main-content-wrapper');
         const topGroup = document.querySelector('.top-group');
-        // --- END: EDITED BY GEMINI ---
 
 
         // --- START: Text Data for Scroller (INVERTED) ---
@@ -728,26 +713,19 @@
                 e.preventDefault(); // Prevent horizontal page swipe
                 const screenWidth = window.innerWidth;
                 
-                // --- START: EDITED BY GEMINI ---
-                // Use the constants defined at the top
                 const isRightSide = topGroup.classList.contains('right'); 
-                // --- END: EDITED BY GEMINI ---
 
                 // --- START OF FIX: Set drag distance to (Half Screen - 10px) ---
                 const dragDistance = currentX - startX; // Get horizontal drag distance
                 const minDrag = (screenWidth / 2) - 10; // Min drag distance is (Half Screen - 10px)
 
                 if (isRightSide && dragDistance < -minDrag) { // Dragged left
-                    // --- START: EDITED BY GEMINI ---
                     topGroup.classList.remove('right'); 
                     mainContentWrapper.classList.remove('right'); // Toggle wrapper class
-                    // --- END: EDITED BY GEMINI ---
                     endDrag(e); // Stop the drag immediately after toggle
                 } else if (!isRightSide && dragDistance > minDrag) { // Dragged right
-                    // --- START: EDITED BY GEMINI ---
                     topGroup.classList.add('right'); 
                     mainContentWrapper.classList.add('right'); // Toggle wrapper class
-                    // --- END: EDITED BY GEMINI ---
                     endDrag(e); // Stop the drag immediately after toggle
                 }
                 // --- END OF FIX ---
