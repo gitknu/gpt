@@ -407,6 +407,96 @@
     }
     /* --- END: Preprocessing Visualization Styles --- */
 
+    /* --- START: Tokenization Visualization Styles --- */
+    .tokenization-vis-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Montserrat', sans-serif;
+        color: black;
+    }
+    .vis-token-main {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+    }
+    .vis-sentence-area {
+        font-size: 1.5rem;
+        font-family: 'Courier New', Courier, monospace;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        min-height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 90%;
+    }
+    .vis-word-token {
+        display: inline-block;
+        padding: 5px;
+        margin: 0;
+        border-radius: 4px;
+        transition: all 0.5s ease-in-out;
+    }
+    .vis-word-token.highlight {
+        background-color: #f0e68c; /* Khaki */
+        transform: scale(1.1);
+    }
+    .vis-word-token.spacing {
+        margin: 0 10px;
+    }
+    .vis-vocab-area {
+        width: 90%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        min-height: 80px;
+        border: 1px dashed #aaa;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    .vis-vocab-entry {
+        background-color: #e0e0e0;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.9rem;
+        opacity: 0;
+        transform: scale(0.5);
+        transition: all 0.5s ease-in-out;
+    }
+    .vis-vocab-entry.visible {
+        opacity: 1;
+        transform: scale(1);
+    }
+     .vis-vocab-entry.highlight {
+        background-color: #add8e6; /* Light Blue */
+        box-shadow: 0 0 10px #add8e6;
+    }
+    .vis-vocab-id {
+        font-weight: bold;
+        color: #b80000;
+        margin-right: 8px;
+    }
+    .vis-sequence-area {
+        font-size: 1.5rem;
+        font-family: 'Courier New', Courier, monospace;
+        letter-spacing: 5px;
+        background-color: #f5f5f5;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 15px;
+        min-height: 50px;
+        width: 90%;
+        text-align: center;
+    }
+    /* --- END: Tokenization Visualization Styles --- */
+
 
     /* --- Mobile Responsivity --- */
     @media (max-width: 600px) {
@@ -504,6 +594,14 @@
             padding: 10px;
             min-height: 100px;
         }
+        
+        /* Tokenization mobile styles */
+        .vis-sentence-area { font-size: 1rem; min-height: 40px; }
+        .vis-word-token.spacing { margin: 0 2px; }
+        .vis-vocab-area { min-height: 60px; gap: 5px; }
+        .vis-vocab-entry { font-size: 0.75rem; padding: 3px 8px; }
+        .vis-sequence-area { font-size: 1rem; padding: 10px; min-height: 40px; }
+
 
 /* --- END: EDITED BY GEMINI --- */
 
@@ -966,6 +1064,129 @@
                 visContainer.style.transition = '';
             }
         }
+
+        // --- Tokenization Visualizer ---
+        async function startTokenizationVisualization() {
+            if (isVisRunning) return;
+            isVisRunning = true;
+
+            const sentences = [
+                "the quick brown fox",
+                "jumps over the lazy dog",
+                "the lazy fox slept"
+            ];
+
+            workingArea.innerHTML = `
+                <div class="tokenization-vis-container">
+                    <div class="vis-token-main">
+                        <div class="vis-sentence-area" id="vis-sentence-area"></div>
+                        <div class="vis-vocab-area" id="vis-vocab-area"></div>
+                        <div class="vis-sequence-area" id="vis-sequence-area"></div>
+                    </div>
+                    <div class="vis-log" id="vis-log"></div>
+                </div>`;
+
+            const logArea = document.getElementById('vis-log');
+            const sentenceArea = document.getElementById('vis-sentence-area');
+            const vocabArea = document.getElementById('vis-vocab-area');
+            const sequenceArea = document.getElementById('vis-sequence-area');
+            const visContainer = workingArea.querySelector('.tokenization-vis-container');
+
+            const vocabulary = {};
+            let nextTokenId = 1;
+
+            while (isVisRunning) {
+                addToVisLog(logArea, "Починаємо процес токенізації...");
+                await wait(1500);
+
+                for (const sentence of sentences) {
+                    if (!isVisRunning) break;
+
+                    // 1. Show sentence
+                    sentenceArea.innerHTML = sentence.split(' ').map(word => `<span class="vis-word-token">${word}</span>`).join('');
+                    sequenceArea.innerHTML = ''; // Clear previous sequence
+                    addToVisLog(logArea, `Обробка речення: "${sentence}"`);
+                    await wait(2000);
+                    if (!isVisRunning) break;
+
+                    // 2. Split into tokens
+                    const wordTokens = sentenceArea.querySelectorAll('.vis-word-token');
+                    addToVisLog(logArea, "Розбиття на окремі токени...");
+                    wordTokens.forEach(token => token.classList.add('spacing'));
+                    await wait(1500);
+                    if (!isVisRunning) break;
+
+                    // 3. Build vocabulary and sequence
+                    const currentSequence = [];
+                    for (const token of wordTokens) {
+                        if (!isVisRunning) break;
+                        const word = token.textContent.toLowerCase();
+                        token.classList.add('highlight');
+                        
+                        if (!vocabulary[word]) {
+                            addToVisLog(logArea, `Новий токен '${word}'. Присвоєння ID: ${nextTokenId}`);
+                            vocabulary[word] = nextTokenId;
+                            
+                            const vocabEntry = document.createElement('div');
+                            vocabEntry.className = 'vis-vocab-entry';
+                            vocabEntry.id = `vocab-${word}`;
+                            vocabEntry.innerHTML = `<span class="vis-vocab-id">${nextTokenId}:</span><span>${word}</span>`;
+                            vocabArea.appendChild(vocabEntry);
+                            await wait(50);
+                            vocabEntry.classList.add('visible');
+
+                            nextTokenId++;
+                        } else {
+                             addToVisLog(logArea, `Токен '${word}' вже існує. ID: ${vocabulary[word]}`);
+                             const existingEntry = document.getElementById(`vocab-${word}`);
+                             if (existingEntry) {
+                                 existingEntry.classList.add('highlight');
+                             }
+                        }
+                        
+                        currentSequence.push(vocabulary[word]);
+                        sequenceArea.innerHTML = `[ ${currentSequence.join(', ')} ]`;
+
+                        await wait(1500);
+                        if (!isVisRunning) break;
+
+                        token.classList.remove('highlight');
+                        const existingEntry = document.getElementById(`vocab-${word}`);
+                        if (existingEntry) {
+                            existingEntry.classList.remove('highlight');
+                        }
+                        await wait(500);
+                    }
+                    if (!isVisRunning) break;
+                    
+                    addToVisLog(logArea, "Речення успішно токенізовано.");
+                    await wait(2500);
+                    if (!isVisRunning) break;
+                }
+
+                if (!isVisRunning) break;
+                addToVisLog(logArea, "Всі речення оброблено. Перезапуск...");
+                await wait(2000);
+                if (!isVisRunning) break;
+
+                visContainer.style.transition = 'opacity 0.5s ease-in-out';
+                visContainer.style.opacity = 0;
+                await wait(500);
+                if (!isVisRunning) break;
+                
+                // Reset for next full loop
+                logArea.innerHTML = '';
+                sentenceArea.innerHTML = '';
+                vocabArea.innerHTML = '';
+                sequenceArea.innerHTML = '';
+                Object.keys(vocabulary).forEach(key => delete vocabulary[key]);
+                nextTokenId = 1;
+                
+                visContainer.style.opacity = 1;
+                await wait(500);
+                visContainer.style.transition = '';
+            }
+        }
         
         // --- END: Visualization Functions ---
 
@@ -1069,6 +1290,8 @@
                                 startDataCollectionVisualization();
                             } else if (currentLevelIndex === 5) {
                                 startPreprocessingVisualization();
+                            } else if (currentLevelIndex === 4) {
+                                startTokenizationVisualization();
                             }
                         }, 10); // A tiny delay is enough
                     }
