@@ -880,6 +880,81 @@
     }
     /* --- END: Reward Model Training Visualization Styles --- */
 
+    /* --- START: RLHF Visualization Styles --- */
+    .rlhf-vis-container {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Montserrat', sans-serif;
+        color: black;
+    }
+    .rlhf-main {
+        flex-grow: 1;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        grid-template-rows: auto 1fr;
+        align-items: center;
+        gap: 15px;
+        position: relative;
+    }
+    .rlhf-prompt-area {
+        grid-column: 1 / -1;
+        text-align: center;
+    }
+    .rlhf-model-area, .rlhf-reward-model-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    .rlhf-interaction-area {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+    }
+    .rlhf-response {
+        border: 1px solid #ccc;
+        padding: 8px;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        font-family: 'Courier New', monospace;
+        background-color: #f9f9f9;
+        transition: all 0.3s;
+        opacity: 0;
+        transform: scale(0.9);
+        cursor: pointer;
+    }
+    .rlhf-response:hover {
+        border-color: #0b5394;
+        transform: scale(1.03) !important;
+    }
+    .rlhf-response.chosen {
+        border-color: #006400;
+        background-color: #ddffdd;
+    }
+    .rlhf-response.not-chosen {
+        opacity: 0.4 !important;
+        border-color: #b80000;
+        background-color: #ffdddd;
+    }
+    .blinking-question-mark {
+        font-size: 2.5rem;
+        animation: blink 1.5s infinite ease-in-out;
+    }
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.2; }
+    }
+    .rlhf-reward-signal {
+        position: absolute;
+        font-size: 1.5rem;
+        opacity: 0;
+        transition: all 0.8s ease-in-out;
+    }
+    /* --- END: RLHF Visualization Styles --- */
 
     /* --- Mobile Responsivity --- */
     @media (max-width: 600px) {
@@ -1055,6 +1130,19 @@
         .vis-reward-model-icon { font-size: 2.8rem; } /* EDITED */
         .vis-reward-score { font-size: 0.7rem; padding: 2px 5px; top: -5px; right: -5px;} /* EDITED */
         /* --- END: Reward Model mobile styles --- */
+        
+        /* --- START: RLHF mobile styles --- */
+        .rlhf-main {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto auto;
+            gap: 5px;
+        }
+        .rlhf-model-area { grid-row: 2; }
+        .rlhf-interaction-area { grid-row: 3; }
+        .rlhf-reward-model-area { grid-row: 4; }
+        .rlhf-response { font-size: 0.75rem; }
+        .blinking-question-mark { font-size: 1.8rem; }
+        /* --- END: RLHF mobile styles --- */
 
         .logo-container {
             padding: 0 20px 20px;
@@ -2184,6 +2272,147 @@
             }
         }
         
+        // --- RLHF Visualizer ---
+        async function startRLHFVisualization() {
+            if (isVisRunning) return;
+            isVisRunning = true;
+            
+            const rlhfData = [
+                {
+                    prompt: "Напиши короткий вірш про весну.",
+                    responses: [
+                        { text: "Квіти цвітуть, сонце гріє, радість усім.", chosen: true },
+                        { text: "Весна. Дерева. Квіти.", chosen: false }
+                    ]
+                },
+                {
+                    prompt: "Як бути більш продуктивним?",
+                    responses: [
+                        { text: "Просто роби більше.", chosen: false },
+                        { text: "Створюйте списки завдань, розставляйте пріоритети та робіть перерви.", chosen: true }
+                    ]
+                }
+            ];
+
+            workingArea.innerHTML = `
+                <div class="rlhf-vis-container">
+                    <div class="rlhf-main" id="rlhf-main">
+                        <div class="rlhf-prompt-area">
+                            <div class="vis-prompt-box">
+                                <strong>Запит:</strong>
+                                <div id="vis-prompt-text-rlhf"></div>
+                            </div>
+                        </div>
+                        <div class="rlhf-model-area">
+                             <div class="vis-model-icon" id="rlhf-model-icon">🧠</div>
+                             <div>Основна Модель</div>
+                        </div>
+                        <div class="rlhf-interaction-area">
+                            <div id="rlhf-responses-list"></div>
+                            <div class="blinking-question-mark" id="rlhf-question-mark">?</div>
+                        </div>
+                         <div class="rlhf-reward-model-area">
+                             <div class="vis-reward-model-icon">🏅</div>
+                             <div>Модель Винагороди</div>
+                        </div>
+                    </div>
+                    <div class="vis-log" id="vis-log"></div>
+                </div>`;
+
+            const logArea = document.getElementById('vis-log');
+            const mainArea = document.getElementById('rlhf-main');
+            const promptText = document.getElementById('vis-prompt-text-rlhf');
+            const responsesList = document.getElementById('rlhf-responses-list');
+            const questionMark = document.getElementById('rlhf-question-mark');
+            const modelIcon = document.getElementById('rlhf-model-icon');
+
+            while(isVisRunning) {
+                addToVisLog(logArea, "Починаємо цикл RLHF...");
+                await wait(1500);
+
+                for (const item of rlhfData) {
+                    if (!isVisRunning) break;
+                    
+                    // Reset
+                    responsesList.innerHTML = '';
+                    questionMark.style.display = 'none';
+
+                    promptText.textContent = item.prompt;
+                    addToVisLog(logArea, `Новий запит: "${item.prompt}"`);
+                    await wait(1500);
+                    if (!isVisRunning) break;
+
+                    addToVisLog(logArea, "Модель генерує кілька варіантів відповіді...");
+                    responsesList.innerHTML = item.responses.map((r, i) =>
+                        `<div class="rlhf-response" id="response-rlhf-${i}" data-chosen="${r.chosen}">${r.text}</div>`
+                    ).join('');
+
+                    const responseElements = Array.from(responsesList.querySelectorAll('.rlhf-response'));
+                    for(const el of responseElements) {
+                        await wait(100);
+                        el.style.opacity = '1';
+                        el.style.transform = 'scale(1)';
+                    }
+                    await wait(1500);
+                    if (!isVisRunning) break;
+
+                    addToVisLog(logArea, "Очікування на відгук людини...");
+                    questionMark.style.display = 'block';
+                    await wait(2500);
+                    if (!isVisRunning) break;
+                    questionMark.style.display = 'none';
+
+                    addToVisLog(logArea, "Відгук отримано! Визначаємо кращу відповідь.");
+                    let chosenEl = null;
+                    for (const el of responseElements) {
+                        if (el.dataset.chosen === "true") {
+                            el.classList.add('chosen');
+                            chosenEl = el;
+                        } else {
+                            el.classList.add('not-chosen');
+                        }
+                    }
+                    await wait(1500);
+                    if (!isVisRunning) break;
+                    
+                    addToVisLog(logArea, "Модель винагороди посилає позитивний сигнал.");
+                    const signal = document.createElement('div');
+                    signal.className = 'rlhf-reward-signal';
+                    signal.textContent = '👍';
+                    mainArea.appendChild(signal);
+
+                    const chosenRect = chosenEl.getBoundingClientRect();
+                    const modelRect = modelIcon.getBoundingClientRect();
+                    const mainRect = mainArea.getBoundingClientRect();
+
+                    signal.style.top = `${chosenRect.top - mainRect.top + chosenRect.height/2}px`;
+                    signal.style.left = `${chosenRect.left - mainRect.left + chosenRect.width/2}px`;
+
+                    await wait(50);
+                    signal.style.opacity = '1';
+                    signal.style.top = `${modelRect.top - mainRect.top + modelRect.height/2}px`;
+                    signal.style.left = `${modelRect.left - mainRect.left + modelRect.width/2}px`;
+                    
+                    await wait(800);
+                    if (!isVisRunning) { if(mainArea.contains(signal)) mainArea.removeChild(signal); break; }
+                    
+                    addToVisLog(logArea, "Основна модель оновлюється на основі винагороди.");
+                    modelIcon.style.transition = 'transform 0.3s';
+                    modelIcon.style.transform = 'scale(1.2)';
+                    if(mainArea.contains(signal)) mainArea.removeChild(signal);
+
+                    await wait(400);
+                    modelIcon.style.transform = 'scale(1)';
+                    await wait(2500);
+                    if (!isVisRunning) break;
+                }
+                if (!isVisRunning) break;
+                addToVisLog(logArea, "Всі приклади оброблено. Перезапуск...");
+                await wait(2000);
+            }
+
+        }
+
         // --- END: Visualization Functions ---
 
         // --- START: Call Visualization on initial load ---
@@ -2294,6 +2523,8 @@
                                 startSupervisedFinetuningVisualization();
                             } else if (currentLevelIndex === 1) {
                                 startRewardModelTrainingVisualization();
+                            } else if (currentLevelIndex === 0) {
+                                startRLHFVisualization();
                             }
                         }, 10); // A tiny delay is enough
                     }
