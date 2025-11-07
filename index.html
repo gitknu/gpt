@@ -1293,25 +1293,39 @@
                     const { jsPDF } = window.jspdf;
                     const doc = new jsPDF();
 
-                    // Set fonts and title
+                    // Set font for the title in Ukrainian - Font size is now doubled.
                     doc.setFont("helvetica", "bold");
-                    doc.text("Resources from the presentation", 105, 20, null, null, "center");
-                    
-                    // Set font for the list
-                    doc.setFont("helvetica", "normal");
-                    doc.setFontSize(12);
-                    
-                    // List title - Supporting Cyrillic might require a specific font setup in jsPDF,
-                    // but for standard fonts, it may or may not work depending on the environment.
-                    // Using a simple English title for broader compatibility in this example.
-                    doc.text("List of main references:", 20, 40);
+                    doc.setFontSize(30); // Increased from 16 to 32
+                    doc.text("PO3KA3AHO", 105, 30, null, null, "center"); // Adjusted Y position
 
-                    // Add clickable links
-                    doc.textWithLink('aistudio.google.com', 20, 50, { url: 'https://aistudio.google.com/prompts/new_chat' });
-                    doc.textWithLink('notebooklm.google.com', 20, 60, { url: 'https://notebooklm.google.com/notebook' });
-                    doc.textWithLink('podcast.adobe.com', 20, 70, { url: 'https://podcast.adobe.com/en/enhance' });
-                    doc.textWithLink('hf.co/spaces', 20, 80, { url: 'https://hf.co/spaces/ResembleAI/resemble-enhance' });
-                    doc.textWithLink('ai.google.dev/gemma', 20, 90, { url: 'https://ai.google.dev/gemma' });
+                    // Set font for the links - Font size is now doubled.
+                    doc.setFont("helvetica", "normal");
+                    doc.setFontSize(20); // Increased from 12 to 24
+                    
+                    let yPosition = 70; // Adjusted starting Y position for the first link
+                    const yIncrement = 20; // Increased spacing between lines
+                    const bulletX = 20;
+                    const linkX = 28;
+
+                    const links = [
+                        { text: 'aistudio.google.com', url: 'https://aistudio.google.com/prompts/new_chat' },
+                        { text: 'notebooklm.google.com', url: 'https://notebooklm.google.com/notebook' },
+                        { text: 'podcast.adobe.com', url: 'https://podcast.adobe.com/en/enhance' },
+                        { text: 'hf.co/spaces', url: 'https://hf.co/spaces/ResembleAI/resemble-enhance' },
+                        { text: 'ai.google.dev/gemma', url: 'https://ai.google.dev/gemma' }
+                    ];
+
+                    links.forEach(link => {
+                        // Set color to black for the bullet point
+                        doc.setTextColor(0, 0, 0);
+                        doc.text('•', bulletX, yPosition);
+
+                        // Set color to blue for the clickable link
+                        doc.setTextColor(0, 0, 255);
+                        doc.textWithLink(link.text, linkX, yPosition, { url: link.url });
+                        
+                        yPosition += yIncrement;
+                    });
 
                     // Save the generated PDF
                     doc.save('gpt_presentation_resources.pdf');
